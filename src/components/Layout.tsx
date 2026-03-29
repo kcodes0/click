@@ -7,9 +7,10 @@ type LayoutProps = {
   title: string;
   user: User | null;
   children: Child;
+  pageClass?: string;
 };
 
-export function Layout({ title, user, children }: LayoutProps) {
+export function Layout({ title, user, children, pageClass }: LayoutProps) {
   return (
     <html lang="en">
       <head>
@@ -46,8 +47,8 @@ export function Layout({ title, user, children }: LayoutProps) {
             </nav>
           </div>
         </header>
-        <main class="shell page">{children}</main>
-        <footer class="shell site-footer">
+        <main class={`shell page ${pageClass || ''}`}>{children}</main>
+        <footer class="site-footer">
           <p>you're not lost, you're exploring. probably.</p>
         </footer>
       </body>

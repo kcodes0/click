@@ -37,7 +37,7 @@ app.get("/", async (c) => {
   const user = c.get("user");
 
   return c.html(
-    <Layout title="click!" user={user}>
+    <Layout title="click!" user={user} pageClass="page--home">
       <div class="hero-wrap">
         <div class="hero shell">
           <span class="tag">wikipedia racing</span>
