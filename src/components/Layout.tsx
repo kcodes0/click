@@ -22,7 +22,7 @@ export function Layout({ title, user, children }: LayoutProps) {
         <header class="site-header">
           <div class="shell nav-row">
             <a class="brand" href="/">
-              WikiRace
+              <span class="brand-w">Wiki</span>Race
             </a>
             <nav class="nav-links">
               <a href="/play/daily">Daily</a>
@@ -30,7 +30,7 @@ export function Layout({ title, user, children }: LayoutProps) {
               <a href="/leaderboard/daily">Archive</a>
               {user ? (
                 <form method="post" action="/auth/logout">
-                  <button class="ghost-button" type="submit">
+                  <button class="nav-btn" type="submit">
                     {user.username} / Log out
                   </button>
                 </form>
@@ -44,6 +44,9 @@ export function Layout({ title, user, children }: LayoutProps) {
           </div>
         </header>
         <main class="shell page">{children}</main>
+        <footer class="shell site-footer">
+          <p>Built for the joy of clicking through Wikipedia at unreasonable speeds.</p>
+        </footer>
       </body>
     </html>
   );

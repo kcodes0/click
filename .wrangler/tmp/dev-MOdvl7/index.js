@@ -4939,12 +4939,15 @@ function Layout({ title: title2, user, children }) {
     ] }),
     /* @__PURE__ */ jsxDEV("body", { children: [
       /* @__PURE__ */ jsxDEV("header", { class: "site-header", children: /* @__PURE__ */ jsxDEV("div", { class: "shell nav-row", children: [
-        /* @__PURE__ */ jsxDEV("a", { class: "brand", href: "/", children: "WikiRace" }),
+        /* @__PURE__ */ jsxDEV("a", { class: "brand", href: "/", children: [
+          /* @__PURE__ */ jsxDEV("span", { class: "brand-w", children: "Wiki" }),
+          "Race"
+        ] }),
         /* @__PURE__ */ jsxDEV("nav", { class: "nav-links", children: [
           /* @__PURE__ */ jsxDEV("a", { href: "/play/daily", children: "Daily" }),
           /* @__PURE__ */ jsxDEV("a", { href: "/crown", children: "Crown" }),
           /* @__PURE__ */ jsxDEV("a", { href: "/leaderboard/daily", children: "Archive" }),
-          user ? /* @__PURE__ */ jsxDEV("form", { method: "post", action: "/auth/logout", children: /* @__PURE__ */ jsxDEV("button", { class: "ghost-button", type: "submit", children: [
+          user ? /* @__PURE__ */ jsxDEV("form", { method: "post", action: "/auth/logout", children: /* @__PURE__ */ jsxDEV("button", { class: "nav-btn", type: "submit", children: [
             user.username,
             " / Log out"
           ] }) }) : /* @__PURE__ */ jsxDEV(Fragment, { children: [
@@ -4953,7 +4956,8 @@ function Layout({ title: title2, user, children }) {
           ] })
         ] })
       ] }) }),
-      /* @__PURE__ */ jsxDEV("main", { class: "shell page", children })
+      /* @__PURE__ */ jsxDEV("main", { class: "shell page", children }),
+      /* @__PURE__ */ jsxDEV("footer", { class: "shell site-footer", children: /* @__PURE__ */ jsxDEV("p", { children: "Built for the joy of clicking through Wikipedia at unreasonable speeds." }) })
     ] })
   ] });
 }
@@ -7756,9 +7760,9 @@ __name(formatDateKey, "formatDateKey");
 // src/routes/auth.tsx
 var auth = new Hono2();
 function AuthPage({ title: title2, action, submitLabel, error }) {
-  return /* @__PURE__ */ jsxDEV(Layout, { title: title2, user: null, children: /* @__PURE__ */ jsxDEV("section", { class: "auth-card", children: [
+  return /* @__PURE__ */ jsxDEV(Layout, { title: title2, user: null, children: /* @__PURE__ */ jsxDEV("section", { class: "auth-zone", children: [
     /* @__PURE__ */ jsxDEV("h1", { children: title2 }),
-    /* @__PURE__ */ jsxDEV("p", { class: "muted", children: "Username and password only. Email is optional." }),
+    /* @__PURE__ */ jsxDEV("p", { class: "auth-hint", children: "Username and password only. Email is optional." }),
     error ? /* @__PURE__ */ jsxDEV("p", { class: "error-banner", children: error }) : null,
     /* @__PURE__ */ jsxDEV("form", { method: "post", action, class: "stack-form", children: [
       /* @__PURE__ */ jsxDEV("label", { children: [
@@ -18535,13 +18539,6 @@ function Leaderboard(props) {
 }
 __name(Leaderboard, "Leaderboard");
 
-// src/components/Timer.tsx
-init_modules_watch_stub();
-function Timer() {
-  return /* @__PURE__ */ jsxDEV("div", { id: "timer", class: "timer", children: "0:00.00" });
-}
-__name(Timer, "Timer");
-
 // src/lib/seed.ts
 init_modules_watch_stub();
 async function ensureDailyChallenge(db) {
@@ -18603,36 +18600,39 @@ function GamePage({
         children: [
           /* @__PURE__ */ jsxDEV("div", { class: "game-topbar", children: [
             /* @__PURE__ */ jsxDEV("div", { children: [
-              /* @__PURE__ */ jsxDEV("p", { class: "eyebrow", children: subtitle }),
+              /* @__PURE__ */ jsxDEV("span", { class: "tag", children: subtitle }),
               /* @__PURE__ */ jsxDEV("h1", { children: [
                 challenge.start_article,
-                " to ",
+                " \u2192 ",
                 challenge.end_article
               ] })
             ] }),
             /* @__PURE__ */ jsxDEV("div", { class: "status-panel", children: [
-              /* @__PURE__ */ jsxDEV(Timer, {}),
-              /* @__PURE__ */ jsxDEV("div", { class: "pill", children: [
-                /* @__PURE__ */ jsxDEV("span", { children: "Target" }),
-                /* @__PURE__ */ jsxDEV("strong", { id: "target-title", children: challenge.end_article })
+              /* @__PURE__ */ jsxDEV("div", { class: "stat-box timer-box", children: [
+                /* @__PURE__ */ jsxDEV("span", { class: "stat-label", children: "Timer" }),
+                /* @__PURE__ */ jsxDEV("span", { class: "stat-value", id: "timer", children: "0:00.00" })
               ] }),
-              /* @__PURE__ */ jsxDEV("div", { class: "pill", children: [
-                /* @__PURE__ */ jsxDEV("span", { children: "Clicks" }),
-                /* @__PURE__ */ jsxDEV("strong", { id: "click-count", children: "0" })
+              /* @__PURE__ */ jsxDEV("div", { class: "stat-box", children: [
+                /* @__PURE__ */ jsxDEV("span", { class: "stat-label", children: "Target" }),
+                /* @__PURE__ */ jsxDEV("span", { class: "stat-value", id: "target-title", children: challenge.end_article })
+              ] }),
+              /* @__PURE__ */ jsxDEV("div", { class: "stat-box", children: [
+                /* @__PURE__ */ jsxDEV("span", { class: "stat-label", children: "Clicks" }),
+                /* @__PURE__ */ jsxDEV("span", { class: "stat-value", id: "click-count", children: "0" })
               ] })
             ] })
           ] }),
           !user ? /* @__PURE__ */ jsxDEV("p", { class: "error-banner", children: "You need an account to submit runs. You can still preview the route." }) : null,
           /* @__PURE__ */ jsxDEV("div", { id: "game-result", class: "result-banner hidden" }),
           /* @__PURE__ */ jsxDEV("div", { class: "game-layout", children: [
-            /* @__PURE__ */ jsxDEV("section", { class: "article-panel", children: [
-              /* @__PURE__ */ jsxDEV("div", { class: "article-header", children: /* @__PURE__ */ jsxDEV("h2", { id: "article-title", children: articleTitle }) }),
+            /* @__PURE__ */ jsxDEV("section", { class: "article-zone", children: [
+              /* @__PURE__ */ jsxDEV("h2", { id: "article-title", children: articleTitle }),
               /* @__PURE__ */ jsxDEV("div", { id: "article-content", children: /* @__PURE__ */ jsxDEV(ArticleView, { html: articleHtml }) })
             ] }),
-            /* @__PURE__ */ jsxDEV("aside", { class: "sidebar-card", children: [
+            /* @__PURE__ */ jsxDEV("aside", { class: "sidebar", children: [
               /* @__PURE__ */ jsxDEV("h2", { children: "Best Runs" }),
               /* @__PURE__ */ jsxDEV(Leaderboard, { kind: "runs", entries: leaderboard2 }),
-              /* @__PURE__ */ jsxDEV("div", { class: "share-actions", children: /* @__PURE__ */ jsxDEV("button", { type: "button", id: "copy-link-button", class: "ghost-button", children: "Copy challenge link" }) })
+              /* @__PURE__ */ jsxDEV("div", { class: "share-actions", children: /* @__PURE__ */ jsxDEV("button", { type: "button", id: "copy-link-button", class: "ghost-btn", children: "Copy challenge link" }) })
             ] })
           ] })
         ]
@@ -18694,16 +18694,16 @@ leaderboard.get("/daily", async (c) => {
   await closeExpiredDailyCrowns(c.env.DB);
   const days = await listDailyChallenges(c.env.DB);
   return c.html(
-    /* @__PURE__ */ jsxDEV(Layout, { title: "Daily archive", user: c.get("user"), children: /* @__PURE__ */ jsxDEV("section", { class: "stack-block", children: [
+    /* @__PURE__ */ jsxDEV(Layout, { title: "Daily archive", user: c.get("user"), children: /* @__PURE__ */ jsxDEV("section", { class: "section-page", children: [
       /* @__PURE__ */ jsxDEV("h1", { children: "Daily Challenge Archive" }),
-      /* @__PURE__ */ jsxDEV("div", { class: "list-card", children: days.length ? /* @__PURE__ */ jsxDEV("ul", { class: "archive-list", children: days.map((day) => /* @__PURE__ */ jsxDEV("li", { children: [
+      days.length ? /* @__PURE__ */ jsxDEV("ul", { class: "archive-list", children: days.map((day) => /* @__PURE__ */ jsxDEV("li", { children: [
         /* @__PURE__ */ jsxDEV("a", { href: `/leaderboard/daily/${day.daily_date}`, children: formatDateKey(day.daily_date || "") }),
         /* @__PURE__ */ jsxDEV("span", { children: [
           day.start_article,
-          " to ",
+          " \u2192 ",
           day.end_article
         ] })
-      ] })) }) : /* @__PURE__ */ jsxDEV("p", { children: "No archived dailies yet." }) })
+      ] })) }) : /* @__PURE__ */ jsxDEV("p", { class: "muted", children: "No archived dailies yet." })
     ] }) })
   );
 });
@@ -18714,11 +18714,11 @@ leaderboard.get("/daily/:date", async (c) => {
   }
   const entries2 = await getLeaderboard(c.env.DB, challenge.id);
   return c.html(
-    /* @__PURE__ */ jsxDEV(Layout, { title: "Daily leaderboard", user: c.get("user"), children: /* @__PURE__ */ jsxDEV("section", { class: "stack-block", children: [
-      /* @__PURE__ */ jsxDEV("p", { class: "eyebrow", children: formatDateKey(challenge.daily_date || "") }),
+    /* @__PURE__ */ jsxDEV(Layout, { title: "Daily leaderboard", user: c.get("user"), children: /* @__PURE__ */ jsxDEV("section", { class: "section-page", children: [
+      /* @__PURE__ */ jsxDEV("span", { class: "tag", children: formatDateKey(challenge.daily_date || "") }),
       /* @__PURE__ */ jsxDEV("h1", { children: [
         challenge.start_article,
-        " to ",
+        " \u2192 ",
         challenge.end_article
       ] }),
       /* @__PURE__ */ jsxDEV(Leaderboard, { kind: "runs", entries: entries2 })
@@ -18732,11 +18732,11 @@ leaderboard.get("/:challengeId", async (c) => {
   }
   const entries2 = await getLeaderboard(c.env.DB, challenge.id);
   return c.html(
-    /* @__PURE__ */ jsxDEV(Layout, { title: "Challenge leaderboard", user: c.get("user"), children: /* @__PURE__ */ jsxDEV("section", { class: "stack-block", children: [
-      /* @__PURE__ */ jsxDEV("p", { class: "eyebrow", children: challenge.type === "daily" ? "Daily challenge" : "Freeplay challenge" }),
+    /* @__PURE__ */ jsxDEV(Layout, { title: "Challenge leaderboard", user: c.get("user"), children: /* @__PURE__ */ jsxDEV("section", { class: "section-page", children: [
+      /* @__PURE__ */ jsxDEV("span", { class: "tag", children: challenge.type === "daily" ? "Daily challenge" : "Freeplay challenge" }),
       /* @__PURE__ */ jsxDEV("h1", { children: [
         challenge.start_article,
-        " to ",
+        " \u2192 ",
         challenge.end_article
       ] }),
       /* @__PURE__ */ jsxDEV(Leaderboard, { kind: "runs", entries: entries2 })
@@ -18748,9 +18748,9 @@ crown.get("/", async (c) => {
   await closeExpiredDailyCrowns(c.env.DB);
   const entries2 = await getCrownLeaderboard(c.env.DB, Date.now());
   return c.html(
-    /* @__PURE__ */ jsxDEV(Layout, { title: "Crown leaderboard", user: c.get("user"), children: /* @__PURE__ */ jsxDEV("section", { class: "stack-block", children: [
+    /* @__PURE__ */ jsxDEV(Layout, { title: "Crown leaderboard", user: c.get("user"), children: /* @__PURE__ */ jsxDEV("section", { class: "section-page", children: [
       /* @__PURE__ */ jsxDEV("h1", { children: "Crown Leaderboard" }),
-      /* @__PURE__ */ jsxDEV("p", { class: "muted", children: "Total time spent holding first place on daily challenges." }),
+      /* @__PURE__ */ jsxDEV("p", { class: "section-sub", children: "Total time spent holding first place on daily challenges." }),
       /* @__PURE__ */ jsxDEV(Leaderboard, { kind: "crown", entries: entries2 })
     ] }) })
   );
@@ -18771,41 +18771,45 @@ app.get("/", async (c) => {
   const challenge = await ensureDailyChallenge(c.env.DB);
   const user = c.get("user");
   return c.html(
-    /* @__PURE__ */ jsxDEV(Layout, { title: "WikiRace", user, children: /* @__PURE__ */ jsxDEV("section", { class: "hero", children: [
-      /* @__PURE__ */ jsxDEV("p", { class: "eyebrow", children: "Wikipedia racing" }),
-      /* @__PURE__ */ jsxDEV("h1", { children: "Reach the target article in the fewest clicks and the fastest time." }),
-      /* @__PURE__ */ jsxDEV("p", { children: "Shared daily routes reset at noon UTC. Freeplay spins up a new random pair you can share with anyone." }),
-      /* @__PURE__ */ jsxDEV("div", { class: "hero-actions", children: [
-        /* @__PURE__ */ jsxDEV("a", { href: "/play/daily", children: /* @__PURE__ */ jsxDEV("button", { type: "button", children: "Play today's challenge" }) }),
-        user ? /* @__PURE__ */ jsxDEV("a", { class: "secondary-link", href: "/play/free", children: "Start freeplay" }) : /* @__PURE__ */ jsxDEV("a", { class: "secondary-link", href: "/auth/register", children: "Create account" })
+    /* @__PURE__ */ jsxDEV(Layout, { title: "WikiRace", user, children: [
+      /* @__PURE__ */ jsxDEV("div", { class: "home-intro", children: [
+        /* @__PURE__ */ jsxDEV("span", { class: "tag", children: "Wikipedia racing" }),
+        /* @__PURE__ */ jsxDEV("h1", { children: "Reach the target article in the fewest clicks and the fastest time." }),
+        /* @__PURE__ */ jsxDEV("p", { class: "home-sub", children: "Shared daily routes reset at noon UTC. Freeplay spins up a new random pair you can share with anyone." }),
+        /* @__PURE__ */ jsxDEV("div", { class: "home-actions", children: [
+          /* @__PURE__ */ jsxDEV("a", { href: "/play/daily", children: /* @__PURE__ */ jsxDEV("button", { type: "button", children: "Play today's challenge" }) }),
+          user ? /* @__PURE__ */ jsxDEV("a", { class: "link-btn", href: "/play/free", children: "Start freeplay" }) : /* @__PURE__ */ jsxDEV("a", { class: "link-btn", href: "/auth/register", children: "Create account" })
+        ] })
       ] }),
-      /* @__PURE__ */ jsxDEV("div", { class: "challenge-card-grid", children: [
-        /* @__PURE__ */ jsxDEV("div", { class: "challenge-mini-card", children: [
-          /* @__PURE__ */ jsxDEV("p", { class: "eyebrow", children: "Today" }),
-          /* @__PURE__ */ jsxDEV("strong", { children: challenge.start_article }),
-          /* @__PURE__ */ jsxDEV("p", { children: "to" }),
-          /* @__PURE__ */ jsxDEV("strong", { children: challenge.end_article })
-        ] }),
-        /* @__PURE__ */ jsxDEV("div", { class: "challenge-mini-card", children: [
-          /* @__PURE__ */ jsxDEV("p", { class: "eyebrow", children: "How scoring works" }),
+      /* @__PURE__ */ jsxDEV("div", { class: "mission", children: [
+        /* @__PURE__ */ jsxDEV("span", { class: "tag tag--teal", children: "Today's route" }),
+        /* @__PURE__ */ jsxDEV("div", { class: "mission-route", children: [
+          /* @__PURE__ */ jsxDEV("span", { class: "mission-endpoint", children: challenge.start_article }),
+          /* @__PURE__ */ jsxDEV("span", { class: "mission-arrow", children: "------>" }),
+          /* @__PURE__ */ jsxDEV("span", { class: "mission-endpoint", children: challenge.end_article })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxDEV("div", { class: "home-info", children: [
+        /* @__PURE__ */ jsxDEV("div", { class: "info-block", children: [
+          /* @__PURE__ */ jsxDEV("h3", { children: "Scoring" }),
           /* @__PURE__ */ jsxDEV("p", { children: "Timer starts on your first click. Leaderboards use your best completed run." })
         ] }),
-        /* @__PURE__ */ jsxDEV("div", { class: "challenge-mini-card", children: [
-          /* @__PURE__ */ jsxDEV("p", { class: "eyebrow", children: "Crown" }),
+        /* @__PURE__ */ jsxDEV("div", { class: "info-block", children: [
+          /* @__PURE__ */ jsxDEV("h3", { children: "Crown" }),
           /* @__PURE__ */ jsxDEV("p", { children: "The crown leaderboard tracks total time spent in first place on dailies." })
         ] })
       ] })
-    ] }) })
+    ] })
   );
 });
 app.get("/wiki/:title", async (c) => {
   const article = await fetchSanitizedArticle(c.req.param("title"));
   const user = c.get("user");
   return c.html(
-    /* @__PURE__ */ jsxDEV(Layout, { title: article.displayTitle, user, children: /* @__PURE__ */ jsxDEV("section", { class: "stack-block", children: [
-      /* @__PURE__ */ jsxDEV("p", { class: "eyebrow", children: "Fallback article view" }),
+    /* @__PURE__ */ jsxDEV(Layout, { title: article.displayTitle, user, children: /* @__PURE__ */ jsxDEV("section", { class: "section-page", children: [
+      /* @__PURE__ */ jsxDEV("span", { class: "tag", children: "Fallback article view" }),
       /* @__PURE__ */ jsxDEV("h1", { children: article.displayTitle }),
-      /* @__PURE__ */ jsxDEV("p", { class: "muted", children: "In-game article clicks should load inline without leaving the challenge." }),
+      /* @__PURE__ */ jsxDEV("p", { class: "section-sub", children: "In-game article clicks should load inline without leaving the challenge." }),
       /* @__PURE__ */ jsxDEV(ArticleView, { html: article.html })
     ] }) })
   );

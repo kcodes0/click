@@ -3,7 +3,6 @@ import { Hono } from "hono";
 import { ArticleView } from "../components/ArticleView";
 import { Layout } from "../components/Layout";
 import { Leaderboard } from "../components/Leaderboard";
-import { Timer } from "../components/Timer";
 import {
   createChallenge,
   getChallengeById,
@@ -46,20 +45,23 @@ function GamePage({
       >
         <div class="game-topbar">
           <div>
-            <p class="eyebrow">{subtitle}</p>
+            <span class="tag">{subtitle}</span>
             <h1>
-              {challenge.start_article} to {challenge.end_article}
+              {challenge.start_article} &rarr; {challenge.end_article}
             </h1>
           </div>
           <div class="status-panel">
-            <Timer />
-            <div class="pill">
-              <span>Target</span>
-              <strong id="target-title">{challenge.end_article}</strong>
+            <div class="stat-box timer-box">
+              <span class="stat-label">Timer</span>
+              <span class="stat-value" id="timer">0:00.00</span>
             </div>
-            <div class="pill">
-              <span>Clicks</span>
-              <strong id="click-count">0</strong>
+            <div class="stat-box">
+              <span class="stat-label">Target</span>
+              <span class="stat-value" id="target-title">{challenge.end_article}</span>
+            </div>
+            <div class="stat-box">
+              <span class="stat-label">Clicks</span>
+              <span class="stat-value" id="click-count">0</span>
             </div>
           </div>
         </div>
@@ -70,19 +72,17 @@ function GamePage({
         ) : null}
         <div id="game-result" class="result-banner hidden" />
         <div class="game-layout">
-          <section class="article-panel">
-            <div class="article-header">
-              <h2 id="article-title">{articleTitle}</h2>
-            </div>
+          <section class="article-zone">
+            <h2 id="article-title">{articleTitle}</h2>
             <div id="article-content">
               <ArticleView html={articleHtml} />
             </div>
           </section>
-          <aside class="sidebar-card">
+          <aside class="sidebar">
             <h2>Best Runs</h2>
             <Leaderboard kind="runs" entries={leaderboard} />
             <div class="share-actions">
-              <button type="button" id="copy-link-button" class="ghost-button">
+              <button type="button" id="copy-link-button" class="ghost-btn">
                 Copy challenge link
               </button>
             </div>

@@ -20,9 +20,9 @@ type AuthPageProps = {
 function AuthPage({ title, action, submitLabel, error }: AuthPageProps) {
   return (
     <Layout title={title} user={null}>
-      <section class="auth-card">
+      <section class="auth-zone">
         <h1>{title}</h1>
-        <p class="muted">Username and password only. Email is optional.</p>
+        <p class="auth-hint">Username and password only. Email is optional.</p>
         {error ? <p class="error-banner">{error}</p> : null}
         <form method="post" action={action} class="stack-form">
           <label>
