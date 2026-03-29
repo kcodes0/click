@@ -1,0 +1,13 @@
+name = "wiki-race"
+main = "src/index.tsx"
+compatibility_date = "2026-03-28"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "wiki-race"
+database_id = "00000000-0000-0000-0000-000000000000"
+
+[[rules]]
+type = "Text"
+globs = ["src/static/*.css", "src/static/*.js"]
+fallthrough = true
