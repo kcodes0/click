@@ -29,13 +29,13 @@ app.get("/", async (c) => {
   const user = c.get("user");
 
   return c.html(
-    <Layout title="WikiRace" user={user}>
+    <Layout title="click!" user={user}>
       <div class="home-intro">
         <span class="tag">Wikipedia racing</span>
-        <h1>Reach the target article in the fewest clicks and the fastest time.</h1>
+        <h1>Get from A to B. Click <em>fast</em>. Click <em>smart</em>.</h1>
         <p class="home-sub">
-          Shared daily routes reset at noon UTC. Freeplay spins up a new random pair
-          you can share with anyone.
+          A new Wikipedia route drops every day at noon UTC.
+          Or spin up a random one and send it to your friends.
         </p>
         <div class="home-actions">
           <a href="/play/daily" class="btn-primary">

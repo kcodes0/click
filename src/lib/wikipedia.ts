@@ -4,8 +4,8 @@ const WIKIPEDIA_PAGE_BASE = "https://en.wikipedia.org/wiki/";
 const WIKIPEDIA_RANDOM_SUMMARY =
   "https://en.wikipedia.org/api/rest_v1/page/random/summary";
 const WIKI_HEADERS = {
-  "api-user-agent": "WikiRace/0.1 (local development)",
-  "user-agent": "WikiRace/0.1 (local development)",
+  "api-user-agent": "click/0.1 (local development)",
+  "user-agent": "click/0.1 (local development)",
   "accept-language": "en-US,en;q=0.9"
 };
 const FALLBACK_PAIRS = [

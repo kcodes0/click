@@ -25,7 +25,7 @@ export function Layout({ title, user, children }: LayoutProps) {
         <header class="site-header">
           <div class="shell nav-row">
             <a class="brand" href="/">
-              <span class="brand-w">Wiki</span>Race
+              click<span class="brand-bang">!</span>
             </a>
             <nav class="nav-links">
               <a href="/play/daily">Daily</a>
@@ -48,7 +48,7 @@ export function Layout({ title, user, children }: LayoutProps) {
         </header>
         <main class="shell page">{children}</main>
         <footer class="shell site-footer">
-          <p>Built for the joy of clicking through Wikipedia at unreasonable speeds.</p>
+          <p>you're not lost, you're exploring. probably.</p>
         </footer>
       </body>
     </html>

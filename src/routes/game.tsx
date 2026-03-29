@@ -36,7 +36,7 @@ function GamePage({
     : "Freeplay challenge";
 
   return (
-    <Layout title="Play WikiRace" user={user}>
+    <Layout title="click!" user={user}>
       <section
         class="game-shell"
         data-challenge-id={challenge.id}

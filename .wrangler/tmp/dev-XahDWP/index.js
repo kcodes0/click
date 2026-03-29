@@ -4446,7 +4446,7 @@ init_modules_watch_stub();
 
 // src/static/assets.ts
 init_modules_watch_stub();
-var STYLE_CSS = String.raw`/* WIKIRACE */
+var STYLE_CSS = String.raw`/* click! */
 :root {
   --bg: #08090c;
   --surface: #111318;
@@ -4474,9 +4474,7 @@ var STYLE_CSS = String.raw`/* WIKIRACE */
   padding: 0;
 }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
   background: var(--bg);
@@ -4511,13 +4509,11 @@ a {
   transition: color 0.12s;
 }
 
-a:hover {
-  color: #ffaa44;
-}
+a:hover { color: #ffaa44; }
 
-button, input {
-  font-family: var(--font-body);
-}
+button, input { font-family: var(--font-body); }
+
+/* ---- BUTTONS ---- */
 
 .btn-primary {
   display: inline-block;
@@ -4548,13 +4544,8 @@ button, input {
   box-shadow: 0 8px 30px rgba(255, 138, 0, 0.25);
 }
 
-.btn-primary:hover::after {
-  transform: translateX(100%);
-}
-
-.btn-primary:active {
-  transform: translateY(0);
-}
+.btn-primary:hover::after { transform: translateX(100%); }
+.btn-primary:active { transform: translateY(0); }
 
 .btn-outline {
   display: inline-flex;
@@ -4592,6 +4583,8 @@ button, input {
   border-color: var(--muted);
 }
 
+/* ---- INPUTS ---- */
+
 input {
   width: 100%;
   padding: 0.8rem 1rem;
@@ -4607,20 +4600,22 @@ input:focus {
   border-color: var(--accent);
 }
 
-input::placeholder {
-  color: var(--muted);
-}
+input::placeholder { color: var(--muted); }
+
+/* ---- LAYOUT ---- */
 
 .shell {
   width: min(1080px, calc(100% - 3rem));
   margin: 0 auto;
 }
 
+/* ---- HEADER ---- */
+
 .site-header {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(8, 9, 12, 0.9);
+  background: rgba(8, 9, 12, 0.92);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 }
@@ -4644,19 +4639,16 @@ input::placeholder {
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  padding: 1rem 0;
+  padding: 0.9rem 0;
 }
 
 .brand {
   font-family: var(--font-mono);
-  font-size: 1.05rem;
+  font-size: 1.2rem;
   font-weight: 700;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   color: var(--text-bright);
   text-decoration: none;
-  display: flex;
-  align-items: center;
-  gap: 0;
 }
 
 .brand:hover {
@@ -4664,8 +4656,19 @@ input::placeholder {
   color: var(--text-bright);
 }
 
-.brand-w {
+.brand-bang {
   color: var(--accent);
+  display: inline-block;
+  animation: wiggle 3s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+@keyframes wiggle {
+  0%, 85%, 100% { transform: rotate(0deg); }
+  88% { transform: rotate(12deg); }
+  91% { transform: rotate(-10deg); }
+  94% { transform: rotate(8deg); }
+  97% { transform: rotate(-4deg); }
 }
 
 .nav-links {
@@ -4698,13 +4701,8 @@ input::placeholder {
   text-decoration: none;
 }
 
-.nav-links a:hover::after {
-  width: 100%;
-}
-
-.nav-links form {
-  margin: 0;
-}
+.nav-links a:hover::after { width: 100%; }
+.nav-links form { margin: 0; }
 
 .nav-btn {
   background: transparent;
@@ -4718,9 +4716,9 @@ input::placeholder {
   transition: color 0.12s;
 }
 
-.nav-btn:hover {
-  color: var(--text-bright);
-}
+.nav-btn:hover { color: var(--text-bright); }
+
+/* ---- MAIN ---- */
 
 .page {
   padding: 4rem 0 6rem;
@@ -4732,6 +4730,8 @@ input::placeholder {
   to { opacity: 1; transform: none; }
 }
 
+/* ---- FOOTER ---- */
+
 .site-footer {
   padding: 2.5rem 0 3rem;
   border-top: 1px solid var(--border);
@@ -4740,6 +4740,8 @@ input::placeholder {
   font-size: 0.78rem;
   letter-spacing: 0.01em;
 }
+
+/* ---- TAGS ---- */
 
 .tag {
   display: inline-block;
@@ -4762,20 +4764,24 @@ input::placeholder {
   border-color: rgba(0, 229, 160, 0.2);
 }
 
+/* ========== HOMEPAGE ========== */
+
 .home-intro {
   max-width: 700px;
   padding-bottom: 4rem;
 }
 
 .home-intro h1 {
-  font-size: clamp(2.2rem, 5.5vw, 3.8rem);
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
   font-weight: 900;
   margin-bottom: 1.2rem;
-  line-height: 1.05;
-  background: linear-gradient(135deg, var(--text-bright) 0%, #b8b0a2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  line-height: 1.02;
+}
+
+.home-intro h1 em {
+  font-style: italic;
+  color: var(--accent);
+  -webkit-text-fill-color: var(--accent);
 }
 
 .home-sub {
@@ -4793,30 +4799,25 @@ input::placeholder {
   align-items: center;
 }
 
+/* ---- MISSION / TODAY ---- */
+
 .mission {
   padding: 3rem 0;
   position: relative;
 }
 
-.mission::before {
+.mission::before,
+.mission::after {
   content: '';
   position: absolute;
-  top: 0;
   left: -1.5rem;
   right: -1.5rem;
   height: 1px;
   background: repeating-linear-gradient(90deg, var(--border-bright) 0, var(--border-bright) 8px, transparent 8px, transparent 16px);
 }
 
-.mission::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: -1.5rem;
-  right: -1.5rem;
-  height: 1px;
-  background: repeating-linear-gradient(90deg, var(--border-bright) 0, var(--border-bright) 8px, transparent 8px, transparent 16px);
-}
+.mission::before { top: 0; }
+.mission::after { bottom: 0; }
 
 .mission-route {
   display: flex;
@@ -4875,6 +4876,8 @@ input::placeholder {
   line-height: 1.6;
 }
 
+/* ========== GAME PAGE ========== */
+
 .game-shell { }
 
 .game-topbar {
@@ -4904,7 +4907,6 @@ input::placeholder {
   padding: 0.65rem 1rem;
   background: var(--surface);
   border: 1px solid var(--border-bright);
-  position: relative;
 }
 
 .stat-box .stat-label {
@@ -4956,9 +4958,7 @@ input::placeholder {
   margin-bottom: 1.2rem;
 }
 
-.sidebar {
-  padding-top: 0.3rem;
-}
+.sidebar { padding-top: 0.3rem; }
 
 .sidebar h2 {
   font-family: var(--font-mono);
@@ -4972,11 +4972,101 @@ input::placeholder {
   border-bottom: 1px solid var(--border);
 }
 
+/* ========== ARTICLE BODY (Wikipedia content) ========== */
+
 .article-body {
   overflow-wrap: anywhere;
   font-size: 0.94rem;
   line-height: 1.75;
   color: var(--text);
+}
+
+.article-body p {
+  margin: 0.6rem 0;
+}
+
+.article-body h2 {
+  font-size: 1.25rem;
+  margin: 2rem 0 0.6rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.article-body h3 {
+  font-size: 1.05rem;
+  margin: 1.5rem 0 0.4rem;
+}
+
+.article-body h4, .article-body h5, .article-body h6 {
+  font-size: 0.95rem;
+  margin: 1.2rem 0 0.3rem;
+  color: var(--text-bright);
+}
+
+.article-body ul,
+.article-body ol {
+  padding-left: 1.6rem;
+  margin: 0.5rem 0;
+}
+
+.article-body ul { list-style: disc; }
+.article-body ol { list-style: decimal; }
+
+.article-body li {
+  margin: 0.2rem 0;
+  padding-left: 0.2rem;
+}
+
+.article-body li > ul,
+.article-body li > ol {
+  margin: 0.15rem 0;
+}
+
+.article-body dl {
+  margin: 0.5rem 0;
+}
+
+.article-body dt {
+  font-weight: 600;
+  color: var(--text-bright);
+  margin-top: 0.4rem;
+}
+
+.article-body dd {
+  margin-left: 1.5rem;
+  margin-bottom: 0.3rem;
+}
+
+.article-body blockquote {
+  border-left: 2px solid var(--accent);
+  padding-left: 1rem;
+  margin: 1rem 0;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.article-body pre,
+.article-body code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.article-body code {
+  padding: 0.1rem 0.3rem;
+}
+
+.article-body pre {
+  padding: 0.8rem;
+  overflow-x: auto;
+  margin: 0.5rem 0;
+}
+
+.article-body hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 1.5rem 0;
 }
 
 .article-body img {
@@ -4994,6 +5084,7 @@ input::placeholder {
   text-underline-offset: 2px;
   text-decoration-thickness: 1.5px;
   transition: text-decoration-color 0.12s, color 0.12s;
+  cursor: pointer;
 }
 
 .article-body a[data-wiki-target]:hover {
@@ -5004,21 +5095,33 @@ input::placeholder {
 .article-body a:not([data-wiki-target]) {
   color: var(--muted);
   pointer-events: none;
+  text-decoration: none;
 }
 
+/* Tables */
+
 .article-body table {
-  width: 100%;
-  display: block;
-  overflow-x: auto;
+  width: auto;
+  max-width: 100%;
   border-collapse: collapse;
   font-size: 0.85rem;
   margin: 1rem 0;
+  display: table;
+  overflow-x: auto;
+}
+
+.article-body .mw-parser-output > table,
+.article-body > table {
+  display: block;
+  overflow-x: auto;
 }
 
 .article-body th,
 .article-body td {
   border: 1px solid var(--border-bright);
-  padding: 0.35rem 0.5rem;
+  padding: 0.35rem 0.6rem;
+  vertical-align: top;
+  text-align: left;
 }
 
 .article-body th {
@@ -5026,6 +5129,122 @@ input::placeholder {
   color: var(--text-bright);
   font-weight: 600;
 }
+
+.article-body caption {
+  font-weight: 600;
+  padding: 0.3rem 0;
+  text-align: left;
+  color: var(--text-bright);
+  font-size: 0.88rem;
+}
+
+/* Infobox */
+.article-body .infobox {
+  float: right;
+  max-width: 300px;
+  margin: 0 0 1rem 1.5rem;
+  border: 1px solid var(--border-bright);
+  background: var(--surface);
+  font-size: 0.82rem;
+}
+
+.article-body .infobox th,
+.article-body .infobox td {
+  border-color: var(--border);
+}
+
+.article-body .infobox th {
+  text-align: center;
+  background: rgba(255, 138, 0, 0.06);
+}
+
+/* Wikitable */
+.article-body .wikitable {
+  border: 1px solid var(--border-bright);
+}
+
+.article-body .wikitable th {
+  background: rgba(255, 138, 0, 0.06);
+}
+
+/* Thumbs and figure captions */
+.article-body .thumb,
+.article-body .tmulti {
+  margin: 0.8rem 0;
+  max-width: 100%;
+}
+
+.article-body .thumb.tright {
+  float: right;
+  clear: right;
+  margin: 0.5rem 0 0.8rem 1.5rem;
+}
+
+.article-body .thumb.tleft {
+  float: left;
+  clear: left;
+  margin: 0.5rem 1.5rem 0.8rem 0;
+}
+
+.article-body .thumbinner {
+  border: 1px solid var(--border-bright);
+  background: var(--surface);
+  padding: 0.3rem;
+  font-size: 0.8rem;
+}
+
+.article-body .thumbcaption {
+  padding: 0.3rem 0.2rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.article-body .thumbimage {
+  border: none;
+  margin: 0;
+}
+
+/* Gallery */
+.article-body .gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0;
+  list-style: none;
+  padding: 0;
+}
+
+.article-body .gallerybox {
+  flex: 0 0 auto;
+}
+
+.article-body .gallerytext {
+  font-size: 0.78rem;
+  color: var(--muted);
+  padding: 0.2rem;
+}
+
+/* Override inline background colors from Wikipedia */
+.article-body [style*="background"]:not(img):not([data-wiki-target]) {
+  background-color: var(--surface) !important;
+}
+
+.article-body [style*="color"]:not(a):not(img) {
+  color: var(--text) !important;
+}
+
+/* Collapsible / mw-collapsible */
+.article-body .mw-collapsible-content { display: block; }
+
+/* Clear floats */
+.article-body::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+/* ========== AUTH ========== */
 
 .auth-zone {
   max-width: 380px;
@@ -5058,13 +5277,11 @@ input::placeholder {
   letter-spacing: 0.06em;
 }
 
-.stack-form button {
-  margin-top: 0.5rem;
-}
+.stack-form button { margin-top: 0.5rem; }
 
-.section-page {
-  max-width: 700px;
-}
+/* ========== SECTION PAGES ========== */
+
+.section-page { max-width: 700px; }
 
 .section-page h1 {
   font-size: 2rem;
@@ -5076,6 +5293,8 @@ input::placeholder {
   margin-bottom: 2rem;
   font-size: 0.95rem;
 }
+
+/* ---- BOARD TABLE ---- */
 
 .board-table {
   width: 100%;
@@ -5118,13 +5337,10 @@ input::placeholder {
   text-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
 }
 
-.board-table tbody tr:nth-child(2) td:first-child {
-  color: #c0c0c0;
-}
+.board-table tbody tr:nth-child(2) td:first-child { color: #c0c0c0; }
+.board-table tbody tr:nth-child(3) td:first-child { color: #cd7f32; }
 
-.board-table tbody tr:nth-child(3) td:first-child {
-  color: #cd7f32;
-}
+/* ---- ARCHIVE ---- */
 
 .archive-list {
   list-style: none;
@@ -5144,14 +5360,14 @@ input::placeholder {
   transition: padding-left 0.15s;
 }
 
-.archive-list li:hover {
-  padding-left: 0.5rem;
-}
+.archive-list li:hover { padding-left: 0.5rem; }
 
 .archive-list li span {
   color: var(--muted);
   font-size: 0.85rem;
 }
+
+/* ---- BANNERS ---- */
 
 .error-banner,
 .success-banner {
@@ -5173,34 +5389,18 @@ input::placeholder {
   color: var(--teal);
 }
 
-.result-banner {
-  font-weight: 600;
-}
+.result-banner { font-weight: 600; }
+.share-actions { margin-top: 1.2rem; }
 
-.share-actions {
-  margin-top: 1.2rem;
-}
+.hidden { display: none; }
+.muted { color: var(--muted); }
 
-.hidden {
-  display: none;
-}
-
-.muted {
-  color: var(--muted);
-}
+/* ========== RESPONSIVE ========== */
 
 @media (max-width: 900px) {
-  .game-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .game-topbar {
-    flex-direction: column;
-  }
-
-  .status-panel {
-    width: 100%;
-  }
+  .game-layout { grid-template-columns: 1fr; }
+  .game-topbar { flex-direction: column; }
+  .status-panel { width: 100%; }
 
   .sidebar {
     border-top: 1px solid var(--border);
@@ -5210,6 +5410,13 @@ input::placeholder {
   .home-info {
     grid-template-columns: 1fr;
     gap: 2rem;
+  }
+
+  .article-body .infobox,
+  .article-body .thumb.tright {
+    float: none;
+    max-width: 100%;
+    margin: 1rem 0;
   }
 }
 
@@ -5225,9 +5432,7 @@ input::placeholder {
     flex-wrap: wrap;
   }
 
-  .status-panel {
-    flex-direction: column;
-  }
+  .status-panel { flex-direction: column; }
 
   .mission-route {
     flex-direction: column;
@@ -5235,9 +5440,7 @@ input::placeholder {
     gap: 0.3rem;
   }
 
-  .home-intro h1 {
-    font-size: 1.8rem;
-  }
+  .home-intro h1 { font-size: 1.8rem; }
 }
 `;
 var GAME_JS = String.raw`const gameRoot = document.querySelector(".game-shell");
@@ -5404,8 +5607,8 @@ function Layout({ title: title2, user, children }) {
     /* @__PURE__ */ jsxDEV("body", { children: [
       /* @__PURE__ */ jsxDEV("header", { class: "site-header", children: /* @__PURE__ */ jsxDEV("div", { class: "shell nav-row", children: [
         /* @__PURE__ */ jsxDEV("a", { class: "brand", href: "/", children: [
-          /* @__PURE__ */ jsxDEV("span", { class: "brand-w", children: "Wiki" }),
-          "Race"
+          "click",
+          /* @__PURE__ */ jsxDEV("span", { class: "brand-bang", children: "!" })
         ] }),
         /* @__PURE__ */ jsxDEV("nav", { class: "nav-links", children: [
           /* @__PURE__ */ jsxDEV("a", { href: "/play/daily", children: "Daily" }),
@@ -5421,7 +5624,7 @@ function Layout({ title: title2, user, children }) {
         ] })
       ] }) }),
       /* @__PURE__ */ jsxDEV("main", { class: "shell page", children }),
-      /* @__PURE__ */ jsxDEV("footer", { class: "shell site-footer", children: /* @__PURE__ */ jsxDEV("p", { children: "Built for the joy of clicking through Wikipedia at unreasonable speeds." }) })
+      /* @__PURE__ */ jsxDEV("footer", { class: "shell site-footer", children: /* @__PURE__ */ jsxDEV("p", { children: "you're not lost, you're exploring. probably." }) })
     ] })
   ] });
 }
@@ -18722,8 +18925,8 @@ setPrototypeOf(Document4, Document2).prototype = Document2.prototype;
 var WIKIPEDIA_PAGE_BASE = "https://en.wikipedia.org/wiki/";
 var WIKIPEDIA_RANDOM_SUMMARY = "https://en.wikipedia.org/api/rest_v1/page/random/summary";
 var WIKI_HEADERS = {
-  "api-user-agent": "WikiRace/0.1 (local development)",
-  "user-agent": "WikiRace/0.1 (local development)",
+  "api-user-agent": "click/0.1 (local development)",
+  "user-agent": "click/0.1 (local development)",
   "accept-language": "en-US,en;q=0.9"
 };
 var FALLBACK_PAIRS = [
@@ -19053,7 +19256,7 @@ function GamePage({
 }) {
   const isDaily = challenge.type === "daily";
   const subtitle = isDaily && challenge.daily_date ? `Daily challenge for ${formatDateKey(challenge.daily_date)}` : "Freeplay challenge";
-  return /* @__PURE__ */ jsxDEV(Layout, { title: "Play WikiRace", user, children: [
+  return /* @__PURE__ */ jsxDEV(Layout, { title: "click!", user, children: [
     /* @__PURE__ */ jsxDEV(
       "section",
       {
@@ -19158,7 +19361,7 @@ leaderboard.get("/daily", async (c) => {
   await closeExpiredDailyCrowns(c.env.DB);
   const days = await listDailyChallenges(c.env.DB);
   return c.html(
-    /* @__PURE__ */ jsxDEV(Layout, { title: "Daily archive", user: c.get("user"), children: /* @__PURE__ */ jsxDEV("section", { class: "section-page", children: [
+    /* @__PURE__ */ jsxDEV(Layout, { title: "archive / click!", user: c.get("user"), children: /* @__PURE__ */ jsxDEV("section", { class: "section-page", children: [
       /* @__PURE__ */ jsxDEV("h1", { children: "Daily Challenge Archive" }),
       days.length ? /* @__PURE__ */ jsxDEV("ul", { class: "archive-list", children: days.map((day) => /* @__PURE__ */ jsxDEV("li", { children: [
         /* @__PURE__ */ jsxDEV("a", { href: `/leaderboard/daily/${day.daily_date}`, children: formatDateKey(day.daily_date || "") }),
@@ -19178,7 +19381,7 @@ leaderboard.get("/daily/:date", async (c) => {
   }
   const entries2 = await getLeaderboard(c.env.DB, challenge.id);
   return c.html(
-    /* @__PURE__ */ jsxDEV(Layout, { title: "Daily leaderboard", user: c.get("user"), children: /* @__PURE__ */ jsxDEV("section", { class: "section-page", children: [
+    /* @__PURE__ */ jsxDEV(Layout, { title: "leaderboard / click!", user: c.get("user"), children: /* @__PURE__ */ jsxDEV("section", { class: "section-page", children: [
       /* @__PURE__ */ jsxDEV("span", { class: "tag", children: formatDateKey(challenge.daily_date || "") }),
       /* @__PURE__ */ jsxDEV("h1", { children: [
         challenge.start_article,
@@ -19196,7 +19399,7 @@ leaderboard.get("/:challengeId", async (c) => {
   }
   const entries2 = await getLeaderboard(c.env.DB, challenge.id);
   return c.html(
-    /* @__PURE__ */ jsxDEV(Layout, { title: "Challenge leaderboard", user: c.get("user"), children: /* @__PURE__ */ jsxDEV("section", { class: "section-page", children: [
+    /* @__PURE__ */ jsxDEV(Layout, { title: "leaderboard / click!", user: c.get("user"), children: /* @__PURE__ */ jsxDEV("section", { class: "section-page", children: [
       /* @__PURE__ */ jsxDEV("span", { class: "tag", children: challenge.type === "daily" ? "Daily challenge" : "Freeplay challenge" }),
       /* @__PURE__ */ jsxDEV("h1", { children: [
         challenge.start_article,
@@ -19212,7 +19415,7 @@ crown.get("/", async (c) => {
   await closeExpiredDailyCrowns(c.env.DB);
   const entries2 = await getCrownLeaderboard(c.env.DB, Date.now());
   return c.html(
-    /* @__PURE__ */ jsxDEV(Layout, { title: "Crown leaderboard", user: c.get("user"), children: /* @__PURE__ */ jsxDEV("section", { class: "section-page", children: [
+    /* @__PURE__ */ jsxDEV(Layout, { title: "crown / click!", user: c.get("user"), children: /* @__PURE__ */ jsxDEV("section", { class: "section-page", children: [
       /* @__PURE__ */ jsxDEV("h1", { children: "Crown Leaderboard" }),
       /* @__PURE__ */ jsxDEV("p", { class: "section-sub", children: "Total time spent holding first place on daily challenges." }),
       /* @__PURE__ */ jsxDEV(Leaderboard, { kind: "crown", entries: entries2 })
@@ -19235,11 +19438,17 @@ app.get("/", async (c) => {
   const challenge = await ensureDailyChallenge(c.env.DB);
   const user = c.get("user");
   return c.html(
-    /* @__PURE__ */ jsxDEV(Layout, { title: "WikiRace", user, children: [
+    /* @__PURE__ */ jsxDEV(Layout, { title: "click!", user, children: [
       /* @__PURE__ */ jsxDEV("div", { class: "home-intro", children: [
         /* @__PURE__ */ jsxDEV("span", { class: "tag", children: "Wikipedia racing" }),
-        /* @__PURE__ */ jsxDEV("h1", { children: "Reach the target article in the fewest clicks and the fastest time." }),
-        /* @__PURE__ */ jsxDEV("p", { class: "home-sub", children: "Shared daily routes reset at noon UTC. Freeplay spins up a new random pair you can share with anyone." }),
+        /* @__PURE__ */ jsxDEV("h1", { children: [
+          "Get from A to B. Click ",
+          /* @__PURE__ */ jsxDEV("em", { children: "fast" }),
+          ". Click ",
+          /* @__PURE__ */ jsxDEV("em", { children: "smart" }),
+          "."
+        ] }),
+        /* @__PURE__ */ jsxDEV("p", { class: "home-sub", children: "A new Wikipedia route drops every day at noon UTC. Or spin up a random one and send it to your friends." }),
         /* @__PURE__ */ jsxDEV("div", { class: "home-actions", children: [
           /* @__PURE__ */ jsxDEV("a", { href: "/play/daily", class: "btn-primary", children: "Play today's challenge" }),
           user ? /* @__PURE__ */ jsxDEV("a", { class: "btn-outline", href: "/play/free", children: "Start freeplay" }) : /* @__PURE__ */ jsxDEV("a", { class: "btn-outline", href: "/auth/register", children: "Create account" })
