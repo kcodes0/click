@@ -19,29 +19,31 @@ type AuthPageProps = {
 
 function AuthPage({ title, action, submitLabel, error }: AuthPageProps) {
   return (
-    <Layout title={title} user={null}>
-      <section class="auth-zone">
-        <h1>{title}</h1>
-        <p class="auth-hint">Username and password only. Email is optional.</p>
-        {error ? <p class="error-banner">{error}</p> : null}
-        <form method="post" action={action} class="stack-form">
-          <label>
-            <span>Username</span>
-            <input type="text" name="username" minLength={3} maxLength={24} required />
-          </label>
-          {action === "/auth/register" ? (
+    <Layout title={`${title} / click!`} user={null}>
+      <div class="wrap page-content">
+        <div class="auth-box">
+          <h1>{title}</h1>
+          <p class="sub">Username and password only. Email is optional.</p>
+          {error && <p class="error-banner">{error}</p>}
+          <form method="post" action={action} class="form-stack">
             <label>
-              <span>Email</span>
-              <input type="email" name="email" />
+              <span>Username</span>
+              <input type="text" name="username" minLength={3} maxLength={24} required />
             </label>
-          ) : null}
-          <label>
-            <span>Password</span>
-            <input type="password" name="password" minLength={8} required />
-          </label>
-          <button type="submit" class="btn-primary">{submitLabel}</button>
-        </form>
-      </section>
+            {action === "/auth/register" && (
+              <label>
+                <span>Email</span>
+                <input type="email" name="email" />
+              </label>
+            )}
+            <label>
+              <span>Password</span>
+              <input type="password" name="password" minLength={8} required />
+            </label>
+            <button type="submit" class="btn">{submitLabel}</button>
+          </form>
+        </div>
+      </div>
     </Layout>
   );
 }
@@ -57,63 +59,22 @@ auth.post("/register", async (c) => {
   const password = String(form.get("password") || "");
 
   if (!/^[a-zA-Z0-9_]{3,24}$/.test(username)) {
-    return c.html(
-      <AuthPage
-        title="Register"
-        action="/auth/register"
-        submitLabel="Create account"
-        error="Username must be 3-24 chars using letters, numbers, or underscores."
-      />,
-      400
-    );
+    return c.html(<AuthPage title="Register" action="/auth/register" submitLabel="Create account" error="Username must be 3-24 chars using letters, numbers, or underscores." />, 400);
   }
-
   if (!isAllowedUsername(username)) {
-    return c.html(
-      <AuthPage
-        title="Register"
-        action="/auth/register"
-        submitLabel="Create account"
-        error="That username is not allowed."
-      />,
-      400
-    );
+    return c.html(<AuthPage title="Register" action="/auth/register" submitLabel="Create account" error="That username is not allowed." />, 400);
   }
-
   if (password.length < 8) {
-    return c.html(
-      <AuthPage
-        title="Register"
-        action="/auth/register"
-        submitLabel="Create account"
-        error="Password must be at least 8 characters."
-      />,
-      400
-    );
+    return c.html(<AuthPage title="Register" action="/auth/register" submitLabel="Create account" error="Password must be at least 8 characters." />, 400);
   }
 
   const existing = await getUserByUsernameForAuth(c.env.DB, username);
   if (existing) {
-    return c.html(
-      <AuthPage
-        title="Register"
-        action="/auth/register"
-        submitLabel="Create account"
-        error="Username already taken."
-      />,
-      409
-    );
+    return c.html(<AuthPage title="Register" action="/auth/register" submitLabel="Create account" error="Username already taken." />, 409);
   }
 
   const userId = crypto.randomUUID();
-  await createUser(c.env.DB, {
-    id: userId,
-    username,
-    passwordHash: await hashPassword(password),
-    email,
-    createdAt: nowMs()
-  });
-
+  await createUser(c.env.DB, { id: userId, username, passwordHash: await hashPassword(password), email, createdAt: nowMs() });
   await issueSessionCookie(c, userId);
   return c.redirect("/");
 });
@@ -125,15 +86,7 @@ auth.post("/login", async (c) => {
 
   const user = await getUserByUsernameForAuth(c.env.DB, username);
   if (!user || !(await verifyPassword(password, user.password_hash))) {
-    return c.html(
-      <AuthPage
-        title="Log in"
-        action="/auth/login"
-        submitLabel="Log in"
-        error="Invalid username or password."
-      />,
-      401
-    );
+    return c.html(<AuthPage title="Log in" action="/auth/login" submitLabel="Log in" error="Invalid username or password." />, 401);
   }
 
   await issueSessionCookie(c, user.id);

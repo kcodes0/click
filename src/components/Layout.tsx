@@ -7,10 +7,9 @@ type LayoutProps = {
   title: string;
   user: User | null;
   children: Child;
-  pageClass?: string;
 };
 
-export function Layout({ title, user, children, pageClass }: LayoutProps) {
+export function Layout({ title, user, children }: LayoutProps) {
   return (
     <html lang="en">
       <head>
@@ -19,16 +18,14 @@ export function Layout({ title, user, children, pageClass }: LayoutProps) {
         <title>{title}</title>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&display=swap" rel="stylesheet" />
         <style>{STYLE_CSS}</style>
       </head>
       <body>
-        <header class="site-header">
-          <div class="shell nav-row">
-            <a class="brand" href="/">
-              click<span class="brand-bang">!</span>
-            </a>
-            <nav class="nav-links">
+        <header class="header">
+          <div class="wrap header-inner">
+            <a class="logo" href="/">click<span class="logo-bang">!</span></a>
+            <nav class="nav">
               <a href="/play/daily">Daily</a>
               <a href="/crown">Crown</a>
               <a href="/leaderboard/daily">Archive</a>
@@ -47,10 +44,7 @@ export function Layout({ title, user, children, pageClass }: LayoutProps) {
             </nav>
           </div>
         </header>
-        <main class={`shell page ${pageClass || ''}`}>{children}</main>
-        <footer class="site-footer">
-          <p>you're not lost, you're exploring. probably.</p>
-        </footer>
+        <main>{children}</main>
       </body>
     </html>
   );

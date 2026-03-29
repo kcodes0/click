@@ -21,8 +21,8 @@ leaderboard.get("/daily", async (c) => {
 
   return c.html(
     <Layout title="archive / click!" user={c.get("user")}>
-      <section class="section-page">
-        <h1>Daily Challenge Archive</h1>
+      <div class="wrap page-content">
+        <h1>Daily Archive</h1>
         {days.length ? (
           <ul class="archive-list">
             {days.map((day) => (
@@ -37,51 +37,43 @@ leaderboard.get("/daily", async (c) => {
             ))}
           </ul>
         ) : (
-          <p class="muted">No archived dailies yet.</p>
+          <p class="sub">No archived dailies yet.</p>
         )}
-      </section>
+      </div>
     </Layout>
   );
 });
 
 leaderboard.get("/daily/:date", async (c) => {
   const challenge = await getDailyChallengeByArchiveDate(c.env.DB, c.req.param("date"));
-  if (!challenge) {
-    return c.notFound();
-  }
+  if (!challenge) return c.notFound();
 
   const entries = await getLeaderboard(c.env.DB, challenge.id);
   return c.html(
     <Layout title="leaderboard / click!" user={c.get("user")}>
-      <section class="section-page">
-        <span class="tag">{formatDateKey(challenge.daily_date || "")}</span>
-        <h1>
-          {challenge.start_article} &rarr; {challenge.end_article}
-        </h1>
+      <div class="wrap page-content">
+        <span class="label">{formatDateKey(challenge.daily_date || "")}</span>
+        <h1>{challenge.start_article} &rarr; {challenge.end_article}</h1>
         <Leaderboard kind="runs" entries={entries} />
-      </section>
+      </div>
     </Layout>
   );
 });
 
 leaderboard.get("/:challengeId", async (c) => {
   const challenge = await getChallengeById(c.env.DB, c.req.param("challengeId"));
-  if (!challenge) {
-    return c.notFound();
-  }
+  if (!challenge) return c.notFound();
 
   const entries = await getLeaderboard(c.env.DB, challenge.id);
   return c.html(
     <Layout title="leaderboard / click!" user={c.get("user")}>
-      <section class="section-page">
-        <span class="tag">
-          {challenge.type === "daily" ? "Daily challenge" : "Freeplay challenge"}
+      <div class="wrap page-content">
+        <span class="label">
+          {challenge.type === "daily" ? "Daily" : "Freeplay"}
         </span>
-        <h1>
-          {challenge.start_article} &rarr; {challenge.end_article}
-        </h1>
+        <h1>{challenge.start_article} &rarr; {challenge.end_article}</h1>
         <Leaderboard kind="runs" entries={entries} />
-      </section>
+      </div>
     </Layout>
   );
 });
@@ -93,13 +85,11 @@ crown.get("/", async (c) => {
   const entries = await getCrownLeaderboard(c.env.DB, Date.now());
   return c.html(
     <Layout title="crown / click!" user={c.get("user")}>
-      <section class="section-page">
+      <div class="wrap page-content">
         <h1>Crown Leaderboard</h1>
-        <p class="section-sub">
-          Total time spent holding first place on daily challenges.
-        </p>
+        <p class="sub">Total time spent holding #1 on daily challenges.</p>
         <Leaderboard kind="crown" entries={entries} />
-      </section>
+      </div>
     </Layout>
   );
 });

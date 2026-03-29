@@ -37,50 +37,58 @@ app.get("/", async (c) => {
   const user = c.get("user");
 
   return c.html(
-    <Layout title="click!" user={user} pageClass="page--home">
-      <div class="hero-wrap">
-        <div class="hero shell">
-          <span class="tag">wikipedia racing</span>
-          <h1>Get from A to B.<br />Click <em>fast</em>.<br />Click <em>smart</em>.</h1>
-          <p class="hero-sub">
-            A new Wikipedia route drops every day at noon UTC.
-            Or spin up a random one and send it to your friends.
+    <Layout title="click!" user={user}>
+      <section class="hero">
+        <div class="hero-text">
+          <span class="label">Wikipedia racing</span>
+          <h1>
+            Get from<br />
+            A to B.<br />
+            Click <em>fast.</em><br />
+            Click <em>smart.</em>
+          </h1>
+          <p class="hero-desc">
+            A new route drops every day at noon UTC.
+            Or spin up a random one and race your friends.
           </p>
-          <div class="hero-actions">
-            <a href="/play/daily" class="btn-primary">
-              Play today&apos;s challenge
-            </a>
+          <div class="hero-btns">
+            <a href="/play/daily" class="btn">Play today&apos;s</a>
             {user ? (
-              <a class="btn-outline" href="/play/free">
-                Start freeplay
-              </a>
+              <a class="btn btn--ghost" href="/play/free">Freeplay</a>
             ) : (
-              <a class="btn-outline" href="/auth/register">
-                Create account
-              </a>
+              <a class="btn btn--ghost" href="/auth/register">Sign up</a>
             )}
           </div>
         </div>
-      </div>
+        <div class="hero-img" />
+      </section>
 
-      <div class="pinboard">
-        <div class="note note--tilt-r">
-          <span class="note-label">Today&apos;s route</span>
-          <div class="note-route">
-            <strong>{challenge.start_article}</strong>
-            <span class="note-arrow">&rarr;</span>
-            <strong>{challenge.end_article}</strong>
+      <section class="board">
+        <div class="wrap board-grid">
+          <div class="card card--route">
+            <span class="label label--sm">Today&apos;s route</span>
+            <div class="route">
+              <strong>{challenge.start_article}</strong>
+              <span class="route-arrow">&rarr;</span>
+              <strong>{challenge.end_article}</strong>
+            </div>
+          </div>
+          <div class="card card--yellow card--tilt-l">
+            <span class="label label--sm label--dark">Scoring</span>
+            <p>Timer starts on first click. Best run wins.</p>
+          </div>
+          <div class="card card--peach card--tilt-r">
+            <span class="label label--sm label--dark">Crown</span>
+            <p>Hold #1 on dailies. Stack crown time. Flex.</p>
           </div>
         </div>
-        <div class="sticky sticky--1">
-          <strong>Scoring</strong>
-          <p>Timer starts on your first click. Leaderboards rank by best run.</p>
+      </section>
+
+      <footer class="footer">
+        <div class="wrap">
+          <p>you&apos;re not lost, you&apos;re exploring. probably.</p>
         </div>
-        <div class="sticky sticky--2">
-          <strong>Crown</strong>
-          <p>Hold first place on dailies. Accumulate crown time. Flex on everyone.</p>
-        </div>
-      </div>
+      </footer>
     </Layout>
   );
 });
@@ -91,14 +99,14 @@ app.get("/wiki/:title", async (c) => {
 
   return c.html(
     <Layout title={article.displayTitle} user={user}>
-      <section class="section-page">
-        <span class="tag">Fallback article view</span>
+      <div class="wrap page-content">
+        <span class="label">Fallback article view</span>
         <h1>{article.displayTitle}</h1>
-        <p class="section-sub">
-          In-game article clicks should load inline without leaving the challenge.
+        <p class="sub">
+          In-game article clicks load inline without leaving the challenge.
         </p>
         <ArticleView html={article.html} />
-      </section>
+      </div>
     </Layout>
   );
 });
