@@ -12,6 +12,7 @@ import { closeExpiredDailyCrowns } from "./lib/crown";
 import { fetchSanitizedArticle } from "./lib/wikipedia";
 import type { AppVars, Bindings } from "./types";
 import { GAME_JS } from "./static/assets";
+import HERO_IMG from "./static/hero.jpg";
 
 const app = new Hono<{ Bindings: Bindings; Variables: AppVars }>();
 
@@ -23,6 +24,13 @@ app.get("/static/game.js", (c) =>
   })
 );
 
+app.get("/static/hero.jpg", (c) =>
+  c.body(HERO_IMG, 200, {
+    "content-type": "image/jpeg",
+    "cache-control": "public, max-age=86400"
+  })
+);
+
 app.get("/", async (c) => {
   await closeExpiredDailyCrowns(c.env.DB);
   const challenge = await ensureDailyChallenge(c.env.DB);
@@ -30,26 +38,28 @@ app.get("/", async (c) => {
 
   return c.html(
     <Layout title="click!" user={user}>
-      <div class="hero">
-        <span class="tag">wikipedia racing</span>
-        <h1>Get from A to B.<br />Click <em>fast</em>.<br />Click <em>smart</em>.</h1>
-        <p class="hero-sub">
-          A new Wikipedia route drops every day at noon UTC.
-          Or spin up a random one and send it to your friends.
-        </p>
-        <div class="hero-actions">
-          <a href="/play/daily" class="btn-primary">
-            Play today&apos;s challenge
-          </a>
-          {user ? (
-            <a class="btn-outline" href="/play/free">
-              Start freeplay
+      <div class="hero-wrap">
+        <div class="hero shell">
+          <span class="tag">wikipedia racing</span>
+          <h1>Get from A to B.<br />Click <em>fast</em>.<br />Click <em>smart</em>.</h1>
+          <p class="hero-sub">
+            A new Wikipedia route drops every day at noon UTC.
+            Or spin up a random one and send it to your friends.
+          </p>
+          <div class="hero-actions">
+            <a href="/play/daily" class="btn-primary">
+              Play today&apos;s challenge
             </a>
-          ) : (
-            <a class="btn-outline" href="/auth/register">
-              Create account
-            </a>
-          )}
+            {user ? (
+              <a class="btn-outline" href="/play/free">
+                Start freeplay
+              </a>
+            ) : (
+              <a class="btn-outline" href="/auth/register">
+                Create account
+              </a>
+            )}
+          </div>
         </div>
       </div>
 

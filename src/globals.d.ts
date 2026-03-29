@@ -7,3 +7,8 @@ declare module "*.js" {
   const content: string;
   export default content;
 }
+
+declare module "*.jpg" {
+  const content: ArrayBuffer;
+  export default content;
+}
