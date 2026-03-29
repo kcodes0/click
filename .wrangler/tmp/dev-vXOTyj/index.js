@@ -4491,7 +4491,7 @@ body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-image: url(data:image/svg+xml,%3Csvg%20viewBox=%220%200%20512%20512%22%20xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter%20id=%22n%22%3E%3CfeTurbulence%20type=%22fractalNoise%22%20baseFrequency=%220.75%22%20numOctaves=%224%22%20stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect%20width=%22100%25%22%20height=%22100%25%22%20filter=%22url(%23n)%22%20opacity=%220.04%22/%3E%3C/svg%3E);
   pointer-events: none;
   z-index: 9999;
 }
@@ -4878,7 +4878,7 @@ input::placeholder { color: var(--muted); }
   min-height: 420px;
   display: flex;
   align-items: flex-end;
-  background: url('/static/hero.jpg') center center / cover no-repeat;
+  background: url(/static/hero.jpg) center center / cover no-repeat;
 }
 
 .hero-wrap::after {
