@@ -6,8 +6,3 @@ compatibility_date = "2026-03-28"
 binding = "DB"
 database_name = "wiki-race"
 database_id = "00000000-0000-0000-0000-000000000000"
-
-[[rules]]
-type = "Text"
-globs = ["src/static/*.css"]
-fallthrough = true
