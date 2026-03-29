@@ -30,14 +30,14 @@ app.get("/", async (c) => {
 
   return c.html(
     <Layout title="click!" user={user}>
-      <div class="home-intro">
-        <span class="tag">Wikipedia racing</span>
-        <h1>Get from A to B. Click <em>fast</em>. Click <em>smart</em>.</h1>
-        <p class="home-sub">
+      <div class="hero">
+        <span class="tag">wikipedia racing</span>
+        <h1>Get from A to B.<br />Click <em>fast</em>.<br />Click <em>smart</em>.</h1>
+        <p class="hero-sub">
           A new Wikipedia route drops every day at noon UTC.
           Or spin up a random one and send it to your friends.
         </p>
-        <div class="home-actions">
+        <div class="hero-actions">
           <a href="/play/daily" class="btn-primary">
             Play today&apos;s challenge
           </a>
@@ -52,22 +52,23 @@ app.get("/", async (c) => {
           )}
         </div>
       </div>
-      <div class="mission">
-        <span class="tag tag--teal">Today&apos;s route</span>
-        <div class="mission-route">
-          <span class="mission-endpoint">{challenge.start_article}</span>
-          <span class="mission-arrow">------&gt;</span>
-          <span class="mission-endpoint">{challenge.end_article}</span>
+
+      <div class="pinboard">
+        <div class="note note--tilt-r">
+          <span class="note-label">Today&apos;s route</span>
+          <div class="note-route">
+            <strong>{challenge.start_article}</strong>
+            <span class="note-arrow">&rarr;</span>
+            <strong>{challenge.end_article}</strong>
+          </div>
         </div>
-      </div>
-      <div class="home-info">
-        <div class="info-block">
-          <h3>Scoring</h3>
-          <p>Timer starts on your first click. Leaderboards use your best completed run.</p>
+        <div class="sticky sticky--1">
+          <strong>Scoring</strong>
+          <p>Timer starts on your first click. Leaderboards rank by best run.</p>
         </div>
-        <div class="info-block">
-          <h3>Crown</h3>
-          <p>The crown leaderboard tracks total time spent in first place on dailies.</p>
+        <div class="sticky sticky--2">
+          <strong>Crown</strong>
+          <p>Hold first place on dailies. Accumulate crown time. Flex on everyone.</p>
         </div>
       </div>
     </Layout>
