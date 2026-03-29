@@ -19,12 +19,24 @@ if (gameRoot) {
   let elapsedMs = 0;
   let finished = false;
 
+  const getEventAnchor = (target) => {
+    if (target instanceof Element) {
+      return target.closest("a[data-wiki-target]");
+    }
+
+    if (target && target.parentElement) {
+      return target.parentElement.closest("a[data-wiki-target]");
+    }
+
+    return null;
+  };
+
   const setTimer = (ms) => {
     const totalSeconds = Math.floor(ms / 1000);
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = String(totalSeconds % 60).padStart(2, "0");
     const centiseconds = String(Math.floor((ms % 1000) / 10)).padStart(2, "0");
-    timerEl.textContent = `${minutes}:${seconds}.${centiseconds}`;
+    timerEl.textContent = minutes + ":" + seconds + "." + centiseconds;
   };
 
   const tick = () => {
@@ -57,7 +69,7 @@ if (gameRoot) {
         const minutes = Math.floor(totalSeconds / 60);
         const seconds = String(totalSeconds % 60).padStart(2, "0");
         const centiseconds = String(Math.floor((entry.bestTimeMs % 1000) / 10)).padStart(2, "0");
-        return `<tr><td>${index + 1}</td><td>${entry.username}</td><td>${minutes}:${seconds}.${centiseconds}</td><td>${entry.bestClicks}</td></tr>`;
+        return "<tr><td>" + (index + 1) + "</td><td>" + entry.username + "</td><td>" + minutes + ":" + seconds + "." + centiseconds + "</td><td>" + entry.bestClicks + "</td></tr>";
       })
       .join("");
   };
@@ -83,11 +95,11 @@ if (gameRoot) {
 
     const payload = await response.json();
     refreshLeaderboard(payload.leaderboard || []);
-    renderResult(`Finished in ${timerEl.textContent}. Rank #${payload.rank || "?"}.`);
+    renderResult("Finished in " + timerEl.textContent + ". Rank #" + (payload.rank || "?") + ".");
   };
 
   const loadArticle = async (title) => {
-    const response = await fetch(`/api/wikipedia/${encodeURIComponent(title)}`);
+    const response = await fetch("/api/wikipedia/" + encodeURIComponent(title));
     if (!response.ok) {
       renderResult("Could not load the next article.", true);
       return;
@@ -105,7 +117,7 @@ if (gameRoot) {
   };
 
   document.addEventListener("click", async (event) => {
-    const anchor = event.target.closest("a[data-wiki-target]");
+    const anchor = getEventAnchor(event.target);
     if (!anchor || finished) return;
 
     event.preventDefault();

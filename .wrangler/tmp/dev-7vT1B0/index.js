@@ -1629,10 +1629,10 @@ var require_canvas = __commonJS({
   }
 });
 
-// .wrangler/tmp/bundle-SDFVPQ/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-bxMGF9/middleware-loader.entry.ts
 init_modules_watch_stub();
 
-// .wrangler/tmp/bundle-SDFVPQ/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-bxMGF9/middleware-insertion-facade.js
 init_modules_watch_stub();
 
 // src/index.tsx
@@ -4446,341 +4446,13 @@ init_modules_watch_stub();
 
 // src/static/assets.ts
 init_modules_watch_stub();
-var STYLE_CSS = String.raw`:root {
-  color-scheme: light;
-  --bg: #f4f1ea;
-  --surface: #fffdfa;
-  --surface-strong: #f0eadf;
-  --border: #d2c6b2;
-  --text: #1f1b16;
-  --muted: #61584b;
-  --accent: #1d5c45;
-  --accent-soft: #e1efe9;
-  --danger: #9c2f2f;
-}
 
-* {
-  box-sizing: border-box;
-}
+// src/static/style.css
+var style_default = {};
 
-body {
-  margin: 0;
-  background: linear-gradient(180deg, #f6f1e8 0%, #eee7da 100%);
-  color: var(--text);
-  font-family: Georgia, "Times New Roman", serif;
-  line-height: 1.5;
-}
-
-a {
-  color: var(--accent);
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-button,
-input {
-  font: inherit;
-}
-
-button {
-  border: 1px solid var(--border);
-  background: var(--text);
-  color: white;
-  padding: 0.75rem 1rem;
-  border-radius: 999px;
-  cursor: pointer;
-}
-
-input {
-  width: 100%;
-  padding: 0.8rem 0.9rem;
-  border-radius: 0.85rem;
-  border: 1px solid var(--border);
-  background: white;
-}
-
-.ghost-button {
-  background: transparent;
-  color: var(--text);
-}
-
-.shell {
-  width: min(1120px, calc(100vw - 2rem));
-  margin: 0 auto;
-}
-
-.site-header {
-  border-bottom: 1px solid rgba(31, 27, 22, 0.1);
-  backdrop-filter: blur(8px);
-}
-
-.nav-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem 0;
-}
-
-.brand {
-  font-size: 1.3rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: var(--text);
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.nav-links form {
-  margin: 0;
-}
-
-.page {
-  padding: 2rem 0 4rem;
-}
-
-.hero,
-.auth-card,
-.list-card,
-.sidebar-card,
-.article-panel,
-.stack-block,
-.game-shell {
-  background: rgba(255, 253, 250, 0.9);
-  border: 1px solid rgba(210, 198, 178, 0.8);
-  border-radius: 1.4rem;
-  box-shadow: 0 18px 40px rgba(56, 43, 20, 0.06);
-}
-
-.hero,
-.stack-block,
-.auth-card {
-  padding: 2rem;
-}
-
-.hero p,
-.muted {
-  color: var(--muted);
-}
-
-.hero-actions {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  margin-top: 1.25rem;
-}
-
-.secondary-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-}
-
-.challenge-card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.challenge-mini-card {
-  padding: 1rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 1rem;
-}
-
-.eyebrow {
-  margin: 0 0 0.4rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-size: 0.75rem;
-  color: var(--muted);
-}
-
-.stack-form {
-  display: grid;
-  gap: 1rem;
-}
-
-.stack-form label {
-  display: grid;
-  gap: 0.4rem;
-}
-
-.error-banner,
-.success-banner {
-  padding: 0.9rem 1rem;
-  border-radius: 1rem;
-}
-
-.error-banner {
-  background: #f8e3e3;
-  color: var(--danger);
-}
-
-.success-banner {
-  background: var(--accent-soft);
-  color: var(--accent);
-}
-
-.hidden {
-  display: none;
-}
-
-.game-shell {
-  padding: 1.5rem;
-}
-
-.game-topbar {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  align-items: flex-start;
-  margin-bottom: 1.5rem;
-}
-
-.status-panel {
-  display: grid;
-  gap: 0.75rem;
-  min-width: 220px;
-}
-
-.timer,
-.pill {
-  background: var(--surface-strong);
-  border: 1px solid var(--border);
-  border-radius: 1rem;
-  padding: 0.8rem 1rem;
-}
-
-.timer {
-  font-size: 1.6rem;
-  font-weight: 700;
-  text-align: center;
-}
-
-.pill span {
-  display: block;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--muted);
-}
-
-.pill strong {
-  font-size: 1rem;
-}
-
-.game-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 1rem;
-}
-
-.article-panel,
-.sidebar-card,
-.list-card {
-  padding: 1.2rem;
-}
-
-.article-header {
-  border-bottom: 1px solid rgba(210, 198, 178, 0.9);
-  margin-bottom: 1rem;
-}
-
-.article-body {
-  overflow-wrap: anywhere;
-}
-
-.article-body img {
-  max-width: 100%;
-  height: auto;
-}
-
-.article-body table {
-  width: 100%;
-  display: block;
-  overflow-x: auto;
-  border-collapse: collapse;
-}
-
-.article-body th,
-.article-body td {
-  border: 1px solid var(--border);
-  padding: 0.4rem;
-}
-
-.board-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.board-table th,
-.board-table td {
-  text-align: left;
-  padding: 0.65rem 0.5rem;
-  border-bottom: 1px solid rgba(210, 198, 178, 0.7);
-}
-
-.share-actions {
-  margin-top: 1rem;
-}
-
-.archive-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: 0.75rem;
-}
-
-.archive-list li {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-@media (max-width: 900px) {
-  .game-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .game-topbar {
-    flex-direction: column;
-  }
-
-  .status-panel {
-    width: 100%;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 640px) {
-  .nav-row,
-  .nav-links {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .status-panel {
-    grid-template-columns: 1fr;
-  }
-}
-`;
-var GAME_JS = String.raw`const gameRoot = document.querySelector(".game-shell");
-
+// src/static/game.js
+init_modules_watch_stub();
+var gameRoot = document.querySelector(".game-shell");
 if (gameRoot) {
   const articleContainer = document.getElementById("article-content");
   const articleTitle = document.getElementById("article-title");
@@ -4788,74 +4460,60 @@ if (gameRoot) {
   const clickCountEl = document.getElementById("click-count");
   const resultEl = document.getElementById("game-result");
   const copyButton = document.getElementById("copy-link-button");
-
   const challengeId = gameRoot.dataset.challengeId;
   const startTitle = gameRoot.dataset.startTitle;
   const targetTitle = gameRoot.dataset.targetTitle;
-
   let currentTitle = startTitle;
   let clicks = 0;
   let path = [startTitle];
   let startedAt = 0;
   let elapsedMs = 0;
   let finished = false;
-
-  const getEventAnchor = (target) => {
+  const getEventAnchor = /* @__PURE__ */ __name((target) => {
     if (target instanceof Element) {
       return target.closest("a[data-wiki-target]");
     }
-
     if (target && target.parentElement) {
       return target.parentElement.closest("a[data-wiki-target]");
     }
-
     return null;
-  };
-
-  const setTimer = (ms) => {
-    const totalSeconds = Math.floor(ms / 1000);
+  }, "getEventAnchor");
+  const setTimer = /* @__PURE__ */ __name((ms) => {
+    const totalSeconds = Math.floor(ms / 1e3);
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = String(totalSeconds % 60).padStart(2, "0");
-    const centiseconds = String(Math.floor((ms % 1000) / 10)).padStart(2, "0");
+    const centiseconds = String(Math.floor(ms % 1e3 / 10)).padStart(2, "0");
     timerEl.textContent = minutes + ":" + seconds + "." + centiseconds;
-  };
-
-  const tick = () => {
+  }, "setTimer");
+  const tick = /* @__PURE__ */ __name(() => {
     if (startedAt && !finished) {
       elapsedMs = Date.now() - startedAt;
       setTimer(elapsedMs);
     }
     requestAnimationFrame(tick);
-  };
-
-  const renderResult = (message, isError = false) => {
+  }, "tick");
+  const renderResult = /* @__PURE__ */ __name((message, isError = false) => {
     resultEl.classList.remove("hidden");
     resultEl.classList.toggle("error-banner", isError);
     resultEl.classList.toggle("success-banner", !isError);
     resultEl.textContent = message;
-  };
-
-  const refreshLeaderboard = (entries) => {
+  }, "renderResult");
+  const refreshLeaderboard = /* @__PURE__ */ __name((entries2) => {
     const table = document.querySelector(".board-table tbody");
     if (!table) return;
-
-    if (!entries.length) {
+    if (!entries2.length) {
       table.innerHTML = '<tr><td colspan="4">No runs yet.</td></tr>';
       return;
     }
-
-    table.innerHTML = entries
-      .map((entry, index) => {
-        const totalSeconds = Math.floor(entry.bestTimeMs / 1000);
-        const minutes = Math.floor(totalSeconds / 60);
-        const seconds = String(totalSeconds % 60).padStart(2, "0");
-        const centiseconds = String(Math.floor((entry.bestTimeMs % 1000) / 10)).padStart(2, "0");
-        return "<tr><td>" + (index + 1) + "</td><td>" + entry.username + "</td><td>" + minutes + ":" + seconds + "." + centiseconds + "</td><td>" + entry.bestClicks + "</td></tr>";
-      })
-      .join("");
-  };
-
-  const submitRun = async () => {
+    table.innerHTML = entries2.map((entry, index) => {
+      const totalSeconds = Math.floor(entry.bestTimeMs / 1e3);
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = String(totalSeconds % 60).padStart(2, "0");
+      const centiseconds = String(Math.floor(entry.bestTimeMs % 1e3 / 10)).padStart(2, "0");
+      return "<tr><td>" + (index + 1) + "</td><td>" + entry.username + "</td><td>" + minutes + ":" + seconds + "." + centiseconds + "</td><td>" + entry.bestClicks + "</td></tr>";
+    }).join("");
+  }, "refreshLeaderboard");
+  const submitRun = /* @__PURE__ */ __name(async () => {
     const response = await fetch("/api/runs", {
       method: "POST",
       headers: {
@@ -4868,54 +4526,43 @@ if (gameRoot) {
         path
       })
     });
-
     if (!response.ok) {
       renderResult("Finished, but run submission failed.", true);
       return;
     }
-
     const payload = await response.json();
     refreshLeaderboard(payload.leaderboard || []);
     renderResult("Finished in " + timerEl.textContent + ". Rank #" + (payload.rank || "?") + ".");
-  };
-
-  const loadArticle = async (title) => {
-    const response = await fetch("/api/wikipedia/" + encodeURIComponent(title));
+  }, "submitRun");
+  const loadArticle = /* @__PURE__ */ __name(async (title2) => {
+    const response = await fetch("/api/wikipedia/" + encodeURIComponent(title2));
     if (!response.ok) {
       renderResult("Could not load the next article.", true);
       return;
     }
-
     const article = await response.json();
     currentTitle = article.title;
     articleTitle.textContent = article.displayTitle || article.title;
     articleContainer.innerHTML = article.html;
-
     if (currentTitle === targetTitle) {
       finished = true;
       await submitRun();
     }
-  };
-
+  }, "loadArticle");
   document.addEventListener("click", async (event) => {
     const anchor = getEventAnchor(event.target);
     if (!anchor || finished) return;
-
     event.preventDefault();
-
     const nextTitle = anchor.dataset.wikiTarget;
     if (!nextTitle) return;
-
     if (!startedAt) {
       startedAt = Date.now();
     }
-
     clicks += 1;
     clickCountEl.textContent = String(clicks);
     path.push(nextTitle);
     await loadArticle(nextTitle);
   });
-
   copyButton?.addEventListener("click", async () => {
     await navigator.clipboard.writeText(window.location.href);
     copyButton.textContent = "Copied";
@@ -4923,10 +4570,8 @@ if (gameRoot) {
       copyButton.textContent = "Copy challenge link";
     }, 1500);
   });
-
   tick();
 }
-`;
 
 // src/components/Layout.tsx
 function Layout({ title: title2, user, children }) {
@@ -4935,7 +4580,7 @@ function Layout({ title: title2, user, children }) {
       /* @__PURE__ */ jsxDEV("meta", { charSet: "utf-8" }),
       /* @__PURE__ */ jsxDEV("meta", { name: "viewport", content: "width=device-width, initial-scale=1" }),
       /* @__PURE__ */ jsxDEV("title", { children: title2 }),
-      /* @__PURE__ */ jsxDEV("style", { children: STYLE_CSS })
+      /* @__PURE__ */ jsxDEV("style", { children: style_default })
     ] }),
     /* @__PURE__ */ jsxDEV("body", { children: [
       /* @__PURE__ */ jsxDEV("header", { class: "site-header", children: /* @__PURE__ */ jsxDEV("div", { class: "shell nav-row", children: [
@@ -7777,7 +7422,7 @@ function AuthPage({ title: title2, action, submitLabel, error }) {
         /* @__PURE__ */ jsxDEV("span", { children: "Password" }),
         /* @__PURE__ */ jsxDEV("input", { type: "password", name: "password", minLength: 8, required: true })
       ] }),
-      /* @__PURE__ */ jsxDEV("button", { type: "submit", children: submitLabel })
+      /* @__PURE__ */ jsxDEV("button", { type: "submit", class: "btn-primary", children: submitLabel })
     ] })
   ] }) });
 }
@@ -9843,7 +9488,7 @@ var Document = class extends NodeWithChildren {
     return 9;
   }
 };
-var Element = class extends NodeWithChildren {
+var Element2 = class extends NodeWithChildren {
   static {
     __name(this, "Element");
   }
@@ -9920,7 +9565,7 @@ function cloneNode(node, recursive = false) {
     result = new Comment2(node.data);
   } else if (isTag2(node)) {
     const children = recursive ? cloneChildren(node.children) : [];
-    const clone = new Element(node.name, { ...node.attribs }, children);
+    const clone = new Element2(node.name, { ...node.attribs }, children);
     children.forEach((child) => child.parent = clone);
     if (node.namespace != null) {
       clone.namespace = node.namespace;
@@ -10042,7 +9687,7 @@ var DomHandler = class {
   }
   onopentag(name, attribs) {
     const type = this.options.xmlMode ? ElementType.Tag : void 0;
-    const element = new Element(name, attribs, void 0, type);
+    const element = new Element2(name, attribs, void 0, type);
     this.addNode(element);
     this.tagStack.push(element);
   }
@@ -11823,9 +11468,9 @@ var attribute = /* @__PURE__ */ __name((element, end, attribute2, value, active)
   if (active)
     attributeChangedCallback(element, attribute2.name, null, value);
 }, "attribute");
-var parseFromString = /* @__PURE__ */ __name((document, isHTML, markupLanguage) => {
-  const { active, registry } = document[CUSTOM_ELEMENTS];
-  let node = document;
+var parseFromString = /* @__PURE__ */ __name((document2, isHTML, markupLanguage) => {
+  const { active, registry } = document2[CUSTOM_ELEMENTS];
+  let node = document2;
   let ownerSVGElement = null;
   let parsingCData = false;
   notParsing = false;
@@ -11833,18 +11478,18 @@ var parseFromString = /* @__PURE__ */ __name((document, isHTML, markupLanguage) 
     // <!DOCTYPE ...>
     onprocessinginstruction(name, data) {
       if (name.toLowerCase() === "!doctype")
-        document.doctype = data.slice(name.length).trim();
+        document2.doctype = data.slice(name.length).trim();
     },
     // <tagName>
     onopentag(name, attributes2) {
       let create3 = true;
       if (isHTML) {
         if (ownerSVGElement) {
-          node = append2(node, document.createElementNS(SVG_NAMESPACE, name), active);
+          node = append2(node, document2.createElementNS(SVG_NAMESPACE, name), active);
           node.ownerSVGElement = ownerSVGElement;
           create3 = false;
         } else if (name === "svg" || name === "SVG") {
-          ownerSVGElement = document.createElementNS(SVG_NAMESPACE, name);
+          ownerSVGElement = document2.createElementNS(SVG_NAMESPACE, name);
           node = append2(node, ownerSVGElement, active);
           create3 = false;
         } else if (active) {
@@ -11858,20 +11503,20 @@ var parseFromString = /* @__PURE__ */ __name((document, isHTML, markupLanguage) 
         }
       }
       if (create3)
-        node = append2(node, document.createElement(name), false);
+        node = append2(node, document2.createElement(name), false);
       let end = node[END];
       for (const name2 of keys(attributes2))
-        attribute(node, end, document.createAttribute(name2), attributes2[name2], active);
+        attribute(node, end, document2.createAttribute(name2), attributes2[name2], active);
     },
     // #text, #comment
     oncomment(data) {
-      append2(node, document.createComment(data), active);
+      append2(node, document2.createComment(data), active);
     },
     ontext(text) {
       if (parsingCData) {
-        append2(node, document.createCDATASection(text), active);
+        append2(node, document2.createCDATASection(text), active);
       } else {
-        append2(node, document.createTextNode(text), active);
+        append2(node, document2.createTextNode(text), active);
       }
     },
     // #cdata
@@ -11895,7 +11540,7 @@ var parseFromString = /* @__PURE__ */ __name((document, isHTML, markupLanguage) 
   content.write(markupLanguage);
   content.end();
   notParsing = true;
-  return document;
+  return document2;
 }, "parseFromString");
 
 // node_modules/linkedom/esm/html/document.js
@@ -14683,9 +14328,9 @@ var getInnerHtml = /* @__PURE__ */ __name((node) => node.childNodes.join(""), "g
 var setInnerHtml = /* @__PURE__ */ __name((node, html2) => {
   const { ownerDocument } = node;
   const { constructor } = ownerDocument;
-  const document = new constructor();
-  document[CUSTOM_ELEMENTS] = ownerDocument[CUSTOM_ELEMENTS];
-  const { childNodes } = parseFromString(document, ignoreCase(node), html2);
+  const document2 = new constructor();
+  document2[CUSTOM_ELEMENTS] = ownerDocument[CUSTOM_ELEMENTS];
+  const { childNodes } = parseFromString(document2, ignoreCase(node), html2);
   node.replaceChildren(...childNodes.map(setOwnerDocument, ownerDocument));
 }, "setInnerHtml");
 function setOwnerDocument(node) {
@@ -15095,7 +14740,7 @@ var create2 = /* @__PURE__ */ __name((ownerDocument, element, localName) => {
 var isVoid = /* @__PURE__ */ __name(({ localName, ownerDocument }) => {
   return ownerDocument[MIME].voidElements.test(localName);
 }, "isVoid");
-var Element2 = class extends ParentNode {
+var Element3 = class extends ParentNode {
   static {
     __name(this, "Element");
   }
@@ -15554,7 +15199,7 @@ var handler3 = {
     return true;
   }
 };
-var SVGElement = class extends Element2 {
+var SVGElement = class extends Element3 {
   static {
     __name(this, "SVGElement");
   }
@@ -15631,12 +15276,12 @@ function DocumentType2() {
 __name(DocumentType2, "DocumentType");
 setPrototypeOf(DocumentType2, DocumentType);
 DocumentType2.prototype = DocumentType.prototype;
-function Element3() {
+function Element4() {
   illegalConstructor();
 }
-__name(Element3, "Element");
-setPrototypeOf(Element3, Element2);
-Element3.prototype = Element2.prototype;
+__name(Element4, "Element");
+setPrototypeOf(Element4, Element3);
+Element4.prototype = Element3.prototype;
 function Node5() {
   illegalConstructor();
 }
@@ -15668,7 +15313,7 @@ var Facades = {
   Comment: Comment4,
   DocumentFragment: DocumentFragment2,
   DocumentType: DocumentType2,
-  Element: Element3,
+  Element: Element4,
   Node: Node5,
   ShadowRoot: ShadowRoot2,
   Text: Text4,
@@ -15696,7 +15341,7 @@ var level0 = {
       element.addEventListener(type, value, false);
   }
 };
-var HTMLElement = class extends Element2 {
+var HTMLElement = class extends Element3 {
   static {
     __name(this, "HTMLElement");
   }
@@ -17775,16 +17420,16 @@ var Range = class _Range {
   createContextualFragment(html2) {
     const { commonAncestorContainer: doc } = this;
     const isSVG = "ownerSVGElement" in doc;
-    const document = isSVG ? doc.ownerDocument : doc;
-    let content = htmlToFragment(document, html2);
+    const document2 = isSVG ? doc.ownerDocument : doc;
+    let content = htmlToFragment(document2, html2);
     if (isSVG) {
       const childNodes = [...content.childNodes];
-      content = document.createDocumentFragment();
+      content = document2.createDocumentFragment();
       Object.setPrototypeOf(content, SVGElement.prototype);
-      content.ownerSVGElement = document;
+      content.ownerSVGElement = document2;
       for (const child of childNodes) {
         Object.setPrototypeOf(child, SVGElement.prototype);
-        child.ownerSVGElement = document;
+        child.ownerSVGElement = document2;
         content.appendChild(child);
       }
     } else
@@ -17861,7 +17506,7 @@ var globalExports = assign(
     NodeList
   }
 );
-var window = /* @__PURE__ */ new WeakMap();
+var window2 = /* @__PURE__ */ new WeakMap();
 var Document2 = class extends NonElementParentNode {
   static {
     __name(this, "Document");
@@ -17881,8 +17526,8 @@ var Document2 = class extends NonElementParentNode {
    * @type {globalThis.Document['defaultView']}
    */
   get defaultView() {
-    if (!window.has(this))
-      window.set(this, new Proxy(globalThis, {
+    if (!window2.has(this))
+      window2.set(this, new Proxy(globalThis, {
         set: /* @__PURE__ */ __name((target, name, value) => {
           switch (name) {
             case "addEventListener":
@@ -17917,7 +17562,7 @@ var Document2 = class extends NonElementParentNode {
               };
             /* c8 ignore stop */
             case "window":
-              return window.get(this);
+              return window2.get(this);
             case "customElements":
               if (!this[CUSTOM_ELEMENTS].registry)
                 this[CUSTOM_ELEMENTS] = new CustomElementRegistry(this);
@@ -17938,7 +17583,7 @@ var Document2 = class extends NonElementParentNode {
           return this[GLOBALS] && this[GLOBALS][name] || globalExports[name] || globalThis2[name];
         }, "get")
       }));
-    return window.get(this);
+    return window2.get(this);
   }
   get doctype() {
     const docType = this[DOCTYPE];
@@ -17984,7 +17629,7 @@ var Document2 = class extends NonElementParentNode {
     return new DocumentType(this, name, publicId, systemId);
   }
   createElement(localName) {
-    return new Element2(this, localName);
+    return new Element3(this, localName);
   }
   createRange() {
     const range = new Range();
@@ -18019,17 +17664,17 @@ var Document2 = class extends NonElementParentNode {
       [CUSTOM_ELEMENTS]: customElements2,
       [DOCTYPE]: doctype
     } = this;
-    const document = new constructor();
-    document[CUSTOM_ELEMENTS] = customElements2;
+    const document2 = new constructor();
+    document2[CUSTOM_ELEMENTS] = customElements2;
     if (deep) {
-      const end = document[END];
+      const end = document2[END];
       const { childNodes } = this;
       for (let { length } = childNodes, i = 0; i < length; i++)
-        document.insertBefore(childNodes[i].cloneNode(true), end);
+        document2.insertBefore(childNodes[i].cloneNode(true), end);
       if (doctype)
-        document[DOCTYPE] = childNodes[0];
+        document2[DOCTYPE] = childNodes[0];
     }
-    return document;
+    return document2;
   }
   importNode(externalNode) {
     const deep = 1 < arguments.length && !!arguments[1];
@@ -18218,20 +17863,20 @@ var DOMParser = class _DOMParser {
    * @returns {MimeToDoc[MIME]}
    */
   parseFromString(markupLanguage, mimeType, globals = null) {
-    let isHTML = false, document;
+    let isHTML = false, document2;
     if (mimeType === "text/html") {
       isHTML = true;
-      document = new HTMLDocument();
+      document2 = new HTMLDocument();
     } else if (mimeType === "image/svg+xml")
-      document = new SVGDocument();
+      document2 = new SVGDocument();
     else
-      document = new XMLDocument();
-    document[DOM_PARSER] = _DOMParser;
+      document2 = new XMLDocument();
+    document2[DOM_PARSER] = _DOMParser;
     if (globals)
-      document[GLOBALS] = globals;
+      document2[GLOBALS] = globals;
     if (isHTML && markupLanguage === "...")
       markupLanguage = "<!doctype html><html><head></head><body></body></html>";
-    return markupLanguage ? parseFromString(document, isHTML, markupLanguage) : document;
+    return markupLanguage ? parseFromString(document2, isHTML, markupLanguage) : document2;
   }
 };
 
@@ -18369,12 +18014,12 @@ async function fetchSanitizedArticle(title2) {
     );
   }
   const html2 = await response.text();
-  const { document } = parseHTML(html2);
-  const contentRoot = document.querySelector("#mw-content-text .mw-parser-output") || document.querySelector(".mw-parser-output");
+  const { document: document2 } = parseHTML(html2);
+  const contentRoot = document2.querySelector("#mw-content-text .mw-parser-output") || document2.querySelector(".mw-parser-output");
   if (!contentRoot) {
     throw new Error("Wikipedia article page missing content root");
   }
-  const titleText = document.querySelector("#firstHeading")?.textContent?.trim() || getDisplayTitle(document, normalizedTitle);
+  const titleText = document2.querySelector("#firstHeading")?.textContent?.trim() || getDisplayTitle(document2, normalizedTitle);
   const { document: articleDocument } = parseHTML(contentRoot.outerHTML);
   return {
     title: titleText || normalizedTitle,
@@ -18632,7 +18277,7 @@ function GamePage({
             /* @__PURE__ */ jsxDEV("aside", { class: "sidebar", children: [
               /* @__PURE__ */ jsxDEV("h2", { children: "Best Runs" }),
               /* @__PURE__ */ jsxDEV(Leaderboard, { kind: "runs", entries: leaderboard2 }),
-              /* @__PURE__ */ jsxDEV("div", { class: "share-actions", children: /* @__PURE__ */ jsxDEV("button", { type: "button", id: "copy-link-button", class: "ghost-btn", children: "Copy challenge link" }) })
+              /* @__PURE__ */ jsxDEV("div", { class: "share-actions", children: /* @__PURE__ */ jsxDEV("button", { type: "button", id: "copy-link-button", class: "btn-ghost", children: "Copy challenge link" }) })
             ] })
           ] })
         ]
@@ -18762,7 +18407,7 @@ var app = new Hono2();
 app.use("*", authMiddleware);
 app.get(
   "/static/game.js",
-  (c) => c.body(GAME_JS, 200, {
+  (c) => c.body(GAME_JS2, 200, {
     "content-type": "application/javascript; charset=utf-8"
   })
 );
@@ -18777,8 +18422,8 @@ app.get("/", async (c) => {
         /* @__PURE__ */ jsxDEV("h1", { children: "Reach the target article in the fewest clicks and the fastest time." }),
         /* @__PURE__ */ jsxDEV("p", { class: "home-sub", children: "Shared daily routes reset at noon UTC. Freeplay spins up a new random pair you can share with anyone." }),
         /* @__PURE__ */ jsxDEV("div", { class: "home-actions", children: [
-          /* @__PURE__ */ jsxDEV("a", { href: "/play/daily", children: /* @__PURE__ */ jsxDEV("button", { type: "button", children: "Play today's challenge" }) }),
-          user ? /* @__PURE__ */ jsxDEV("a", { class: "link-btn", href: "/play/free", children: "Start freeplay" }) : /* @__PURE__ */ jsxDEV("a", { class: "link-btn", href: "/auth/register", children: "Create account" })
+          /* @__PURE__ */ jsxDEV("a", { href: "/play/daily", class: "btn-primary", children: "Play today's challenge" }),
+          user ? /* @__PURE__ */ jsxDEV("a", { class: "btn-outline", href: "/play/free", children: "Start freeplay" }) : /* @__PURE__ */ jsxDEV("a", { class: "btn-outline", href: "/auth/register", children: "Create account" })
         ] })
       ] }),
       /* @__PURE__ */ jsxDEV("div", { class: "mission", children: [
@@ -18864,7 +18509,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-SDFVPQ/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-bxMGF9/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -18897,7 +18542,7 @@ function __facade_invoke__(request, env, ctx, dispatch2, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-SDFVPQ/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-bxMGF9/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;

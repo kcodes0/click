@@ -38,15 +38,15 @@ app.get("/", async (c) => {
           you can share with anyone.
         </p>
         <div class="home-actions">
-          <a href="/play/daily">
-            <button type="button">Play today&apos;s challenge</button>
+          <a href="/play/daily" class="btn-primary">
+            Play today&apos;s challenge
           </a>
           {user ? (
-            <a class="link-btn" href="/play/free">
+            <a class="btn-outline" href="/play/free">
               Start freeplay
             </a>
           ) : (
-            <a class="link-btn" href="/auth/register">
+            <a class="btn-outline" href="/auth/register">
               Create account
             </a>
           )}

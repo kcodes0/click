@@ -82,7 +82,7 @@ function GamePage({
             <h2>Best Runs</h2>
             <Leaderboard kind="runs" entries={leaderboard} />
             <div class="share-actions">
-              <button type="button" id="copy-link-button" class="ghost-btn">
+              <button type="button" id="copy-link-button" class="btn-ghost">
                 Copy challenge link
               </button>
             </div>

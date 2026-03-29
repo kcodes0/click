@@ -39,7 +39,7 @@ function AuthPage({ title, action, submitLabel, error }: AuthPageProps) {
             <span>Password</span>
             <input type="password" name="password" minLength={8} required />
           </label>
-          <button type="submit">{submitLabel}</button>
+          <button type="submit" class="btn-primary">{submitLabel}</button>
         </form>
       </section>
     </Layout>

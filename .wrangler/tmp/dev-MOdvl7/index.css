@@ -1,9 +1,6 @@
-/* ========================================================
-   WIKIRACE
-   ======================================================== */
+@import "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&family=Playfair+Display:wght@700;900&display=swap";
 
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&family=Playfair+Display:wght@700;900&display=swap');
-
+/* src/static/style.css */
 :root {
   --bg: #08090c;
   --surface: #111318;
@@ -15,26 +12,31 @@
   --muted: #5e5a6e;
   --border: #1e2028;
   --border-bright: #2c2e3a;
-  --font-body: 'Space Grotesk', system-ui, sans-serif;
-  --font-display: 'Playfair Display', Georgia, serif;
-  --font-mono: 'Space Mono', ui-monospace, monospace;
+  --font-body:
+    "Space Grotesk",
+    system-ui,
+    sans-serif;
+  --font-display:
+    "Playfair Display",
+    Georgia,
+    serif;
+  --font-mono:
+    "Space Mono",
+    ui-monospace,
+    monospace;
 }
-
 ::selection {
   background: var(--accent);
   color: var(--bg);
 }
-
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
-
 html {
   scroll-behavior: smooth;
 }
-
 body {
   background: var(--bg);
   color: var(--text);
@@ -45,40 +47,34 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
 }
-
-/* subtle grain overlay */
 body::before {
-  content: '';
+  content: "";
   position: fixed;
   inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
   pointer-events: none;
   z-index: 9999;
 }
-
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   font-family: var(--font-display);
   color: var(--text-bright);
   line-height: 1.1;
   letter-spacing: -0.03em;
 }
-
 a {
   color: var(--accent);
   text-decoration: none;
   transition: color 0.12s;
 }
-
 a:hover {
   color: #ffaa44;
 }
-
-button, input {
+button,
+input {
   font-family: var(--font-body);
 }
-
-/* ---- BUTTONS ---- */
-
 .btn-primary {
   display: inline-block;
   border: none;
@@ -93,29 +89,29 @@ button, input {
   overflow: hidden;
   transition: transform 0.12s, box-shadow 0.12s;
 }
-
 .btn-primary::after {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
+  background:
+    linear-gradient(
+      120deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.15) 50%,
+      transparent 70%);
   transform: translateX(-100%);
   transition: transform 0.4s;
 }
-
 .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 30px rgba(255, 138, 0, 0.25);
 }
-
 .btn-primary:hover::after {
   transform: translateX(100%);
 }
-
 .btn-primary:active {
   transform: translateY(0);
 }
-
 .btn-outline {
   display: inline-flex;
   align-items: center;
@@ -127,16 +123,17 @@ button, input {
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
-  transition: border-color 0.15s, color 0.15s, transform 0.12s;
+  transition:
+    border-color 0.15s,
+    color 0.15s,
+    transform 0.12s;
 }
-
 .btn-outline:hover {
   border-color: var(--accent);
   color: var(--accent);
   text-decoration: none;
   transform: translateY(-1px);
 }
-
 .btn-ghost {
   background: transparent;
   border: 1px solid var(--border-bright);
@@ -146,14 +143,10 @@ button, input {
   cursor: pointer;
   transition: color 0.15s, border-color 0.15s;
 }
-
 .btn-ghost:hover {
   color: var(--text-bright);
   border-color: var(--muted);
 }
-
-/* ---- INPUTS ---- */
-
 input {
   width: 100%;
   padding: 0.8rem 1rem;
@@ -163,25 +156,17 @@ input {
   font-size: 1rem;
   transition: border-color 0.15s;
 }
-
 input:focus {
   outline: none;
   border-color: var(--accent);
 }
-
 input::placeholder {
   color: var(--muted);
 }
-
-/* ---- LAYOUT ---- */
-
 .shell {
   width: min(1080px, calc(100% - 3rem));
   margin: 0 auto;
 }
-
-/* ---- HEADER ---- */
-
 .site-header {
   position: sticky;
   top: 0;
@@ -190,21 +175,27 @@ input::placeholder {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 }
-
 .site-header::after {
-  content: '';
+  content: "";
   display: block;
   height: 2px;
-  background: linear-gradient(90deg, var(--accent), var(--teal), var(--accent));
+  background:
+    linear-gradient(
+      90deg,
+      var(--accent),
+      var(--teal),
+      var(--accent));
   background-size: 200% 100%;
   animation: shimmer 4s ease infinite;
 }
-
 @keyframes shimmer {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
-
 .nav-row {
   display: flex;
   justify-content: space-between;
@@ -212,7 +203,6 @@ input::placeholder {
   gap: 1rem;
   padding: 1rem 0;
 }
-
 .brand {
   font-family: var(--font-mono);
   font-size: 1.05rem;
@@ -224,16 +214,13 @@ input::placeholder {
   align-items: center;
   gap: 0;
 }
-
 .brand:hover {
   text-decoration: none;
   color: var(--text-bright);
 }
-
 .brand-w {
   color: var(--accent);
 }
-
 .nav-links {
   display: flex;
   align-items: center;
@@ -241,15 +228,13 @@ input::placeholder {
   font-size: 0.88rem;
   font-weight: 500;
 }
-
 .nav-links a {
   color: var(--muted);
   transition: color 0.12s;
   position: relative;
 }
-
 .nav-links a::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -4px;
   left: 0;
@@ -258,20 +243,16 @@ input::placeholder {
   background: var(--accent);
   transition: width 0.2s;
 }
-
 .nav-links a:hover {
   color: var(--text-bright);
   text-decoration: none;
 }
-
 .nav-links a:hover::after {
   width: 100%;
 }
-
 .nav-links form {
   margin: 0;
 }
-
 .nav-btn {
   background: transparent;
   border: none;
@@ -283,25 +264,23 @@ input::placeholder {
   cursor: pointer;
   transition: color 0.12s;
 }
-
 .nav-btn:hover {
   color: var(--text-bright);
 }
-
-/* ---- MAIN ---- */
-
 .page {
   padding: 4rem 0 6rem;
   animation: fadeUp 0.4s ease-out;
 }
-
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: none; }
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
-
-/* ---- FOOTER ---- */
-
 .site-footer {
   padding: 2.5rem 0 3rem;
   border-top: 1px solid var(--border);
@@ -310,9 +289,6 @@ input::placeholder {
   font-size: 0.78rem;
   letter-spacing: 0.01em;
 }
-
-/* ---- TAGS ---- */
-
 .tag {
   display: inline-block;
   font-family: var(--font-mono);
@@ -327,40 +303,35 @@ input::placeholder {
   transform: rotate(-1.5deg);
   margin-bottom: 1rem;
 }
-
 .tag--teal {
   color: var(--teal);
   background: rgba(0, 229, 160, 0.08);
   border-color: rgba(0, 229, 160, 0.2);
 }
-
-/* ========================================================
-   HOMEPAGE
-   ======================================================== */
-
 .home-intro {
   max-width: 700px;
   padding-bottom: 4rem;
 }
-
 .home-intro h1 {
   font-size: clamp(2.2rem, 5.5vw, 3.8rem);
   font-weight: 900;
   margin-bottom: 1.2rem;
   line-height: 1.05;
-  background: linear-gradient(135deg, var(--text-bright) 0%, #b8b0a2 100%);
+  background:
+    linear-gradient(
+      135deg,
+      var(--text-bright) 0%,
+      #b8b0a2 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-
 .home-sub {
   color: var(--muted);
   font-size: 1.05rem;
   max-width: 500px;
   line-height: 1.7;
 }
-
 .home-actions {
   display: flex;
   gap: 1rem;
@@ -368,34 +339,40 @@ input::placeholder {
   margin-top: 2rem;
   align-items: center;
 }
-
-/* ---- MISSION / TODAY'S ROUTE ---- */
-
 .mission {
   padding: 3rem 0;
   position: relative;
 }
-
 .mission::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -1.5rem;
   right: -1.5rem;
   height: 1px;
-  background: repeating-linear-gradient(90deg, var(--border-bright) 0, var(--border-bright) 8px, transparent 8px, transparent 16px);
+  background:
+    repeating-linear-gradient(
+      90deg,
+      var(--border-bright) 0,
+      var(--border-bright) 8px,
+      transparent 8px,
+      transparent 16px);
 }
-
 .mission::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: -1.5rem;
   right: -1.5rem;
   height: 1px;
-  background: repeating-linear-gradient(90deg, var(--border-bright) 0, var(--border-bright) 8px, transparent 8px, transparent 16px);
+  background:
+    repeating-linear-gradient(
+      90deg,
+      var(--border-bright) 0,
+      var(--border-bright) 8px,
+      transparent 8px,
+      transparent 16px);
 }
-
 .mission-route {
   display: flex;
   align-items: center;
@@ -403,14 +380,12 @@ input::placeholder {
   flex-wrap: wrap;
   margin-top: 0.8rem;
 }
-
 .mission-endpoint {
   font-family: var(--font-display);
   font-size: clamp(1.4rem, 3vw, 2rem);
   font-weight: 700;
   color: var(--text-bright);
 }
-
 .mission-arrow {
   font-family: var(--font-mono);
   color: var(--accent);
@@ -419,24 +394,26 @@ input::placeholder {
   animation: nudge 2.5s ease-in-out infinite;
   letter-spacing: -0.15em;
 }
-
 @keyframes nudge {
-  0%, 100% { transform: translateX(0); opacity: 1; }
-  50% { transform: translateX(8px); opacity: 0.6; }
+  0%, 100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(8px);
+    opacity: 0.6;
+  }
 }
-
 .home-info {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 3rem;
   padding-top: 3rem;
 }
-
 .info-block {
   padding-left: 1.2rem;
   border-left: 2px solid var(--border-bright);
 }
-
 .info-block h3 {
   font-family: var(--font-mono);
   font-size: 0.75rem;
@@ -446,21 +423,13 @@ input::placeholder {
   color: var(--teal);
   margin-bottom: 0.4rem;
 }
-
 .info-block p {
   color: var(--muted);
   font-size: 0.92rem;
   line-height: 1.6;
 }
-
-/* ========================================================
-   GAME PAGE
-   ======================================================== */
-
 .game-shell {
-  /* no card styles */
 }
-
 .game-topbar {
   display: flex;
   justify-content: space-between;
@@ -470,20 +439,15 @@ input::placeholder {
   margin-bottom: 2rem;
   border-bottom: 1px solid var(--border);
 }
-
 .game-topbar h1 {
   font-size: 1.6rem;
   margin-top: 0.4rem;
 }
-
-/* ---- STATUS PANEL ---- */
-
 .status-panel {
   display: flex;
   gap: 0.5rem;
   flex-shrink: 0;
 }
-
 .stat-box {
   text-align: center;
   min-width: 110px;
@@ -492,7 +456,6 @@ input::placeholder {
   border: 1px solid var(--border-bright);
   position: relative;
 }
-
 .stat-box .stat-label {
   display: block;
   font-family: var(--font-mono);
@@ -503,7 +466,6 @@ input::placeholder {
   color: var(--muted);
   margin-bottom: 0.15rem;
 }
-
 .stat-box .stat-value {
   display: block;
   font-family: var(--font-mono);
@@ -513,41 +475,32 @@ input::placeholder {
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
-
 .timer-box {
   border-color: var(--accent);
   box-shadow: 0 0 20px rgba(255, 138, 0, 0.08);
 }
-
 .timer-box .stat-value {
   color: var(--accent);
   font-size: 1.4rem;
 }
-
-/* ---- GAME LAYOUT ---- */
-
 .game-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 280px;
   gap: 2.5rem;
 }
-
 .article-zone {
   border-left: 3px solid var(--accent);
   padding-left: 1.5rem;
 }
-
 .article-zone h2 {
   font-size: 1.4rem;
   padding-bottom: 0.7rem;
   border-bottom: 1px solid var(--border);
   margin-bottom: 1.2rem;
 }
-
 .sidebar {
   padding-top: 0.3rem;
 }
-
 .sidebar h2 {
   font-family: var(--font-mono);
   font-size: 0.7rem;
@@ -559,16 +512,12 @@ input::placeholder {
   padding-bottom: 0.6rem;
   border-bottom: 1px solid var(--border);
 }
-
-/* ---- ARTICLE BODY ---- */
-
 .article-body {
   overflow-wrap: anywhere;
   font-size: 0.94rem;
   line-height: 1.75;
   color: var(--text);
 }
-
 .article-body img {
   max-width: 100%;
   height: auto;
@@ -576,7 +525,6 @@ input::placeholder {
   border: 1px solid var(--border-bright);
   margin: 0.5rem 0;
 }
-
 .article-body a[data-wiki-target] {
   color: var(--accent);
   text-decoration: underline;
@@ -585,17 +533,14 @@ input::placeholder {
   text-decoration-thickness: 1.5px;
   transition: text-decoration-color 0.12s, color 0.12s;
 }
-
 .article-body a[data-wiki-target]:hover {
   text-decoration-color: var(--accent);
   color: #ffaa44;
 }
-
 .article-body a:not([data-wiki-target]) {
   color: var(--muted);
   pointer-events: none;
 }
-
 .article-body table {
   width: 100%;
   display: block;
@@ -604,44 +549,33 @@ input::placeholder {
   font-size: 0.85rem;
   margin: 1rem 0;
 }
-
 .article-body th,
 .article-body td {
   border: 1px solid var(--border-bright);
   padding: 0.35rem 0.5rem;
 }
-
 .article-body th {
   background: var(--surface);
   color: var(--text-bright);
   font-weight: 600;
 }
-
-/* ========================================================
-   AUTH
-   ======================================================== */
-
 .auth-zone {
   max-width: 380px;
   margin: 0 auto;
 }
-
 .auth-zone h1 {
   font-size: 2.2rem;
   margin-bottom: 0.3rem;
 }
-
 .auth-hint {
   color: var(--muted);
   font-size: 0.88rem;
   margin-bottom: 2rem;
 }
-
 .stack-form {
   display: grid;
   gap: 1.2rem;
 }
-
 .stack-form label {
   display: grid;
   gap: 0.35rem;
@@ -651,37 +585,25 @@ input::placeholder {
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
-
 .stack-form button {
   margin-top: 0.5rem;
 }
-
-/* ========================================================
-   SECTION PAGES (leaderboards, archive, wiki fallback)
-   ======================================================== */
-
 .section-page {
   max-width: 700px;
 }
-
 .section-page h1 {
   font-size: 2rem;
   margin-bottom: 0.4rem;
 }
-
 .section-sub {
   color: var(--muted);
   margin-bottom: 2rem;
   font-size: 0.95rem;
 }
-
-/* ---- BOARD TABLE ---- */
-
 .board-table {
   width: 100%;
   border-collapse: collapse;
 }
-
 .board-table th {
   text-align: left;
   font-family: var(--font-mono);
@@ -693,18 +615,15 @@ input::placeholder {
   padding: 0.5rem 0.5rem;
   border-bottom: 2px solid var(--border-bright);
 }
-
 .board-table td {
   padding: 0.55rem 0.5rem;
   border-bottom: 1px solid var(--border);
   font-size: 0.9rem;
   transition: background 0.1s;
 }
-
 .board-table tbody tr:hover td {
   background: rgba(255, 138, 0, 0.04);
 }
-
 .board-table td:first-child {
   font-family: var(--font-mono);
   font-weight: 800;
@@ -712,29 +631,22 @@ input::placeholder {
   width: 2.5rem;
   color: var(--muted);
 }
-
 .board-table tbody tr:nth-child(1) td:first-child {
   color: #ffd700;
   text-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
 }
-
 .board-table tbody tr:nth-child(2) td:first-child {
   color: #c0c0c0;
 }
-
 .board-table tbody tr:nth-child(3) td:first-child {
   color: #cd7f32;
 }
-
-/* ---- ARCHIVE ---- */
-
 .archive-list {
   list-style: none;
   padding: 0;
   display: grid;
   gap: 0;
 }
-
 .archive-list li {
   display: flex;
   justify-content: space-between;
@@ -745,18 +657,13 @@ input::placeholder {
   font-size: 0.92rem;
   transition: padding-left 0.15s;
 }
-
 .archive-list li:hover {
   padding-left: 0.5rem;
 }
-
 .archive-list li span {
   color: var(--muted);
   font-size: 0.85rem;
 }
-
-/* ---- BANNERS ---- */
-
 .error-banner,
 .success-banner {
   padding: 0.85rem 1rem;
@@ -764,90 +671,67 @@ input::placeholder {
   border-left: 3px solid;
   margin-bottom: 1.5rem;
 }
-
 .error-banner {
   background: rgba(255, 87, 87, 0.06);
   border-color: var(--danger);
   color: var(--danger);
 }
-
 .success-banner {
   background: rgba(0, 229, 160, 0.06);
   border-color: var(--teal);
   color: var(--teal);
 }
-
 .result-banner {
   font-weight: 600;
 }
-
-/* ---- SHARE ACTIONS ---- */
-
 .share-actions {
   margin-top: 1.2rem;
 }
-
-/* ---- UTILITIES ---- */
-
 .hidden {
   display: none;
 }
-
 .muted {
   color: var(--muted);
 }
-
-/* ========================================================
-   RESPONSIVE
-   ======================================================== */
-
 @media (max-width: 900px) {
   .game-layout {
     grid-template-columns: 1fr;
   }
-
   .game-topbar {
     flex-direction: column;
   }
-
   .status-panel {
     width: 100%;
   }
-
   .sidebar {
     border-top: 1px solid var(--border);
     padding-top: 1.5rem;
   }
-
   .home-info {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
 }
-
 @media (max-width: 640px) {
   .nav-row {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.6rem;
   }
-
   .nav-links {
     gap: 1rem;
     flex-wrap: wrap;
   }
-
   .status-panel {
     flex-direction: column;
   }
-
   .mission-route {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.3rem;
   }
-
   .home-intro h1 {
     font-size: 1.8rem;
   }
 }
+/*# sourceMappingURL=index.css.map */
