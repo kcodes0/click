@@ -9,5 +9,5 @@ database_id = "00000000-0000-0000-0000-000000000000"
 
 [[rules]]
 type = "Text"
-globs = ["src/static/*.css", "src/static/*.js"]
+globs = ["src/static/*.css"]
 fallthrough = true

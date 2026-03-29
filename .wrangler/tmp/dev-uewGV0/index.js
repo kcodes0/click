@@ -1629,10 +1629,10 @@ var require_canvas = __commonJS({
   }
 });
 
-// .wrangler/tmp/bundle-gLWnG5/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-rGRJ3B/middleware-loader.entry.ts
 init_modules_watch_stub();
 
-// .wrangler/tmp/bundle-gLWnG5/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-rGRJ3B/middleware-insertion-facade.js
 init_modules_watch_stub();
 
 // src/index.tsx
@@ -4450,9 +4450,9 @@ init_modules_watch_stub();
 // src/static/style.css
 var style_default = {};
 
-// src/static/game.js
-init_modules_watch_stub();
-var gameRoot = document.querySelector(".game-shell");
+// src/static/assets.ts
+var GAME_JS = String.raw`const gameRoot = document.querySelector(".game-shell");
+
 if (gameRoot) {
   const articleContainer = document.getElementById("article-content");
   const articleTitle = document.getElementById("article-title");
@@ -4460,60 +4460,74 @@ if (gameRoot) {
   const clickCountEl = document.getElementById("click-count");
   const resultEl = document.getElementById("game-result");
   const copyButton = document.getElementById("copy-link-button");
+
   const challengeId = gameRoot.dataset.challengeId;
   const startTitle = gameRoot.dataset.startTitle;
   const targetTitle = gameRoot.dataset.targetTitle;
+
   let currentTitle = startTitle;
   let clicks = 0;
   let path = [startTitle];
   let startedAt = 0;
   let elapsedMs = 0;
   let finished = false;
-  const getEventAnchor = /* @__PURE__ */ __name((target) => {
+
+  const getEventAnchor = (target) => {
     if (target instanceof Element) {
       return target.closest("a[data-wiki-target]");
     }
+
     if (target && target.parentElement) {
       return target.parentElement.closest("a[data-wiki-target]");
     }
+
     return null;
-  }, "getEventAnchor");
-  const setTimer = /* @__PURE__ */ __name((ms) => {
-    const totalSeconds = Math.floor(ms / 1e3);
+  };
+
+  const setTimer = (ms) => {
+    const totalSeconds = Math.floor(ms / 1000);
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = String(totalSeconds % 60).padStart(2, "0");
-    const centiseconds = String(Math.floor(ms % 1e3 / 10)).padStart(2, "0");
+    const centiseconds = String(Math.floor((ms % 1000) / 10)).padStart(2, "0");
     timerEl.textContent = minutes + ":" + seconds + "." + centiseconds;
-  }, "setTimer");
-  const tick = /* @__PURE__ */ __name(() => {
+  };
+
+  const tick = () => {
     if (startedAt && !finished) {
       elapsedMs = Date.now() - startedAt;
       setTimer(elapsedMs);
     }
     requestAnimationFrame(tick);
-  }, "tick");
-  const renderResult = /* @__PURE__ */ __name((message, isError = false) => {
+  };
+
+  const renderResult = (message, isError = false) => {
     resultEl.classList.remove("hidden");
     resultEl.classList.toggle("error-banner", isError);
     resultEl.classList.toggle("success-banner", !isError);
     resultEl.textContent = message;
-  }, "renderResult");
-  const refreshLeaderboard = /* @__PURE__ */ __name((entries2) => {
+  };
+
+  const refreshLeaderboard = (entries) => {
     const table = document.querySelector(".board-table tbody");
     if (!table) return;
-    if (!entries2.length) {
+
+    if (!entries.length) {
       table.innerHTML = '<tr><td colspan="4">No runs yet.</td></tr>';
       return;
     }
-    table.innerHTML = entries2.map((entry, index) => {
-      const totalSeconds = Math.floor(entry.bestTimeMs / 1e3);
-      const minutes = Math.floor(totalSeconds / 60);
-      const seconds = String(totalSeconds % 60).padStart(2, "0");
-      const centiseconds = String(Math.floor(entry.bestTimeMs % 1e3 / 10)).padStart(2, "0");
-      return "<tr><td>" + (index + 1) + "</td><td>" + entry.username + "</td><td>" + minutes + ":" + seconds + "." + centiseconds + "</td><td>" + entry.bestClicks + "</td></tr>";
-    }).join("");
-  }, "refreshLeaderboard");
-  const submitRun = /* @__PURE__ */ __name(async () => {
+
+    table.innerHTML = entries
+      .map((entry, index) => {
+        const totalSeconds = Math.floor(entry.bestTimeMs / 1000);
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = String(totalSeconds % 60).padStart(2, "0");
+        const centiseconds = String(Math.floor((entry.bestTimeMs % 1000) / 10)).padStart(2, "0");
+        return "<tr><td>" + (index + 1) + "</td><td>" + entry.username + "</td><td>" + minutes + ":" + seconds + "." + centiseconds + "</td><td>" + entry.bestClicks + "</td></tr>";
+      })
+      .join("");
+  };
+
+  const submitRun = async () => {
     const response = await fetch("/api/runs", {
       method: "POST",
       headers: {
@@ -4526,43 +4540,54 @@ if (gameRoot) {
         path
       })
     });
+
     if (!response.ok) {
       renderResult("Finished, but run submission failed.", true);
       return;
     }
+
     const payload = await response.json();
     refreshLeaderboard(payload.leaderboard || []);
     renderResult("Finished in " + timerEl.textContent + ". Rank #" + (payload.rank || "?") + ".");
-  }, "submitRun");
-  const loadArticle = /* @__PURE__ */ __name(async (title2) => {
-    const response = await fetch("/api/wikipedia/" + encodeURIComponent(title2));
+  };
+
+  const loadArticle = async (title) => {
+    const response = await fetch("/api/wikipedia/" + encodeURIComponent(title));
     if (!response.ok) {
       renderResult("Could not load the next article.", true);
       return;
     }
+
     const article = await response.json();
     currentTitle = article.title;
     articleTitle.textContent = article.displayTitle || article.title;
     articleContainer.innerHTML = article.html;
+
     if (currentTitle === targetTitle) {
       finished = true;
       await submitRun();
     }
-  }, "loadArticle");
+  };
+
   document.addEventListener("click", async (event) => {
     const anchor = getEventAnchor(event.target);
     if (!anchor || finished) return;
+
     event.preventDefault();
+
     const nextTitle = anchor.dataset.wikiTarget;
     if (!nextTitle) return;
+
     if (!startedAt) {
       startedAt = Date.now();
     }
+
     clicks += 1;
     clickCountEl.textContent = String(clicks);
     path.push(nextTitle);
     await loadArticle(nextTitle);
   });
+
   copyButton?.addEventListener("click", async () => {
     await navigator.clipboard.writeText(window.location.href);
     copyButton.textContent = "Copied";
@@ -4570,8 +4595,10 @@ if (gameRoot) {
       copyButton.textContent = "Copy challenge link";
     }, 1500);
   });
+
   tick();
 }
+`;
 
 // src/components/Layout.tsx
 function Layout({ title: title2, user, children }) {
@@ -9488,7 +9515,7 @@ var Document = class extends NodeWithChildren {
     return 9;
   }
 };
-var Element2 = class extends NodeWithChildren {
+var Element = class extends NodeWithChildren {
   static {
     __name(this, "Element");
   }
@@ -9565,7 +9592,7 @@ function cloneNode(node, recursive = false) {
     result = new Comment2(node.data);
   } else if (isTag2(node)) {
     const children = recursive ? cloneChildren(node.children) : [];
-    const clone = new Element2(node.name, { ...node.attribs }, children);
+    const clone = new Element(node.name, { ...node.attribs }, children);
     children.forEach((child) => child.parent = clone);
     if (node.namespace != null) {
       clone.namespace = node.namespace;
@@ -9687,7 +9714,7 @@ var DomHandler = class {
   }
   onopentag(name, attribs) {
     const type = this.options.xmlMode ? ElementType.Tag : void 0;
-    const element = new Element2(name, attribs, void 0, type);
+    const element = new Element(name, attribs, void 0, type);
     this.addNode(element);
     this.tagStack.push(element);
   }
@@ -11468,9 +11495,9 @@ var attribute = /* @__PURE__ */ __name((element, end, attribute2, value, active)
   if (active)
     attributeChangedCallback(element, attribute2.name, null, value);
 }, "attribute");
-var parseFromString = /* @__PURE__ */ __name((document2, isHTML, markupLanguage) => {
-  const { active, registry } = document2[CUSTOM_ELEMENTS];
-  let node = document2;
+var parseFromString = /* @__PURE__ */ __name((document, isHTML, markupLanguage) => {
+  const { active, registry } = document[CUSTOM_ELEMENTS];
+  let node = document;
   let ownerSVGElement = null;
   let parsingCData = false;
   notParsing = false;
@@ -11478,18 +11505,18 @@ var parseFromString = /* @__PURE__ */ __name((document2, isHTML, markupLanguage)
     // <!DOCTYPE ...>
     onprocessinginstruction(name, data) {
       if (name.toLowerCase() === "!doctype")
-        document2.doctype = data.slice(name.length).trim();
+        document.doctype = data.slice(name.length).trim();
     },
     // <tagName>
     onopentag(name, attributes2) {
       let create3 = true;
       if (isHTML) {
         if (ownerSVGElement) {
-          node = append2(node, document2.createElementNS(SVG_NAMESPACE, name), active);
+          node = append2(node, document.createElementNS(SVG_NAMESPACE, name), active);
           node.ownerSVGElement = ownerSVGElement;
           create3 = false;
         } else if (name === "svg" || name === "SVG") {
-          ownerSVGElement = document2.createElementNS(SVG_NAMESPACE, name);
+          ownerSVGElement = document.createElementNS(SVG_NAMESPACE, name);
           node = append2(node, ownerSVGElement, active);
           create3 = false;
         } else if (active) {
@@ -11503,20 +11530,20 @@ var parseFromString = /* @__PURE__ */ __name((document2, isHTML, markupLanguage)
         }
       }
       if (create3)
-        node = append2(node, document2.createElement(name), false);
+        node = append2(node, document.createElement(name), false);
       let end = node[END];
       for (const name2 of keys(attributes2))
-        attribute(node, end, document2.createAttribute(name2), attributes2[name2], active);
+        attribute(node, end, document.createAttribute(name2), attributes2[name2], active);
     },
     // #text, #comment
     oncomment(data) {
-      append2(node, document2.createComment(data), active);
+      append2(node, document.createComment(data), active);
     },
     ontext(text) {
       if (parsingCData) {
-        append2(node, document2.createCDATASection(text), active);
+        append2(node, document.createCDATASection(text), active);
       } else {
-        append2(node, document2.createTextNode(text), active);
+        append2(node, document.createTextNode(text), active);
       }
     },
     // #cdata
@@ -11540,7 +11567,7 @@ var parseFromString = /* @__PURE__ */ __name((document2, isHTML, markupLanguage)
   content.write(markupLanguage);
   content.end();
   notParsing = true;
-  return document2;
+  return document;
 }, "parseFromString");
 
 // node_modules/linkedom/esm/html/document.js
@@ -14328,9 +14355,9 @@ var getInnerHtml = /* @__PURE__ */ __name((node) => node.childNodes.join(""), "g
 var setInnerHtml = /* @__PURE__ */ __name((node, html2) => {
   const { ownerDocument } = node;
   const { constructor } = ownerDocument;
-  const document2 = new constructor();
-  document2[CUSTOM_ELEMENTS] = ownerDocument[CUSTOM_ELEMENTS];
-  const { childNodes } = parseFromString(document2, ignoreCase(node), html2);
+  const document = new constructor();
+  document[CUSTOM_ELEMENTS] = ownerDocument[CUSTOM_ELEMENTS];
+  const { childNodes } = parseFromString(document, ignoreCase(node), html2);
   node.replaceChildren(...childNodes.map(setOwnerDocument, ownerDocument));
 }, "setInnerHtml");
 function setOwnerDocument(node) {
@@ -14740,7 +14767,7 @@ var create2 = /* @__PURE__ */ __name((ownerDocument, element, localName) => {
 var isVoid = /* @__PURE__ */ __name(({ localName, ownerDocument }) => {
   return ownerDocument[MIME].voidElements.test(localName);
 }, "isVoid");
-var Element3 = class extends ParentNode {
+var Element2 = class extends ParentNode {
   static {
     __name(this, "Element");
   }
@@ -15199,7 +15226,7 @@ var handler3 = {
     return true;
   }
 };
-var SVGElement = class extends Element3 {
+var SVGElement = class extends Element2 {
   static {
     __name(this, "SVGElement");
   }
@@ -15276,12 +15303,12 @@ function DocumentType2() {
 __name(DocumentType2, "DocumentType");
 setPrototypeOf(DocumentType2, DocumentType);
 DocumentType2.prototype = DocumentType.prototype;
-function Element4() {
+function Element3() {
   illegalConstructor();
 }
-__name(Element4, "Element");
-setPrototypeOf(Element4, Element3);
-Element4.prototype = Element3.prototype;
+__name(Element3, "Element");
+setPrototypeOf(Element3, Element2);
+Element3.prototype = Element2.prototype;
 function Node5() {
   illegalConstructor();
 }
@@ -15313,7 +15340,7 @@ var Facades = {
   Comment: Comment4,
   DocumentFragment: DocumentFragment2,
   DocumentType: DocumentType2,
-  Element: Element4,
+  Element: Element3,
   Node: Node5,
   ShadowRoot: ShadowRoot2,
   Text: Text4,
@@ -15341,7 +15368,7 @@ var level0 = {
       element.addEventListener(type, value, false);
   }
 };
-var HTMLElement = class extends Element3 {
+var HTMLElement = class extends Element2 {
   static {
     __name(this, "HTMLElement");
   }
@@ -17420,16 +17447,16 @@ var Range = class _Range {
   createContextualFragment(html2) {
     const { commonAncestorContainer: doc } = this;
     const isSVG = "ownerSVGElement" in doc;
-    const document2 = isSVG ? doc.ownerDocument : doc;
-    let content = htmlToFragment(document2, html2);
+    const document = isSVG ? doc.ownerDocument : doc;
+    let content = htmlToFragment(document, html2);
     if (isSVG) {
       const childNodes = [...content.childNodes];
-      content = document2.createDocumentFragment();
+      content = document.createDocumentFragment();
       Object.setPrototypeOf(content, SVGElement.prototype);
-      content.ownerSVGElement = document2;
+      content.ownerSVGElement = document;
       for (const child of childNodes) {
         Object.setPrototypeOf(child, SVGElement.prototype);
-        child.ownerSVGElement = document2;
+        child.ownerSVGElement = document;
         content.appendChild(child);
       }
     } else
@@ -17506,7 +17533,7 @@ var globalExports = assign(
     NodeList
   }
 );
-var window2 = /* @__PURE__ */ new WeakMap();
+var window = /* @__PURE__ */ new WeakMap();
 var Document2 = class extends NonElementParentNode {
   static {
     __name(this, "Document");
@@ -17526,8 +17553,8 @@ var Document2 = class extends NonElementParentNode {
    * @type {globalThis.Document['defaultView']}
    */
   get defaultView() {
-    if (!window2.has(this))
-      window2.set(this, new Proxy(globalThis, {
+    if (!window.has(this))
+      window.set(this, new Proxy(globalThis, {
         set: /* @__PURE__ */ __name((target, name, value) => {
           switch (name) {
             case "addEventListener":
@@ -17562,7 +17589,7 @@ var Document2 = class extends NonElementParentNode {
               };
             /* c8 ignore stop */
             case "window":
-              return window2.get(this);
+              return window.get(this);
             case "customElements":
               if (!this[CUSTOM_ELEMENTS].registry)
                 this[CUSTOM_ELEMENTS] = new CustomElementRegistry(this);
@@ -17583,7 +17610,7 @@ var Document2 = class extends NonElementParentNode {
           return this[GLOBALS] && this[GLOBALS][name] || globalExports[name] || globalThis2[name];
         }, "get")
       }));
-    return window2.get(this);
+    return window.get(this);
   }
   get doctype() {
     const docType = this[DOCTYPE];
@@ -17629,7 +17656,7 @@ var Document2 = class extends NonElementParentNode {
     return new DocumentType(this, name, publicId, systemId);
   }
   createElement(localName) {
-    return new Element3(this, localName);
+    return new Element2(this, localName);
   }
   createRange() {
     const range = new Range();
@@ -17664,17 +17691,17 @@ var Document2 = class extends NonElementParentNode {
       [CUSTOM_ELEMENTS]: customElements2,
       [DOCTYPE]: doctype
     } = this;
-    const document2 = new constructor();
-    document2[CUSTOM_ELEMENTS] = customElements2;
+    const document = new constructor();
+    document[CUSTOM_ELEMENTS] = customElements2;
     if (deep) {
-      const end = document2[END];
+      const end = document[END];
       const { childNodes } = this;
       for (let { length } = childNodes, i = 0; i < length; i++)
-        document2.insertBefore(childNodes[i].cloneNode(true), end);
+        document.insertBefore(childNodes[i].cloneNode(true), end);
       if (doctype)
-        document2[DOCTYPE] = childNodes[0];
+        document[DOCTYPE] = childNodes[0];
     }
-    return document2;
+    return document;
   }
   importNode(externalNode) {
     const deep = 1 < arguments.length && !!arguments[1];
@@ -17863,20 +17890,20 @@ var DOMParser = class _DOMParser {
    * @returns {MimeToDoc[MIME]}
    */
   parseFromString(markupLanguage, mimeType, globals = null) {
-    let isHTML = false, document2;
+    let isHTML = false, document;
     if (mimeType === "text/html") {
       isHTML = true;
-      document2 = new HTMLDocument();
+      document = new HTMLDocument();
     } else if (mimeType === "image/svg+xml")
-      document2 = new SVGDocument();
+      document = new SVGDocument();
     else
-      document2 = new XMLDocument();
-    document2[DOM_PARSER] = _DOMParser;
+      document = new XMLDocument();
+    document[DOM_PARSER] = _DOMParser;
     if (globals)
-      document2[GLOBALS] = globals;
+      document[GLOBALS] = globals;
     if (isHTML && markupLanguage === "...")
       markupLanguage = "<!doctype html><html><head></head><body></body></html>";
-    return markupLanguage ? parseFromString(document2, isHTML, markupLanguage) : document2;
+    return markupLanguage ? parseFromString(document, isHTML, markupLanguage) : document;
   }
 };
 
@@ -18014,12 +18041,12 @@ async function fetchSanitizedArticle(title2) {
     );
   }
   const html2 = await response.text();
-  const { document: document2 } = parseHTML(html2);
-  const contentRoot = document2.querySelector("#mw-content-text .mw-parser-output") || document2.querySelector(".mw-parser-output");
+  const { document } = parseHTML(html2);
+  const contentRoot = document.querySelector("#mw-content-text .mw-parser-output") || document.querySelector(".mw-parser-output");
   if (!contentRoot) {
     throw new Error("Wikipedia article page missing content root");
   }
-  const titleText = document2.querySelector("#firstHeading")?.textContent?.trim() || getDisplayTitle(document2, normalizedTitle);
+  const titleText = document.querySelector("#firstHeading")?.textContent?.trim() || getDisplayTitle(document, normalizedTitle);
   const { document: articleDocument } = parseHTML(contentRoot.outerHTML);
   return {
     title: titleText || normalizedTitle,
@@ -18407,7 +18434,7 @@ var app = new Hono2();
 app.use("*", authMiddleware);
 app.get(
   "/static/game.js",
-  (c) => c.body(GAME_JS2, 200, {
+  (c) => c.body(GAME_JS, 200, {
     "content-type": "application/javascript; charset=utf-8"
   })
 );
@@ -18509,7 +18536,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-gLWnG5/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-rGRJ3B/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -18542,7 +18569,7 @@ function __facade_invoke__(request, env, ctx, dispatch2, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-gLWnG5/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-rGRJ3B/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
