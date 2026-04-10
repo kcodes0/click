@@ -6,6 +6,7 @@ import { hashPassword, verifyPassword } from "../lib/auth";
 import { isAllowedUsername } from "../lib/profanity";
 import { checkRateLimit, clientIp } from "../lib/rate-limit";
 import { nowMs } from "../lib/time";
+import { verifyTurnstile } from "../lib/turnstile";
 import { clearSessionCookie, issueSessionCookie } from "../middleware/auth";
 import type { AppVars, Bindings } from "../types";
 
@@ -16,11 +17,18 @@ type AuthPageProps = {
   action: "/auth/register" | "/auth/login";
   submitLabel: string;
   error?: string | null;
+  turnstileSiteKey?: string | null;
 };
 
-function AuthPage({ title, action, submitLabel, error }: AuthPageProps) {
+function AuthPage({ title, action, submitLabel, error, turnstileSiteKey }: AuthPageProps) {
+  const isRegister = action === "/auth/register";
+  const showTurnstile = isRegister && Boolean(turnstileSiteKey);
+  const turnstileHead = showTurnstile ? (
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" defer></script>
+  ) : undefined;
+
   return (
-    <Layout title={`${title} / click!`} user={null}>
+    <Layout title={`${title} / click!`} user={null} head={turnstileHead}>
       <div class="wrap page-content">
         <div class="auth-box">
           <h1>{title}</h1>
@@ -31,7 +39,7 @@ function AuthPage({ title, action, submitLabel, error }: AuthPageProps) {
               <span>Username</span>
               <input type="text" name="username" minLength={3} maxLength={24} required />
             </label>
-            {action === "/auth/register" && (
+            {isRegister && (
               <label>
                 <span>Email</span>
                 <input type="email" name="email" />
@@ -41,6 +49,9 @@ function AuthPage({ title, action, submitLabel, error }: AuthPageProps) {
               <span>Password</span>
               <input type="password" name="password" minLength={8} required />
             </label>
+            {showTurnstile && turnstileSiteKey && (
+              <div class="cf-turnstile" data-sitekey={turnstileSiteKey} data-theme="light" />
+            )}
             <button type="submit" class="btn">{submitLabel}</button>
           </form>
         </div>
@@ -49,19 +60,37 @@ function AuthPage({ title, action, submitLabel, error }: AuthPageProps) {
   );
 }
 
-auth.get("/register", (c) => c.html(<AuthPage title="Register" action="/auth/register" submitLabel="Create account" />));
+auth.get("/register", (c) =>
+  c.html(
+    <AuthPage
+      title="Register"
+      action="/auth/register"
+      submitLabel="Create account"
+      turnstileSiteKey={c.env.TURNSTILE_SITE_KEY || null}
+    />
+  )
+);
 auth.get("/login", (c) => c.html(<AuthPage title="Log in" action="/auth/login" submitLabel="Log in" />));
 
 auth.post("/register", async (c) => {
   const ip = clientIp(c);
-  if (!(await checkRateLimit(c.env.RL_REGISTER, `register:${ip}`))) {
-    return c.html(
+  const siteKey = c.env.TURNSTILE_SITE_KEY || null;
+
+  const renderError = (message: string, status: 400 | 409 | 429) =>
+    c.html(
       <AuthPage
         title="Register"
         action="/auth/register"
         submitLabel="Create account"
-        error="Too many sign-up attempts. Please wait a minute and try again."
+        error={message}
+        turnstileSiteKey={siteKey}
       />,
+      status
+    );
+
+  if (!(await checkRateLimit(c.env.RL_REGISTER, `register:${ip}`))) {
+    return renderError(
+      "Too many sign-up attempts. Please wait a minute and try again.",
       429
     );
   }
@@ -71,24 +100,39 @@ auth.post("/register", async (c) => {
   const emailValue = String(form.get("email") || "").trim();
   const email = emailValue ? emailValue : null;
   const password = String(form.get("password") || "");
+  const turnstileToken = String(form.get("cf-turnstile-response") || "");
+
+  const turnstile = await verifyTurnstile(c.env.TURNSTILE_SECRET_KEY, turnstileToken, ip);
+  if (!turnstile.ok) {
+    return renderError("Please complete the anti-bot challenge and try again.", 400);
+  }
 
   if (!/^[a-zA-Z0-9_]{3,24}$/.test(username)) {
-    return c.html(<AuthPage title="Register" action="/auth/register" submitLabel="Create account" error="Username must be 3-24 chars using letters, numbers, or underscores." />, 400);
+    return renderError(
+      "Username must be 3-24 chars using letters, numbers, or underscores.",
+      400
+    );
   }
   if (!isAllowedUsername(username)) {
-    return c.html(<AuthPage title="Register" action="/auth/register" submitLabel="Create account" error="That username is not allowed." />, 400);
+    return renderError("That username is not allowed.", 400);
   }
   if (password.length < 8) {
-    return c.html(<AuthPage title="Register" action="/auth/register" submitLabel="Create account" error="Password must be at least 8 characters." />, 400);
+    return renderError("Password must be at least 8 characters.", 400);
   }
 
   const existing = await getUserByUsernameForAuth(c.env.DB, username);
   if (existing) {
-    return c.html(<AuthPage title="Register" action="/auth/register" submitLabel="Create account" error="Username already taken." />, 409);
+    return renderError("Username already taken.", 409);
   }
 
   const userId = crypto.randomUUID();
-  await createUser(c.env.DB, { id: userId, username, passwordHash: await hashPassword(password), email, createdAt: nowMs() });
+  await createUser(c.env.DB, {
+    id: userId,
+    username,
+    passwordHash: await hashPassword(password),
+    email,
+    createdAt: nowMs()
+  });
   await issueSessionCookie(c, userId);
   return c.redirect("/");
 });

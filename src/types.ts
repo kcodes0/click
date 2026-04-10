@@ -5,6 +5,8 @@ export type RateLimit = {
 export type Bindings = {
   DB: D1Database;
   JWT_SECRET?: string;
+  TURNSTILE_SITE_KEY?: string;
+  TURNSTILE_SECRET_KEY?: string;
   RL_PLAYFREE: RateLimit;
   RL_REGISTER: RateLimit;
   RL_LOGIN: RateLimit;
