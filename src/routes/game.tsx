@@ -48,7 +48,9 @@ function GamePage({
             <div class="game-bar-left">
               <span class="label">{subtitle}</span>
               <h1 class="game-title">
-                {challenge.start_article} <span class="game-arrow">&rarr;</span> {challenge.end_article}
+                <span>{challenge.start_article}</span>
+                <span class="game-arrow">~&gt;</span>
+                <span>{challenge.end_article}</span>
               </h1>
             </div>
             <div class="game-stats">

@@ -18,8 +18,8 @@ export function Layout({ title, user, children }: LayoutProps) {
         <title>{title}</title>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Space+Mono:wght@400;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&display=swap" rel="stylesheet" />
-        <style>{STYLE_CSS}</style>
+        <link href="https://fonts.googleapis.com/css2?family=Rubik+Wet+Paint&family=Shantell+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Gaegu:wght@400;700&display=swap" rel="stylesheet" />
+        <style dangerouslySetInnerHTML={{ __html: STYLE_CSS }} />
       </head>
       <body>
         <header class="header">

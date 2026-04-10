@@ -39,17 +39,17 @@ app.get("/", async (c) => {
   return c.html(
     <Layout title="click!" user={user}>
       <section class="hero">
-        <div class="hero-text">
-          <span class="label">Wikipedia racing</span>
+        <div class="wrap hero-inner">
+          <span class="label">~ wikipedia racing ~</span>
           <h1>
-            Get from<br />
-            A to B.<br />
-            Click <em>fast.</em><br />
-            Click <em>smart.</em>
+            <span class="wobble-1">Get from</span><br />
+            <span class="wobble-2">A to B.</span><br />
+            <span class="wobble-3">Click <em>fast.</em></span><br />
+            <span class="wobble-4">Click <em>smart.</em></span>
           </h1>
           <p class="hero-desc">
             A new route drops every day at noon UTC.
-            Or spin up a random one and race your friends.
+            Or spin up a random one and race your friends!
           </p>
           <div class="hero-btns">
             <a href="/play/daily" class="btn">Play today&apos;s</a>
@@ -60,26 +60,25 @@ app.get("/", async (c) => {
             )}
           </div>
         </div>
-        <div class="hero-img" />
       </section>
 
       <section class="board">
         <div class="wrap board-grid">
-          <div class="card card--route">
-            <span class="label label--sm">Today&apos;s route</span>
+          <div class="board-item">
+            <span class="label label--sm">today&apos;s route &darr;</span>
             <div class="route">
               <strong>{challenge.start_article}</strong>
-              <span class="route-arrow">&rarr;</span>
+              <span class="route-arrow">~&gt;</span>
               <strong>{challenge.end_article}</strong>
             </div>
           </div>
-          <div class="card card--yellow card--tilt-l">
-            <span class="label label--sm label--dark">Scoring</span>
-            <p>Timer starts on first click. Best run wins.</p>
+          <div class="board-item">
+            <span class="label label--sm label--dark">scoring!!</span>
+            <p>Timer starts on your first click. Best run wins. Easy peasy.</p>
           </div>
-          <div class="card card--peach card--tilt-r">
-            <span class="label label--sm label--dark">Crown</span>
-            <p>Hold #1 on dailies. Stack crown time. Flex.</p>
+          <div class="board-item">
+            <span class="label label--sm label--dark">the crown ✦</span>
+            <p>Hold #1 on dailies. Stack crown time. Flex on everyone.</p>
           </div>
         </div>
       </section>

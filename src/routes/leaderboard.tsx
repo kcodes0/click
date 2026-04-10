@@ -31,7 +31,7 @@ leaderboard.get("/daily", async (c) => {
                   {formatDateKey(day.daily_date || "")}
                 </a>
                 <span>
-                  {day.start_article} &rarr; {day.end_article}
+                  {day.start_article} ~&gt; {day.end_article}
                 </span>
               </li>
             ))}
@@ -53,7 +53,7 @@ leaderboard.get("/daily/:date", async (c) => {
     <Layout title="leaderboard / click!" user={c.get("user")}>
       <div class="wrap page-content">
         <span class="label">{formatDateKey(challenge.daily_date || "")}</span>
-        <h1>{challenge.start_article} &rarr; {challenge.end_article}</h1>
+        <h1>{challenge.start_article} ~&gt; {challenge.end_article}</h1>
         <Leaderboard kind="runs" entries={entries} />
       </div>
     </Layout>
@@ -71,7 +71,7 @@ leaderboard.get("/:challengeId", async (c) => {
         <span class="label">
           {challenge.type === "daily" ? "Daily" : "Freeplay"}
         </span>
-        <h1>{challenge.start_article} &rarr; {challenge.end_article}</h1>
+        <h1>{challenge.start_article} ~&gt; {challenge.end_article}</h1>
         <Leaderboard kind="runs" entries={entries} />
       </div>
     </Layout>
