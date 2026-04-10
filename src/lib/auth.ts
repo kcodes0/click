@@ -14,5 +14,8 @@ export async function verifyPassword(
 }
 
 export function getJwtSecret(raw?: string): string {
-  return raw || "dev-wiki-race-secret-change-me";
+  if (!raw) {
+    throw new Error("JWT_SECRET is not set. Configure it via `wrangler secret put JWT_SECRET`.");
+  }
+  return raw;
 }

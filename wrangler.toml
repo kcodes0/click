@@ -5,7 +5,7 @@ compatibility_date = "2026-03-28"
 [[d1_databases]]
 binding = "DB"
 database_name = "wiki-race"
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "c60569b1-2694-4486-a089-fdf8ef301f7b"
 
 [[rules]]
 type = "Data"
