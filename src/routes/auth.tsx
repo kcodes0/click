@@ -4,6 +4,7 @@ import { Layout } from "../components/Layout";
 import { createUser, getUserByUsernameForAuth } from "../db/queries";
 import { hashPassword, verifyPassword } from "../lib/auth";
 import { isAllowedUsername } from "../lib/profanity";
+import { checkRateLimit, clientIp } from "../lib/rate-limit";
 import { nowMs } from "../lib/time";
 import { clearSessionCookie, issueSessionCookie } from "../middleware/auth";
 import type { AppVars, Bindings } from "../types";
@@ -52,6 +53,19 @@ auth.get("/register", (c) => c.html(<AuthPage title="Register" action="/auth/reg
 auth.get("/login", (c) => c.html(<AuthPage title="Log in" action="/auth/login" submitLabel="Log in" />));
 
 auth.post("/register", async (c) => {
+  const ip = clientIp(c);
+  if (!(await checkRateLimit(c.env.RL_REGISTER, `register:${ip}`))) {
+    return c.html(
+      <AuthPage
+        title="Register"
+        action="/auth/register"
+        submitLabel="Create account"
+        error="Too many sign-up attempts. Please wait a minute and try again."
+      />,
+      429
+    );
+  }
+
   const form = await c.req.formData();
   const username = String(form.get("username") || "").trim();
   const emailValue = String(form.get("email") || "").trim();
@@ -80,6 +94,19 @@ auth.post("/register", async (c) => {
 });
 
 auth.post("/login", async (c) => {
+  const ip = clientIp(c);
+  if (!(await checkRateLimit(c.env.RL_LOGIN, `login:${ip}`))) {
+    return c.html(
+      <AuthPage
+        title="Log in"
+        action="/auth/login"
+        submitLabel="Log in"
+        error="Too many login attempts. Please wait a minute and try again."
+      />,
+      429
+    );
+  }
+
   const form = await c.req.formData();
   const username = String(form.get("username") || "").trim();
   const password = String(form.get("password") || "");

@@ -1,6 +1,13 @@
+export type RateLimit = {
+  limit(options: { key: string }): Promise<{ success: boolean }>;
+};
+
 export type Bindings = {
   DB: D1Database;
   JWT_SECRET?: string;
+  RL_PLAYFREE: RateLimit;
+  RL_REGISTER: RateLimit;
+  RL_LOGIN: RateLimit;
 };
 
 export type User = {

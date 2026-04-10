@@ -9,6 +9,7 @@ import {
   getLeaderboard
 } from "../db/queries";
 import { closeExpiredDailyCrowns } from "../lib/crown";
+import { checkRateLimit, clientIp } from "../lib/rate-limit";
 import { ensureDailyChallenge } from "../lib/seed";
 import { formatDateKey } from "../lib/time";
 import {
@@ -115,6 +116,15 @@ game.get("/daily", async (c) => {
 game.get("/free", async (c) => {
   const guard = requireAuth(c);
   if (guard) return guard;
+
+  const userId = c.get("user")?.id;
+  const key = userId ? `playfree:user:${userId}` : `playfree:ip:${clientIp(c)}`;
+  if (!(await checkRateLimit(c.env.RL_PLAYFREE, key))) {
+    return c.text(
+      "You're creating new freeplay challenges too fast. Slow down and try again in a minute.",
+      429
+    );
+  }
 
   const { startArticle, endArticle } = await getRandomArticlePair();
   const challengeId = crypto.randomUUID();
