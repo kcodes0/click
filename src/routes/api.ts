@@ -6,15 +6,26 @@ import {
   getLeaderboard
 } from "../db/queries";
 import { maybeUpdateCrownForRun } from "../lib/crown";
-import { fetchSanitizedArticle } from "../lib/wikipedia";
+import {
+  ARTICLE_CACHE_CONTROL,
+  getCachedSanitizedArticle
+} from "../lib/wikipedia";
 import { requireAuth } from "../middleware/auth";
 import type { AppVars, Bindings } from "../types";
 
 const api = new Hono<{ Bindings: Bindings; Variables: AppVars }>();
 
 api.get("/wikipedia/:title", async (c) => {
-  const article = await fetchSanitizedArticle(c.req.param("title"));
-  return c.json(article);
+  const articleCache = await caches.open("wiki-articles");
+  const article = await getCachedSanitizedArticle(c.req.param("title"), {
+    cache: articleCache,
+    cacheUrlBase: c.req.url,
+    waitUntil: (promise) => c.executionCtx.waitUntil(promise)
+  });
+
+  return c.json(article, 200, {
+    "cache-control": ARTICLE_CACHE_CONTROL
+  });
 });
 
 api.post("/runs", async (c) => {

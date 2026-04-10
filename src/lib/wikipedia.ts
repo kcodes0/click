@@ -27,6 +27,15 @@ export type SanitizedArticle = {
   html: string;
 };
 
+export const ARTICLE_CACHE_CONTROL =
+  "public, max-age=0, s-maxage=21600, stale-while-revalidate=86400";
+
+type ArticleCacheOptions = {
+  cache?: Cache;
+  cacheUrlBase?: string;
+  waitUntil?: (promise: Promise<unknown>) => void;
+};
+
 function normalizeTitle(title: string): string {
   return decodeURIComponent(title).replace(/_/g, " ").trim();
 }
@@ -194,6 +203,53 @@ export async function fetchSanitizedArticle(title: string): Promise<SanitizedArt
     displayTitle: titleText || normalizedTitle,
     html: sanitizeDocument(articleDocument)
   };
+}
+
+export async function getCachedSanitizedArticle(
+  title: string,
+  options: ArticleCacheOptions = {}
+): Promise<SanitizedArticle> {
+  const normalizedTitle = normalizeTitle(title);
+  const cache =
+    options.cache && options.cacheUrlBase
+      ? {
+          store: options.cache,
+          key: new Request(
+            new URL(`/api/wikipedia/${encodeTitle(normalizedTitle)}`, options.cacheUrlBase)
+              .toString(),
+            { method: "GET" }
+          )
+        }
+      : null;
+
+  if (cache) {
+    const cachedResponse = await cache.store.match(cache.key);
+    if (cachedResponse) {
+      return (await cachedResponse.json()) as SanitizedArticle;
+    }
+  }
+
+  const article = await fetchSanitizedArticle(normalizedTitle);
+
+  if (cache) {
+    const cacheWrite = cache.store.put(
+      cache.key,
+      new Response(JSON.stringify(article), {
+        headers: {
+          "content-type": "application/json; charset=utf-8",
+          "cache-control": ARTICLE_CACHE_CONTROL
+        }
+      })
+    );
+
+    if (options.waitUntil) {
+      options.waitUntil(cacheWrite);
+    } else {
+      await cacheWrite;
+    }
+  }
+
+  return article;
 }
 
 async function fetchRandomSummary(): Promise<RandomSummary> {
