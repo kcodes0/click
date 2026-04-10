@@ -13,6 +13,9 @@ import { fetchSanitizedArticle } from "./lib/wikipedia";
 import type { AppVars, Bindings } from "./types";
 import { GAME_JS } from "./static/assets";
 import HERO_IMG from "./static/hero.jpg";
+import PAPERNOTES_REGULAR from "./static/fonts/papernotes-regular.woff2";
+import PAPERNOTES_BOLD from "./static/fonts/papernotes-bold.woff2";
+import POPPIN_REGULAR from "./static/fonts/poppin-regular.ttf";
 
 const app = new Hono<{ Bindings: Bindings; Variables: AppVars }>();
 
@@ -28,6 +31,29 @@ app.get("/static/hero.jpg", (c) =>
   c.body(HERO_IMG, 200, {
     "content-type": "image/jpeg",
     "cache-control": "public, max-age=86400"
+  })
+);
+
+const FONT_CACHE = "public, max-age=31536000, immutable";
+
+app.get("/static/fonts/papernotes-regular.woff2", (c) =>
+  c.body(PAPERNOTES_REGULAR, 200, {
+    "content-type": "font/woff2",
+    "cache-control": FONT_CACHE
+  })
+);
+
+app.get("/static/fonts/papernotes-bold.woff2", (c) =>
+  c.body(PAPERNOTES_BOLD, 200, {
+    "content-type": "font/woff2",
+    "cache-control": FONT_CACHE
+  })
+);
+
+app.get("/static/fonts/poppin-regular.ttf", (c) =>
+  c.body(POPPIN_REGULAR, 200, {
+    "content-type": "font/ttf",
+    "cache-control": FONT_CACHE
   })
 );
 

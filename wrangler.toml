@@ -9,5 +9,5 @@ database_id = "00000000-0000-0000-0000-000000000000"
 
 [[rules]]
 type = "Data"
-globs = ["**/*.jpg"]
+globs = ["**/*.jpg", "**/*.woff2", "**/*.ttf"]
 fallthrough = false

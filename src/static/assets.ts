@@ -1,5 +1,27 @@
 export const STYLE_CSS = String.raw`/* click! — derpy doodle edition */
 
+@font-face {
+  font-family: "Papernotes";
+  src: url(/static/fonts/papernotes-regular.woff2) format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Papernotes";
+  src: url(/static/fonts/papernotes-bold.woff2) format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Poppin";
+  src: url(/static/fonts/poppin-regular.ttf) format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --paper: #fdf3dc;
   --paper-2: #fae8bd;
@@ -13,10 +35,8 @@ export const STYLE_CSS = String.raw`/* click! — derpy doodle edition */
   --sky: #4fb8ff;
   --red: #ff4747;
   --article-bg: #fffbf0;
-  --ff-display: "Rubik Wet Paint", "Comic Sans MS", cursive;
-  --ff-goofy: "Shantell Sans", "Comic Sans MS", cursive;
-  --ff-hand: "Gaegu", "Comic Sans MS", cursive;
-  --ff-read: Georgia, "Times New Roman", serif;
+  --ff-goofy: "Poppin", "Comic Sans MS", cursive;
+  --ff-read: "Papernotes", Georgia, "Times New Roman", serif;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -34,13 +54,12 @@ body {
   background-size: 28px 28px, 39px 39px, 100% 100%, 100% 100%;
   background-position: 0 0, 14px 20px, 0 0, 0 0;
   color: var(--ink);
-  font: 400 18px/1.55 var(--ff-goofy);
-  font-variation-settings: "BNCE" 100, "INFM" 100;
+  font: 400 18px/1.55 var(--ff-read);
   -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4 {
-  font-family: var(--ff-display);
+  font-family: var(--ff-goofy);
   color: var(--ink);
   font-weight: 400;
   line-height: 1.02;
@@ -62,6 +81,7 @@ a:hover { color: var(--pink); text-decoration-color: var(--orange); }
 }
 
 .hidden { display: none; }
+.svg-defs { position: absolute; width: 0; height: 0; overflow: hidden; pointer-events: none; }
 
 /* ==============================================================
    DERPY PRIMITIVES (no cards, just tilted words)
@@ -69,7 +89,7 @@ a:hover { color: var(--pink); text-decoration-color: var(--orange); }
 
 .label {
   display: inline-block;
-  font: 400 1.1rem var(--ff-hand);
+  font: 400 1.1rem var(--ff-goofy);
   color: var(--pink);
   transform: rotate(-3deg);
   margin-bottom: .5rem;
@@ -78,7 +98,7 @@ a:hover { color: var(--pink); text-decoration-color: var(--orange); }
 .label--dark { color: var(--ink-soft); }
 
 .sub {
-  font-family: var(--ff-hand);
+  font-family: var(--ff-read);
   font-size: 1.2rem;
   color: var(--ink-soft);
   margin-bottom: 1.4rem;
@@ -94,15 +114,6 @@ a:hover { color: var(--pink); text-decoration-color: var(--orange); }
   padding: 1.6rem 0 1.1rem;
   position: relative;
 }
-.header::after {
-  content: "";
-  position: absolute;
-  left: 1.5rem; right: 1.5rem; bottom: 0;
-  height: 4px;
-  background:
-    radial-gradient(circle, var(--ink) 1.5px, transparent 2px) 0 50% / 14px 4px repeat-x;
-  opacity: .55;
-}
 
 .header-inner {
   display: flex;
@@ -113,7 +124,7 @@ a:hover { color: var(--pink); text-decoration-color: var(--orange); }
 }
 
 .logo {
-  font: 400 2.6rem/.9 var(--ff-display);
+  font: 400 2.6rem/.9 var(--ff-goofy);
   color: var(--ink);
   text-decoration: none;
   display: inline-block;
@@ -132,9 +143,9 @@ a:hover { color: var(--pink); text-decoration-color: var(--orange); }
   align-items: center;
   gap: 1.4rem;
   flex-wrap: wrap;
-  font-family: var(--ff-hand);
+  font-family: var(--ff-goofy);
   font-size: 1.4rem;
-  font-weight: 700;
+  font-weight: 400;
 }
 .nav a, .nav-btn {
   color: var(--ink);
@@ -157,7 +168,7 @@ a:hover { color: var(--pink); text-decoration-color: var(--orange); }
 .nav-btn {
   background: none;
   border: none;
-  font: 700 1.4rem var(--ff-hand);
+  font: 400 1.4rem var(--ff-goofy);
   cursor: pointer;
   padding: 0;
 }
@@ -167,33 +178,46 @@ a:hover { color: var(--pink); text-decoration-color: var(--orange); }
    ============================================================== */
 
 .btn {
+  position: relative;
   display: inline-block;
-  background: var(--sun);
+  background: transparent;
   color: var(--ink);
-  border: 3px solid var(--ink);
-  border-radius: 14px 22px 16px 24px / 22px 14px 24px 16px;
-  padding: .75rem 1.5rem;
-  font: 400 1.4rem/1 var(--ff-display);
+  border: none;
+  padding: .75rem 1.6rem;
+  font: 400 1.5rem/1 var(--ff-goofy);
   cursor: pointer;
   text-decoration: none;
   transform: rotate(-2deg);
-  transition: transform .12s ease, background .12s ease;
+  transition: transform .14s ease;
+  z-index: 0;
+  --btn-fill: var(--sun);
+}
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: -4px -6px;
+  background: var(--btn-fill);
+  border: 3px solid var(--ink);
+  border-radius: 14px 22px 16px 24px / 22px 14px 24px 16px;
+  z-index: -1;
+  filter: url(#wobble);
 }
 .btn:hover {
-  transform: rotate(2deg) scale(1.05);
-  background: var(--orange);
+  transform: rotate(2deg) scale(1.04);
   color: var(--ink);
   text-decoration: none;
+  --btn-fill: var(--orange);
 }
 .btn:active { transform: rotate(-1deg) scale(.97); }
 .btn--ghost {
-  background: transparent;
   color: var(--ink);
-  border-style: dashed;
+  --btn-fill: transparent;
   transform: rotate(2deg);
 }
-.btn--ghost:hover { background: var(--pink); color: var(--ink); }
+.btn--ghost::before { border-style: dashed; }
+.btn--ghost:hover { --btn-fill: var(--pink); color: var(--ink); }
 .btn--sm { font-size: 1rem; padding: .45rem 1rem; }
+.btn--sm::before { inset: -3px -4px; }
 
 /* ==============================================================
    INPUTS — wobbly doodle
@@ -205,7 +229,7 @@ input {
   border: 3px dashed var(--ink);
   background: var(--paper);
   color: var(--ink);
-  font: 400 1.2rem var(--ff-hand);
+  font: 400 1.2rem var(--ff-read);
   border-radius: 16px 28px 14px 22px / 20px 14px 26px 16px;
 }
 input:focus {
@@ -261,7 +285,7 @@ input:focus {
 }
 
 .hero-desc {
-  font-family: var(--ff-hand);
+  font-family: var(--ff-read);
   font-size: 1.35rem;
   color: var(--ink-soft);
   max-width: 520px;
@@ -300,7 +324,7 @@ input:focus {
 .board-item:nth-child(3) { transform: rotate(-.8deg); padding-left: 4rem; }
 
 .board-item p {
-  font-family: var(--ff-hand);
+  font-family: var(--ff-read);
   font-size: 1.25rem;
   color: var(--ink-soft);
   max-width: 540px;
@@ -311,7 +335,7 @@ input:focus {
   align-items: baseline;
   gap: .8rem;
   flex-wrap: wrap;
-  font-family: var(--ff-display);
+  font-family: var(--ff-goofy);
   font-size: clamp(1.6rem, 4vw, 2.6rem);
   line-height: 1;
 }
@@ -327,7 +351,7 @@ input:focus {
 }
 .route-arrow {
   color: var(--pink);
-  font-family: var(--ff-display);
+  font-family: var(--ff-goofy);
   display: inline-block;
   transform: rotate(-4deg) scale(1.1);
   padding: 0 .2rem;
@@ -341,7 +365,7 @@ input:focus {
   padding: 3.5rem 0 2.5rem;
   text-align: center;
   color: var(--ink-soft);
-  font: 1.2rem var(--ff-hand);
+  font: 1.2rem var(--ff-read);
 }
 .footer p {
   display: inline-block;
@@ -377,14 +401,6 @@ input:focus {
   flex-wrap: wrap;
   position: relative;
 }
-.game-bar::after {
-  content: "";
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  height: 4px;
-  background: radial-gradient(circle, var(--ink) 1.5px, transparent 2px) 0 50% / 14px 4px repeat-x;
-  opacity: .5;
-}
 
 .game-bar-left { max-width: 620px; }
 
@@ -397,7 +413,7 @@ input:focus {
 
 .game-arrow {
   color: var(--pink);
-  font-family: var(--ff-display);
+  font-family: var(--ff-goofy);
   display: inline-block;
   transform: rotate(-5deg);
   padding: 0 .3rem;
@@ -420,14 +436,14 @@ input:focus {
 
 .stat-label {
   display: block;
-  font: 400 1rem var(--ff-hand);
+  font: 400 1rem var(--ff-read);
   color: var(--ink-soft);
   margin-bottom: -.15rem;
 }
 
 .stat-val {
   display: block;
-  font: 400 1.6rem var(--ff-display);
+  font: 400 1.6rem var(--ff-goofy);
   color: var(--ink);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -468,7 +484,7 @@ input:focus {
 .game-side { padding-top: .5rem; }
 
 .side-heading {
-  font: 400 1.4rem var(--ff-display);
+  font: 400 1.4rem var(--ff-goofy);
   color: var(--pink);
   margin-bottom: .6rem;
   display: inline-block;
@@ -504,7 +520,7 @@ input:focus {
 .form-stack label {
   display: grid;
   gap: .25rem;
-  font: 400 1.1rem var(--ff-hand);
+  font: 400 1.1rem var(--ff-read);
   color: var(--ink);
 }
 .form-stack label > span {
@@ -644,12 +660,12 @@ input:focus {
 .board-table {
   width: 100%;
   border-collapse: collapse;
-  font-family: var(--ff-hand);
+  font-family: var(--ff-read);
   font-size: 1.15rem;
 }
 .board-table th {
   text-align: left;
-  font: 400 1.1rem var(--ff-display);
+  font: 400 1.1rem var(--ff-goofy);
   color: var(--pink);
   padding: .5rem .4rem;
   border-bottom: 3px dashed var(--ink);
@@ -661,7 +677,7 @@ input:focus {
 .board-table tbody tr:hover td { background: rgba(255,207,43,.25); }
 
 .board-table td:first-child {
-  font: 400 1.5rem var(--ff-display);
+  font: 400 1.5rem var(--ff-goofy);
   width: 2.6rem;
   color: var(--ink-soft);
 }
@@ -681,12 +697,12 @@ input:focus {
   flex-wrap: wrap;
   padding: .8rem 0;
   border-bottom: 2px dotted rgba(42,28,16,.25);
-  font: 1.2rem var(--ff-hand);
+  font: 1.2rem var(--ff-read);
 }
 .archive-list li:nth-child(odd) { transform: rotate(-.5deg); }
 .archive-list li:nth-child(even) { transform: rotate(.5deg); }
 .archive-list li a {
-  font-family: var(--ff-display);
+  font-family: var(--ff-goofy);
   font-size: 1.5rem;
   color: var(--orange);
   text-decoration: none;
@@ -700,7 +716,7 @@ input:focus {
 
 .error-banner, .success-banner {
   padding: .9rem 1.1rem;
-  font: 1.2rem var(--ff-hand);
+  font: 1.2rem var(--ff-read);
   border: 3px dashed;
   border-radius: 18px 26px 14px 22px / 22px 14px 26px 16px;
   margin-bottom: 1.4rem;
