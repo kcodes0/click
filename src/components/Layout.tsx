@@ -6,10 +6,11 @@ import type { User } from "../types";
 type LayoutProps = {
   title: string;
   user: User | null;
+  head?: Child;
   children: Child;
 };
 
-export function Layout({ title, user, children }: LayoutProps) {
+export function Layout({ title, user, head, children }: LayoutProps) {
   return (
     <html lang="en">
       <head>
@@ -20,6 +21,7 @@ export function Layout({ title, user, children }: LayoutProps) {
         <link rel="preload" as="font" type="font/woff2" href="/static/fonts/papernotes-bold.woff2" crossOrigin="anonymous" />
         <link rel="preload" as="font" type="font/ttf" href="/static/fonts/poppin-regular.ttf" crossOrigin="anonymous" />
         <style dangerouslySetInnerHTML={{ __html: STYLE_CSS }} />
+        {head}
       </head>
       <body>
         <div aria-hidden="true" class="svg-defs" dangerouslySetInnerHTML={{ __html: `<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0"><defs><filter id="wobble" x="-8%" y="-15%" width="116%" height="130%"><feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="3" seed="7" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="3.2"/></filter><filter id="wobble-strong" x="-10%" y="-18%" width="120%" height="136%"><feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" seed="3" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="5"/></filter></defs></svg>` }} />

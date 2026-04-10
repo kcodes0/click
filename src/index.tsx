@@ -9,7 +9,7 @@ import gameRoutes from "./routes/game";
 import leaderboardRoutes, { crown as crownRoutes } from "./routes/leaderboard";
 import { ensureDailyChallenge } from "./lib/seed";
 import { closeExpiredDailyCrowns } from "./lib/crown";
-import { fetchSanitizedArticle } from "./lib/wikipedia";
+import { getCachedSanitizedArticle } from "./lib/wikipedia";
 import type { AppVars, Bindings } from "./types";
 import { GAME_JS } from "./static/assets";
 import HERO_IMG from "./static/hero.jpg";
@@ -23,7 +23,8 @@ app.use("*", authMiddleware);
 
 app.get("/static/game.js", (c) =>
   c.body(GAME_JS, 200, {
-    "content-type": "application/javascript; charset=utf-8"
+    "content-type": "application/javascript; charset=utf-8",
+    "cache-control": "public, max-age=3600"
   })
 );
 
@@ -119,7 +120,12 @@ app.get("/", async (c) => {
 });
 
 app.get("/wiki/:title", async (c) => {
-  const article = await fetchSanitizedArticle(c.req.param("title"));
+  const articleCache = await caches.open("wiki-articles");
+  const article = await getCachedSanitizedArticle(c.req.param("title"), {
+    cache: articleCache,
+    cacheUrlBase: c.req.url,
+    waitUntil: (promise) => c.executionCtx.waitUntil(promise)
+  });
   const user = c.get("user");
 
   return c.html(

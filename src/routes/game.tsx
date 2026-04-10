@@ -11,7 +11,10 @@ import {
 import { closeExpiredDailyCrowns } from "../lib/crown";
 import { ensureDailyChallenge } from "../lib/seed";
 import { formatDateKey } from "../lib/time";
-import { fetchSanitizedArticle, getRandomArticlePair } from "../lib/wikipedia";
+import {
+  getCachedSanitizedArticle,
+  getRandomArticlePair
+} from "../lib/wikipedia";
 import { requireAuth } from "../middleware/auth";
 import type { AppVars, Bindings, Challenge } from "../types";
 
@@ -36,7 +39,11 @@ function GamePage({
     : "Freeplay";
 
   return (
-    <Layout title="click!" user={user}>
+    <Layout
+      title="click!"
+      user={user}
+      head={<script defer src="/static/game.js"></script>}
+    >
       <div class="wrap page-content">
         <section
           class="game-shell"
@@ -95,7 +102,6 @@ function GamePage({
           </div>
         </section>
       </div>
-      <script src="/static/game.js"></script>
     </Layout>
   );
 }
@@ -129,9 +135,16 @@ game.get("/free", async (c) => {
 game.get("/:challengeId", async (c) => {
   const challenge = await getChallengeById(c.env.DB, c.req.param("challengeId"));
   if (!challenge) return c.notFound();
+  const articleCache = await caches.open("wiki-articles");
 
-  const article = await fetchSanitizedArticle(challenge.start_article);
-  const leaderboard = await getLeaderboard(c.env.DB, challenge.id);
+  const [article, leaderboard] = await Promise.all([
+    getCachedSanitizedArticle(challenge.start_article, {
+      cache: articleCache,
+      cacheUrlBase: c.req.url,
+      waitUntil: (promise) => c.executionCtx.waitUntil(promise)
+    }),
+    getLeaderboard(c.env.DB, challenge.id)
+  ]);
 
   return c.html(
     <GamePage
