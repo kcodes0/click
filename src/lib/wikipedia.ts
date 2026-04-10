@@ -25,6 +25,7 @@ export type SanitizedArticle = {
   title: string;
   displayTitle: string;
   html: string;
+  linkTargets: string[];
 };
 
 export const ARTICLE_CACHE_CONTROL =
@@ -107,7 +108,9 @@ function extractWikiTarget(href: string): string | null {
   return null;
 }
 
-function sanitizeAnchors(doc: Document): void {
+function sanitizeAnchors(doc: Document): Set<string> {
+  const targets = new Set<string>();
+
   for (const anchor of doc.querySelectorAll("a")) {
     const href = anchor.getAttribute("href") || "";
     const className = anchor.getAttribute("class") || "";
@@ -139,10 +142,13 @@ function sanitizeAnchors(doc: Document): void {
     anchor.setAttribute("data-wiki-target", targetTitle);
     anchor.setAttribute("href", `/wiki/${encodeTitle(targetTitle)}`);
     anchor.removeAttribute("title");
+    targets.add(targetTitle);
   }
+
+  return targets;
 }
 
-function sanitizeDocument(doc: Document): string {
+function sanitizeDocument(doc: Document): { html: string; linkTargets: string[] } {
   for (const element of [
     ...doc.querySelectorAll(
       "script, style, link, meta, noscript, figure[typeof='mw:Error'], sup.reference, ol.references"
@@ -157,14 +163,14 @@ function sanitizeDocument(doc: Document): string {
     }
   }
 
-  sanitizeAnchors(doc);
+  const targets = sanitizeAnchors(doc);
 
   const body =
     doc.querySelector("body") ||
     doc.querySelector("main") ||
     doc.documentElement;
 
-  return body.innerHTML;
+  return { html: body.innerHTML, linkTargets: [...targets] };
 }
 
 export async function fetchSanitizedArticle(title: string): Promise<SanitizedArticle> {
@@ -197,11 +203,13 @@ export async function fetchSanitizedArticle(title: string): Promise<SanitizedArt
     document.querySelector("#firstHeading")?.textContent?.trim() ||
     getDisplayTitle(document, normalizedTitle);
   const { document: articleDocument } = parseHTML(contentRoot.outerHTML);
+  const { html: sanitizedHtml, linkTargets } = sanitizeDocument(articleDocument);
 
   return {
     title: titleText || normalizedTitle,
     displayTitle: titleText || normalizedTitle,
-    html: sanitizeDocument(articleDocument)
+    html: sanitizedHtml,
+    linkTargets
   };
 }
 
