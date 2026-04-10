@@ -9,6 +9,10 @@ import {
   getLeaderboard
 } from "../db/queries";
 import { closeExpiredDailyCrowns } from "../lib/crown";
+import {
+  consumeFromPool,
+  scheduleRefillIfLow
+} from "../lib/freeplay-pool";
 import { checkRateLimit, clientIp } from "../lib/rate-limit";
 import { ensureDailyChallenge } from "../lib/seed";
 import { formatDateKey } from "../lib/time";
@@ -126,8 +130,11 @@ game.get("/free", async (c) => {
     );
   }
 
-  const { startArticle, endArticle } = await getRandomArticlePair();
+  const pooled = await consumeFromPool(c.env.DB);
+  const { startArticle, endArticle } = pooled ?? (await getRandomArticlePair());
   const challengeId = crypto.randomUUID();
+
+  scheduleRefillIfLow(c.env.DB, (promise) => c.executionCtx.waitUntil(promise));
 
   await createChallenge(c.env.DB, {
     id: challengeId,
