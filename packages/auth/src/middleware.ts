@@ -19,8 +19,13 @@ type AuthEnv = {
 };
 
 function cookieOptions<E extends AuthEnv>(c: Context<E>, maxAge: number) {
-  const secure = new URL(c.req.url).protocol === "https:";
-  const domain = c.env.COOKIE_DOMAIN;
+  const url = new URL(c.req.url);
+  const secure = url.protocol === "https:";
+  // Skip the Domain attribute on localhost so dev cookies stay host-only.
+  // In production each worker sets COOKIE_DOMAIN=".kcodes.me" so the same
+  // session cookie is shared across click / maze / games subdomains.
+  const isLocalhost = url.hostname === "localhost" || url.hostname === "127.0.0.1";
+  const domain = isLocalhost ? undefined : c.env.COOKIE_DOMAIN;
   return {
     httpOnly: true,
     sameSite: "Lax" as const,
