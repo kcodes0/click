@@ -13,9 +13,9 @@ import { getCachedSanitizedArticle } from "./lib/wikipedia";
 import type { AppVars, Bindings } from "./types";
 import { GAME_JS } from "./static/assets";
 import HERO_IMG from "./static/hero.jpg";
-import PAPERNOTES_REGULAR from "./static/fonts/papernotes-regular.woff2";
-import PAPERNOTES_BOLD from "./static/fonts/papernotes-bold.woff2";
-import POPPIN_REGULAR from "./static/fonts/poppin-regular.ttf";
+import PAPERNOTES_REGULAR from "@kcodes/ui/fonts/papernotes-regular.woff2";
+import PAPERNOTES_BOLD from "@kcodes/ui/fonts/papernotes-bold.woff2";
+import POPPIN_REGULAR from "@kcodes/ui/fonts/poppin-regular.ttf";
 
 const app = new Hono<{ Bindings: Bindings; Variables: AppVars }>();
 

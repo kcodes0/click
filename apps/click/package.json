@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@kcodes/auth": "workspace:*",
+    "@kcodes/ui": "workspace:*",
     "bcryptjs": "^3.0.2",
     "hono": "^4.9.8",
     "linkedom": "^0.18.12"

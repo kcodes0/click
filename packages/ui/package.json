@@ -1,0 +1,24 @@
+{
+  "name": "@kcodes/ui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./Layout": "./src/Layout.tsx",
+    "./fonts/papernotes-regular.woff2": "./src/fonts/papernotes-regular.woff2",
+    "./fonts/papernotes-bold.woff2": "./src/fonts/papernotes-bold.woff2",
+    "./fonts/poppin-regular.ttf": "./src/fonts/poppin-regular.ttf"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@kcodes/auth": "workspace:*",
+    "hono": "^4.9.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.2"
+  }
+}
