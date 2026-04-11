@@ -19,6 +19,7 @@ const BRAND = (
 
 const NAV = (
   <>
+    <a href="https://games.kcodes.me">All games</a>
     <a href="/play/daily">Daily</a>
     <a href="/crown">Crown</a>
     <a href="/leaderboard/daily">Archive</a>
