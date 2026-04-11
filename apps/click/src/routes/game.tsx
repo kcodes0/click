@@ -1,4 +1,5 @@
 /** @jsxImportSource hono/jsx */
+import { requireAuth } from "@kcodes/auth";
 import { Hono } from "hono";
 import { ArticleView } from "../components/ArticleView";
 import { Layout } from "../components/Layout";
@@ -21,7 +22,6 @@ import {
   getRandomArticlePair,
   type ArticleRenderer
 } from "../lib/wikipedia";
-import { requireAuth } from "../middleware/auth";
 import type { AppVars, Bindings, Challenge } from "../types";
 
 const game = new Hono<{ Bindings: Bindings; Variables: AppVars }>();

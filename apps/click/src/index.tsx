@@ -1,8 +1,8 @@
 /** @jsxImportSource hono/jsx */
 import { Hono } from "hono";
+import { authMiddleware } from "@kcodes/auth";
 import { ArticleView } from "./components/ArticleView";
 import { Layout } from "./components/Layout";
-import { authMiddleware } from "./middleware/auth";
 import authRoutes from "./routes/auth";
 import apiRoutes from "./routes/api";
 import gameRoutes from "./routes/game";

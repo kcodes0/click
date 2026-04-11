@@ -1,3 +1,4 @@
+import { requireAuth } from "@kcodes/auth";
 import { Hono } from "hono";
 import {
   createRun,
@@ -10,7 +11,6 @@ import {
   ARTICLE_CACHE_CONTROL,
   getCachedSanitizedArticle
 } from "../lib/wikipedia";
-import { requireAuth } from "../middleware/auth";
 import type { AppVars, Bindings } from "../types";
 
 const api = new Hono<{ Bindings: Bindings; Variables: AppVars }>();

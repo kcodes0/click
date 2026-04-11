@@ -1,10 +1,10 @@
+import type { AuthBindings, AuthVars, User } from "@kcodes/auth";
+
 export type RateLimit = {
   limit(options: { key: string }): Promise<{ success: boolean }>;
 };
 
-export type Bindings = {
-  DB: D1Database;
-  JWT_SECRET?: string;
+export type Bindings = AuthBindings & {
   TURNSTILE_SITE_KEY?: string;
   TURNSTILE_SECRET_KEY?: string;
   RL_PLAYFREE: RateLimit;
@@ -12,12 +12,9 @@ export type Bindings = {
   RL_LOGIN: RateLimit;
 };
 
-export type User = {
-  id: string;
-  username: string;
-  email: string | null;
-  created_at: number;
-};
+// Re-export so click code that does `import type { User } from "../types"`
+// keeps compiling without paying attention to the auth package boundary.
+export type { User };
 
 export type Challenge = {
   id: string;
@@ -53,6 +50,4 @@ export type CrownEntry = {
   heldMs: number;
 };
 
-export type AppVars = {
-  user: User | null;
-};
+export type AppVars = AuthVars;

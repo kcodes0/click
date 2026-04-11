@@ -1,13 +1,18 @@
 /** @jsxImportSource hono/jsx */
 import { Hono } from "hono";
 import { Layout } from "../components/Layout";
-import { createUser, getUserByUsernameForAuth } from "../db/queries";
-import { hashPassword, verifyPassword } from "../lib/auth";
-import { isAllowedUsername } from "../lib/profanity";
+import {
+  clearSessionCookie,
+  createUser,
+  getUserByUsernameForAuth,
+  hashPassword,
+  isAllowedUsername,
+  issueSessionCookie,
+  verifyPassword
+} from "@kcodes/auth";
 import { checkRateLimit, clientIp } from "../lib/rate-limit";
 import { nowMs } from "../lib/time";
 import { verifyTurnstile } from "../lib/turnstile";
-import { clearSessionCookie, issueSessionCookie } from "../middleware/auth";
 import type { AppVars, Bindings } from "../types";
 
 const auth = new Hono<{ Bindings: Bindings; Variables: AppVars }>();
