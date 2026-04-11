@@ -165,6 +165,47 @@ export const MAZE_CSS = String.raw`/* maze.kcodes.me — game-specific styles */
   flex-wrap: wrap;
 }
 
+.maze-side {
+  margin-top: 1.6rem;
+}
+.maze-side-heading {
+  font: 400 1.4rem var(--ff-goofy);
+  color: var(--pink);
+  margin-bottom: .6rem;
+  display: inline-block;
+  transform: rotate(-3deg);
+}
+
+/* Leaderboard table — same pattern click uses, copied here so the maze
+   app doesn't reach across to click's CSS. If a third game wants it too,
+   factor this block into @kcodes/ui. */
+.board-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--ff-read);
+  font-size: 1.1rem;
+}
+.board-table th {
+  text-align: left;
+  font: 400 1.05rem var(--ff-goofy);
+  color: var(--pink);
+  padding: .5rem .4rem;
+  border-bottom: 3px dashed var(--ink);
+}
+.board-table td {
+  padding: .55rem .4rem;
+  border-bottom: 2px dotted rgba(42,28,16,.25);
+}
+.board-table tbody tr:hover td { background: rgba(255,207,43,.25); }
+.board-table td:first-child {
+  font: 400 1.4rem var(--ff-goofy);
+  width: 2.4rem;
+  color: var(--ink-soft);
+}
+.board-table tbody tr:nth-child(1) td:first-child { color: var(--sun); }
+.board-table tbody tr:nth-child(2) td:first-child { color: #b7a890; }
+.board-table tbody tr:nth-child(3) td:first-child { color: var(--orange); }
+
 @media (max-width: 720px) {
   .maze-topline { flex-direction: column; gap: .6rem; }
   .maze-stats { width: 100%; }

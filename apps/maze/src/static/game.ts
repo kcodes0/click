@@ -144,6 +144,30 @@ export const GAME_JS = String.raw`(() => {
     refreshPath();
   };
 
+  const refreshLeaderboard = (entries) => {
+    const tbody = shell.querySelector(".board-table tbody");
+    if (!tbody) return;
+    if (!entries || !entries.length) {
+      tbody.innerHTML = '<tr><td colspan="4">No runs yet.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = entries
+      .map((entry, index) => {
+        return (
+          "<tr><td>" +
+          (index + 1) +
+          "</td><td>" +
+          entry.username +
+          "</td><td>" +
+          formatTime(entry.bestTimeMs) +
+          "</td><td>" +
+          entry.bestPathLength +
+          "</td></tr>"
+        );
+      })
+      .join("");
+  };
+
   const submitRun = async (timeMs, pathLength) => {
     try {
       const response = await fetch("/api/runs", {
@@ -163,6 +187,7 @@ export const GAME_JS = String.raw`(() => {
       }
 
       const payload = await response.json();
+      refreshLeaderboard(payload.leaderboard || []);
       const rankText = payload.rank ? " Rank #" + payload.rank + "." : "";
       renderResult(
         "Finished in " + formatTime(timeMs) + " (" + pathLength + " steps)." + rankText,

@@ -1,8 +1,9 @@
 /** @jsxImportSource hono/jsx */
 import { Hono } from "hono";
 import { Layout } from "../components/Layout";
+import { Leaderboard } from "../components/Leaderboard";
 import { MazeView } from "../components/MazeView";
-import { getMazeById } from "../db/queries";
+import { getMazeById, getMazeLeaderboard } from "../db/queries";
 import { parseLayout } from "../lib/maze-gen";
 import { ensureDailyMaze } from "../lib/seed";
 import { formatDateKey } from "../lib/time";
@@ -10,7 +11,15 @@ import type { AppVars, Bindings, MazeRow } from "../types";
 
 const game = new Hono<{ Bindings: Bindings; Variables: AppVars }>();
 
-function GamePage({ maze, user }: { maze: MazeRow; user: AppVars["user"] }) {
+function GamePage({
+  maze,
+  user,
+  leaderboard
+}: {
+  maze: MazeRow;
+  user: AppVars["user"];
+  leaderboard: Awaited<ReturnType<typeof getMazeLeaderboard>>;
+}) {
   const layout = parseLayout(maze.layout);
   const subtitle =
     maze.type === "daily" && maze.daily_date
@@ -72,6 +81,11 @@ function GamePage({ maze, user }: { maze: MazeRow; user: AppVars["user"] }) {
               Reset path
             </button>
           </div>
+
+          <aside class="maze-side">
+            <h3 class="maze-side-heading">Best Runs</h3>
+            <Leaderboard entries={leaderboard} />
+          </aside>
         </section>
       </div>
 
@@ -92,7 +106,10 @@ game.get("/daily", async (c) => {
 game.get("/:mazeId", async (c) => {
   const maze = await getMazeById(c.env.DB, c.req.param("mazeId"));
   if (!maze) return c.notFound();
-  return c.html(<GamePage maze={maze} user={c.get("user")} />);
+  const leaderboard = await getMazeLeaderboard(c.env.DB, maze.id);
+  return c.html(
+    <GamePage maze={maze} user={c.get("user")} leaderboard={leaderboard} />
+  );
 });
 
 export default game;
