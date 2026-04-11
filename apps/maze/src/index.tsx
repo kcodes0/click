@@ -3,6 +3,7 @@ import { authMiddleware } from "@kcodes/auth";
 import { mountUiAssets } from "@kcodes/ui";
 import { Hono } from "hono";
 import { Layout } from "./components/Layout";
+import gameRoutes from "./routes/game";
 import type { AppVars, Bindings } from "./types";
 
 const app = new Hono<{ Bindings: Bindings; Variables: AppVars }>();
@@ -15,7 +16,7 @@ app.get("/", (c) => {
   const user = c.get("user");
 
   return c.html(
-    <Layout title="maze? / kcodes games" user={user}>
+    <Layout title="paper maze / kcodes games" user={user}>
       <section class="maze-hero">
         <div class="wrap">
           <h1>
@@ -25,18 +26,20 @@ app.get("/", (c) => {
             A new hand-drawn maze drops every day. Race the clock, race your friends, or just doodle through it whenever.
           </p>
           <div>
-            <span class="maze-coming-soon">~ coming soon ~</span>
+            <a href="/play/daily" class="btn">Play today&apos;s</a>
           </div>
         </div>
       </section>
 
       <footer class="footer">
         <div class="wrap">
-          <p>still drawing the walls. check back!</p>
+          <p>click adjacent cells to draw your way through.</p>
         </div>
       </footer>
     </Layout>
   );
 });
+
+app.route("/play", gameRoutes);
 
 export default app;
