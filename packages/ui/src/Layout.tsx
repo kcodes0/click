@@ -1,14 +1,15 @@
 /** @jsxImportSource hono/jsx */
 import type { User } from "@kcodes/auth";
 import type { Child } from "hono/jsx";
+import { BASE_CSS } from "./css";
 
 type LayoutProps = {
   title: string;
   user: User | null;
-  // Inlined CSS string. The Layout is purely structural — each game
-  // composes its own STYLE_CSS and passes it in. The Layout never imports
-  // CSS itself so it stays game-agnostic.
-  css: string;
+  // Game-specific CSS appended after BASE_CSS. Each game's hero, game-shell,
+  // article, and other game-only rules go here. The Layout always inlines
+  // BASE_CSS first, so consumers only ship the deltas.
+  extraCss?: string;
   // Brand slot rendered top-left in the header (the logo). Each game
   // supplies its own.
   brand: Child;
@@ -23,7 +24,9 @@ type LayoutProps = {
 
 const SVG_DEFS = `<svg xmlns="http://www.w3.org/2000/svg" width="0" height="0"><defs><filter id="wobble" x="-8%" y="-15%" width="116%" height="130%"><feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="3" seed="7" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="3.2"/></filter><filter id="wobble-strong" x="-10%" y="-18%" width="120%" height="136%"><feTurbulence type="fractalNoise" baseFrequency="0.015" numOctaves="3" seed="3" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="5"/></filter></defs></svg>`;
 
-export function Layout({ title, user, css, brand, nav, head, children }: LayoutProps) {
+export function Layout({ title, user, extraCss, brand, nav, head, children }: LayoutProps) {
+  const css = extraCss ? `${BASE_CSS}\n${extraCss}` : BASE_CSS;
+
   return (
     <html lang="en">
       <head>

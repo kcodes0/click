@@ -30,7 +30,7 @@ export function Layout({ title, user, head, children }: LayoutProps) {
     <BaseLayout
       title={title}
       user={user}
-      css={STYLE_CSS}
+      extraCss={STYLE_CSS}
       brand={BRAND}
       nav={NAV}
       head={head}
