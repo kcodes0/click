@@ -975,8 +975,8 @@ if (gameRoot) {
   const challengeId = gameRoot.dataset.challengeId;
   const startTitle = gameRoot.dataset.startTitle;
   const targetTitle = gameRoot.dataset.targetTitle;
-  const renderer = gameRoot.dataset.renderer || "legacy";
-  const articleQuery = renderer === "experimental" ? "?exp=1" : "";
+  const renderer = gameRoot.dataset.renderer || "experimental";
+  const articleQuery = renderer === "legacy" ? "?legacy=1" : "";
 
   if (
     articleContainer &&

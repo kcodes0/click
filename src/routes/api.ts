@@ -21,7 +21,7 @@ const MAX_PATH_LENGTH = 120;
 
 api.get("/wikipedia/:title", async (c) => {
   const articleCache = await caches.open("wiki-articles");
-  const renderer = c.req.query("exp") === "1" ? "experimental" : "legacy";
+  const renderer = c.req.query("legacy") === "1" ? "legacy" : "experimental";
   const article = await getCachedSanitizedArticle(c.req.param("title"), {
     cache: articleCache,
     cacheUrlBase: c.req.url,

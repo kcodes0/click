@@ -46,13 +46,13 @@ function GamePage({
     ? `Daily — ${formatDateKey(challenge.daily_date)}`
     : "Freeplay";
   const rendererToggleHref =
-    renderer === "experimental"
+    renderer === "legacy"
       ? `/play/${challenge.id}`
-      : `/play/${challenge.id}?exp=1`;
+      : `/play/${challenge.id}?legacy=1`;
   const rendererToggleLabel =
-    renderer === "experimental"
-      ? "Back to classic renderer"
-      : "Try experimental renderer";
+    renderer === "legacy"
+      ? "Back to new renderer"
+      : "Use classic renderer";
 
   return (
     <Layout
@@ -169,7 +169,7 @@ game.get("/:challengeId", async (c) => {
   if (!challenge) return c.notFound();
   const articleCache = await caches.open("wiki-articles");
   const renderer: ArticleRenderer =
-    c.req.query("exp") === "1" ? "experimental" : "legacy";
+    c.req.query("legacy") === "1" ? "legacy" : "experimental";
 
   const [article, leaderboard] = await Promise.all([
     getCachedSanitizedArticle(challenge.start_article, {
