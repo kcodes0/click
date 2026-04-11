@@ -15,7 +15,12 @@ export function Layout({ title, user, head, children }: LayoutProps) {
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <meta name="theme-color" content="#fdf3dc" />
+        <meta name="color-scheme" content="light" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="format-detection" content="telephone=no" />
         <title>{title}</title>
         <link rel="preload" as="font" type="font/woff2" href="/static/fonts/papernotes-regular.woff2" crossOrigin="anonymous" />
         <link rel="preload" as="font" type="font/woff2" href="/static/fonts/papernotes-bold.woff2" crossOrigin="anonymous" />
@@ -28,7 +33,16 @@ export function Layout({ title, user, head, children }: LayoutProps) {
         <header class="header">
           <div class="wrap header-inner">
             <a class="logo" href="/">click<span class="logo-bang">!</span></a>
-            <nav class="nav">
+            <input type="checkbox" id="nav-toggle" class="nav-toggle-input" aria-hidden="true" />
+            <label for="nav-toggle" class="nav-toggle" aria-label="Toggle menu" role="button">
+              <span class="nav-toggle-lines" aria-hidden="true">
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+              <span class="nav-toggle-word">menu</span>
+            </label>
+            <nav class="nav" id="primary-nav">
               <a href="/play/daily">Daily</a>
               <a href="/crown">Crown</a>
               <a href="/leaderboard/daily">Archive</a>

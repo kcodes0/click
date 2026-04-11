@@ -68,21 +68,24 @@ function GamePage({
           data-target-title={challenge.end_article}
           data-renderer={renderer}
         >
-          <div class="game-bar">
-            <div class="game-bar-left">
-              <span class="label">{subtitle}</span>
-              <h1 class="game-title">
-                <span>{challenge.start_article}</span>
-                <span class="game-arrow">~&gt;</span>
-                <span>{challenge.end_article}</span>
-              </h1>
+          <div class="game-topline">
+            <div class="game-bar">
+              <div class="game-bar-left">
+                <span class="label">{subtitle}</span>
+                <h1 class="game-title">
+                  <span>{challenge.start_article}</span>
+                  <span class="game-arrow">~&gt;</span>
+                  <span>{challenge.end_article}</span>
+                </h1>
+              </div>
             </div>
-            <div class="game-stats">
+
+            <div class="game-stats" role="group" aria-label="Run stats">
               <div class="stat stat--timer">
                 <span class="stat-label">Timer</span>
                 <span class="stat-val" id="timer">0:00.00</span>
               </div>
-              <div class="stat">
+              <div class="stat stat--target">
                 <span class="stat-label">Target</span>
                 <span class="stat-val" id="target-title">{challenge.end_article}</span>
               </div>
@@ -108,8 +111,15 @@ function GamePage({
               </div>
             </div>
             <aside class="game-side">
-              <h3 class="side-heading">Best Runs</h3>
-              <Leaderboard kind="runs" entries={leaderboard} />
+              <details class="side-collapsible" open>
+                <summary class="side-heading">
+                  <span>Best Runs</span>
+                  <span class="side-collapsible-caret" aria-hidden="true">▾</span>
+                </summary>
+                <div class="side-collapsible-body">
+                  <Leaderboard kind="runs" entries={leaderboard} />
+                </div>
+              </details>
               <div class="share-actions">
                 <button type="button" id="copy-link-button" class="btn btn--ghost btn--sm">
                   Copy challenge link
