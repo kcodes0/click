@@ -22,6 +22,7 @@ export const GAME_JS = String.raw`(() => {
 
   const tileNodes = shell.querySelectorAll(".weave-tile");
   const currentEl = document.getElementById("weave-current");
+  const currentHintEl = shell.querySelector(".weave-current-hint");
   const timerEl = document.getElementById("timer");
   const scoreEl = document.getElementById("score");
   const wordCountEl = document.getElementById("word-count");
@@ -81,6 +82,45 @@ export const GAME_JS = String.raw`(() => {
   let totalScore = 0;
   let runStartedAt = 0;
   let finished = false;
+
+  // --- dictionary (client-side) ---
+  // Fetched once from /static/dictionary.txt and cached in-memory as a
+  // Set. The worker sets cache-control: immutable so return visits skip
+  // the network entirely. Every candidate word is checked against this
+  // Set before being added to the found list — the server re-validates
+  // at final submission, but we don't want players seeing non-words
+  // like "RDFC +1" flash into the list during play.
+  let dictionary = null;
+  let dictionaryLoadFailed = false;
+  const dictionaryReady = fetch("/static/dictionary.txt")
+    .then((r) => {
+      if (!r.ok) throw new Error("dict http " + r.status);
+      return r.text();
+    })
+    .then((text) => {
+      const set = new Set();
+      for (const line of text.split(/\s+/)) {
+        if (line.length >= 4) set.add(line);
+      }
+      dictionary = set;
+      if (currentHintEl && !finished) {
+        currentHintEl.textContent = "release to submit";
+      }
+    })
+    .catch(() => {
+      // Network hiccup — fall back to "optimistic accept, server
+      // decides". Players will still see the server strike-through at
+      // the end. Surface the state so they know dictionary check is
+      // offline.
+      dictionaryLoadFailed = true;
+      if (currentHintEl && !finished) {
+        currentHintEl.textContent = "offline check";
+      }
+    });
+
+  if (currentHintEl) {
+    currentHintEl.textContent = "loading dictionary…";
+  }
 
   // --- timer ---
   const formatTime = (ms) => {
@@ -198,6 +238,24 @@ export const GAME_JS = String.raw`(() => {
     if (foundSet.has(word)) {
       flashCurrent("bad");
       clearCurrent();
+      return;
+    }
+
+    // Client-side dictionary check. If the dictionary failed to load we
+    // accept optimistically and let the server strike through at end of
+    // run; otherwise we reject non-words right here so the found list
+    // can't fill up with gibberish.
+    if (dictionary && !dictionary.has(word)) {
+      flashCurrent("bad");
+      // Keep the traced path visible so the player can rework it, like
+      // a Boggle UI that shouts "not a word" but leaves your trace up.
+      return;
+    }
+    if (!dictionary && !dictionaryLoadFailed) {
+      // Dictionary still downloading. Swallow the submit quietly rather
+      // than optimistic-accept — the fetch takes ~1s so this window is
+      // tiny in practice.
+      flashCurrent("bad");
       return;
     }
 

@@ -5,6 +5,7 @@ import { Hono } from "hono";
 import { Layout } from "./components/Layout";
 import apiRoutes from "./routes/api";
 import gameRoutes from "./routes/game";
+import DICTIONARY_TXT from "./static/dictionary.txt";
 import { GAME_JS } from "./static/game";
 import type { AppVars, Bindings } from "./types";
 
@@ -18,6 +19,17 @@ app.get("/static/game.js", (c) =>
   c.body(GAME_JS, 200, {
     "content-type": "application/javascript; charset=utf-8",
     "cache-control": "public, max-age=3600"
+  })
+);
+
+// Ship the full Big Boggle dictionary to the client so the game can
+// reject non-words the moment the player traces them, instead of waiting
+// for the end-of-run server validation. Aggressively cached so most
+// players pay the ~600KB gzipped fetch exactly once per browser.
+app.get("/static/dictionary.txt", (c) =>
+  c.body(DICTIONARY_TXT, 200, {
+    "content-type": "text/plain; charset=utf-8",
+    "cache-control": "public, max-age=31536000, immutable"
   })
 );
 
