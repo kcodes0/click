@@ -9,6 +9,8 @@ declare module "*.ttf" {
 }
 
 declare module "*.txt" {
-  const content: string;
+  // Wrangler's [[rules]] type = "Data" bundles .txt files as an
+  // ArrayBuffer. The dictionary loader decodes them with TextDecoder.
+  const content: ArrayBuffer;
   export default content;
 }

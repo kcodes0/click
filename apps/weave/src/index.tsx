@@ -3,6 +3,7 @@ import { authMiddleware } from "@kcodes/auth";
 import { mountUiAssets } from "@kcodes/ui";
 import { Hono } from "hono";
 import { Layout } from "./components/Layout";
+import apiRoutes from "./routes/api";
 import gameRoutes from "./routes/game";
 import { GAME_JS } from "./static/game";
 import type { AppVars, Bindings } from "./types";
@@ -49,5 +50,6 @@ app.get("/", (c) => {
 });
 
 app.route("/play", gameRoutes);
+app.route("/api", apiRoutes);
 
 export default app;
