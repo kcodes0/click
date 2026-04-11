@@ -18,7 +18,8 @@ import { ensureDailyChallenge } from "../lib/seed";
 import { formatDateKey } from "../lib/time";
 import {
   getCachedSanitizedArticle,
-  getRandomArticlePair
+  getRandomArticlePair,
+  type ArticleRenderer
 } from "../lib/wikipedia";
 import { requireAuth } from "../middleware/auth";
 import type { AppVars, Bindings, Challenge } from "../types";
@@ -30,18 +31,28 @@ function GamePage({
   articleHtml,
   articleTitle,
   user,
-  leaderboard
+  leaderboard,
+  renderer
 }: {
   challenge: Challenge;
   articleHtml: string;
   articleTitle: string;
   user: AppVars["user"];
   leaderboard: Awaited<ReturnType<typeof getLeaderboard>>;
+  renderer: ArticleRenderer;
 }) {
   const isDaily = challenge.type === "daily";
   const subtitle = isDaily && challenge.daily_date
     ? `Daily — ${formatDateKey(challenge.daily_date)}`
     : "Freeplay";
+  const rendererToggleHref =
+    renderer === "experimental"
+      ? `/play/${challenge.id}`
+      : `/play/${challenge.id}?exp=1`;
+  const rendererToggleLabel =
+    renderer === "experimental"
+      ? "Back to classic renderer"
+      : "Try experimental renderer";
 
   return (
     <Layout
@@ -55,6 +66,7 @@ function GamePage({
           data-challenge-id={challenge.id}
           data-start-title={challenge.start_article}
           data-target-title={challenge.end_article}
+          data-renderer={renderer}
         >
           <div class="game-bar">
             <div class="game-bar-left">
@@ -102,6 +114,9 @@ function GamePage({
                 <button type="button" id="copy-link-button" class="btn btn--ghost btn--sm">
                   Copy challenge link
                 </button>
+                <a href={rendererToggleHref} class="renderer-toggle">
+                  {rendererToggleLabel}
+                </a>
               </div>
             </aside>
           </div>
@@ -153,12 +168,15 @@ game.get("/:challengeId", async (c) => {
   const challenge = await getChallengeById(c.env.DB, c.req.param("challengeId"));
   if (!challenge) return c.notFound();
   const articleCache = await caches.open("wiki-articles");
+  const renderer: ArticleRenderer =
+    c.req.query("exp") === "1" ? "experimental" : "legacy";
 
   const [article, leaderboard] = await Promise.all([
     getCachedSanitizedArticle(challenge.start_article, {
       cache: articleCache,
       cacheUrlBase: c.req.url,
-      waitUntil: (promise) => c.executionCtx.waitUntil(promise)
+      waitUntil: (promise) => c.executionCtx.waitUntil(promise),
+      renderer
     }),
     getLeaderboard(c.env.DB, challenge.id)
   ]);
@@ -170,6 +188,7 @@ game.get("/:challengeId", async (c) => {
       articleTitle={article.displayTitle}
       user={c.get("user")}
       leaderboard={leaderboard}
+      renderer={renderer}
     />
   );
 });

@@ -1,4 +1,7 @@
 import { parseHTML } from "linkedom";
+import { renderExperimentalArticle } from "./article-ir";
+
+export type ArticleRenderer = "legacy" | "experimental";
 
 const WIKIPEDIA_PAGE_BASE = "https://en.wikipedia.org/wiki/";
 const WIKIPEDIA_RANDOM_SUMMARY =
@@ -35,6 +38,7 @@ type ArticleCacheOptions = {
   cache?: Cache;
   cacheUrlBase?: string;
   waitUntil?: (promise: Promise<unknown>) => void;
+  renderer?: ArticleRenderer;
 };
 
 function normalizeTitle(title: string): string {
@@ -148,7 +152,7 @@ function sanitizeAnchors(doc: Document): Set<string> {
   return targets;
 }
 
-function sanitizeDocument(doc: Document): { html: string; linkTargets: string[] } {
+function prepareDocument(doc: Document): Set<string> {
   for (const element of [
     ...doc.querySelectorAll(
       "script, style, link, meta, noscript, figure[typeof='mw:Error'], sup.reference, ol.references"
@@ -163,17 +167,21 @@ function sanitizeDocument(doc: Document): { html: string; linkTargets: string[] 
     }
   }
 
-  const targets = sanitizeAnchors(doc);
+  return sanitizeAnchors(doc);
+}
 
+function renderLegacyDocument(doc: Document): string {
   const body =
     doc.querySelector("body") ||
     doc.querySelector("main") ||
     doc.documentElement;
-
-  return { html: body.innerHTML, linkTargets: [...targets] };
+  return body.innerHTML;
 }
 
-export async function fetchSanitizedArticle(title: string): Promise<SanitizedArticle> {
+export async function fetchSanitizedArticle(
+  title: string,
+  renderer: ArticleRenderer = "legacy"
+): Promise<SanitizedArticle> {
   const normalizedTitle = normalizeTitle(title);
   const response = await fetch(`${WIKIPEDIA_PAGE_BASE}${encodeTitle(normalizedTitle)}`, {
     headers: {
@@ -203,13 +211,23 @@ export async function fetchSanitizedArticle(title: string): Promise<SanitizedArt
     document.querySelector("#firstHeading")?.textContent?.trim() ||
     getDisplayTitle(document, normalizedTitle);
   const { document: articleDocument } = parseHTML(contentRoot.outerHTML);
-  const { html: sanitizedHtml, linkTargets } = sanitizeDocument(articleDocument);
+  const anchorTargets = prepareDocument(articleDocument);
+
+  if (renderer === "experimental") {
+    const { html: experimentalHtml, linkTargets } = renderExperimentalArticle(articleDocument);
+    return {
+      title: titleText || normalizedTitle,
+      displayTitle: titleText || normalizedTitle,
+      html: experimentalHtml,
+      linkTargets
+    };
+  }
 
   return {
     title: titleText || normalizedTitle,
     displayTitle: titleText || normalizedTitle,
-    html: sanitizedHtml,
-    linkTargets
+    html: renderLegacyDocument(articleDocument),
+    linkTargets: [...anchorTargets]
   };
 }
 
@@ -218,13 +236,17 @@ export async function getCachedSanitizedArticle(
   options: ArticleCacheOptions = {}
 ): Promise<SanitizedArticle> {
   const normalizedTitle = normalizeTitle(title);
+  const renderer: ArticleRenderer = options.renderer ?? "legacy";
+  const cacheSuffix = renderer === "experimental" ? "?r=exp" : "";
   const cache =
     options.cache && options.cacheUrlBase
       ? {
           store: options.cache,
           key: new Request(
-            new URL(`/api/wikipedia/${encodeTitle(normalizedTitle)}`, options.cacheUrlBase)
-              .toString(),
+            new URL(
+              `/api/wikipedia/${encodeTitle(normalizedTitle)}${cacheSuffix}`,
+              options.cacheUrlBase
+            ).toString(),
             { method: "GET" }
           )
         }
@@ -237,7 +259,7 @@ export async function getCachedSanitizedArticle(
     }
   }
 
-  const article = await fetchSanitizedArticle(normalizedTitle);
+  const article = await fetchSanitizedArticle(normalizedTitle, renderer);
 
   if (cache) {
     const cacheWrite = cache.store.put(

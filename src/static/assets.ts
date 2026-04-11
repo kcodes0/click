@@ -654,6 +654,174 @@ input:focus {
 .article-body::after { content: ""; display: table; clear: both; }
 
 /* ==============================================================
+   EXPERIMENTAL ARTICLE RENDERER — block-level IR output
+   ============================================================== */
+
+.article-x {
+  font: 16px/1.7 var(--ff-read);
+  color: #1e1a12;
+}
+
+.article-x > * + * { margin-top: .85rem; }
+.article-x > .article-x-heading { margin-top: 1.8rem; }
+.article-x > .article-x-heading + * { margin-top: .55rem; }
+
+.article-x-heading {
+  font-family: var(--ff-read);
+  color: #1a1510;
+  letter-spacing: 0;
+  padding-bottom: .35rem;
+  border-bottom: 1px solid #d8c9a5;
+}
+.article-x-heading--2 { font: 700 1.45rem/1.25 var(--ff-read); }
+.article-x-heading--3 { font: 700 1.12rem/1.25 var(--ff-read); border-bottom: none; padding-bottom: 0; }
+
+.article-x-p {
+  margin: 0;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.article-x-list { margin: 0; padding-left: 1.5rem; }
+.article-x-list li { margin: .2rem 0; }
+.article-x-list--ul { list-style: disc; }
+.article-x-list--ol { list-style: decimal; }
+
+.article-x-quote {
+  border-left: 3px solid var(--orange);
+  padding: .2rem 0 .2rem 1rem;
+  margin: 0;
+  color: #5a4d36;
+  font-style: italic;
+}
+
+.article-x-hr {
+  border: none;
+  border-top: 1px solid #d8c9a5;
+  margin: 1.2rem 0;
+}
+
+.article-x-code {
+  font: .88em ui-monospace, "SF Mono", Menlo, monospace;
+  background: rgba(0,0,0,.04);
+  padding: .08rem .3rem;
+  border: 1px solid #d8c9a5;
+}
+
+.article-x-link {
+  color: #0b5aa4;
+  text-decoration: underline;
+  text-decoration-color: rgba(11,90,164,.4);
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+.article-x-link:hover {
+  text-decoration-color: #0b5aa4;
+  color: #0a4a87;
+}
+
+.article-x-dead {
+  color: #8a7d6b;
+}
+
+/* Infobox: inline "quick facts" card — no floats, no cards outside. */
+.article-x-infobox {
+  border: 1px solid #d8c9a5;
+  background: rgba(255, 251, 240, .6);
+  padding: .9rem 1.1rem;
+  margin: 0;
+}
+.article-x-infobox-title {
+  font: 700 1.1rem/1.3 var(--ff-read);
+  color: #1a1510;
+  margin-bottom: .55rem;
+  padding-bottom: .35rem;
+  border-bottom: 1px solid #d8c9a5;
+}
+.article-x-infobox-body { font-size: .95rem; }
+.article-x-infobox-body > * + * { margin-top: .35rem; }
+.article-x-infobox-section {
+  font: 700 .95rem/1.3 var(--ff-read);
+  color: #1a1510;
+  margin-top: .8rem;
+  padding-top: .45rem;
+  border-top: 1px solid #e4d6b2;
+  text-transform: uppercase;
+  letter-spacing: .02em;
+}
+.article-x-infobox-body > .article-x-infobox-section:first-child { margin-top: 0; border-top: none; padding-top: 0; }
+.article-x-infobox-pair {
+  display: grid;
+  grid-template-columns: minmax(7rem, max-content) minmax(0, 1fr);
+  gap: .25rem .8rem;
+}
+.article-x-infobox-label {
+  font-weight: 700;
+  color: #1a1510;
+}
+.article-x-infobox-value {
+  color: #3a2f1f;
+  overflow-wrap: anywhere;
+}
+.article-x-infobox-note {
+  margin: 0;
+  color: #3a2f1f;
+  overflow-wrap: anywhere;
+}
+
+/* Clean tables — never float, horizontal scroll if needed. */
+.article-x-table-wrap {
+  overflow-x: auto;
+  border: 1px solid #d8c9a5;
+  background: rgba(255, 251, 240, .4);
+  max-width: 100%;
+}
+.article-x-table {
+  border-collapse: collapse;
+  font-size: .92rem;
+  width: 100%;
+  min-width: max-content;
+  table-layout: auto;
+}
+.article-x-table-caption {
+  caption-side: top;
+  padding: .45rem .6rem;
+  font: 700 .95rem/1.25 var(--ff-read);
+  text-align: left;
+  color: #1a1510;
+  background: rgba(0,0,0,.03);
+  border-bottom: 1px solid #d8c9a5;
+}
+.article-x-table th,
+.article-x-table td {
+  border: 1px solid #e4d6b2;
+  padding: .4rem .6rem;
+  vertical-align: top;
+  text-align: left;
+  color: #1e1a12;
+}
+.article-x-table th {
+  background: rgba(0,0,0,.04);
+  font-weight: 700;
+  color: #1a1510;
+}
+
+@media (max-width: 640px) {
+  .article-x-infobox-pair { grid-template-columns: 1fr; gap: .1rem; }
+}
+
+.renderer-toggle {
+  display: inline-block;
+  margin-top: 1rem;
+  font: 400 1rem var(--ff-goofy);
+  color: var(--lav);
+  text-decoration: underline wavy var(--sun);
+  text-underline-offset: 3px;
+  transform: rotate(-1deg);
+}
+.renderer-toggle:hover { color: var(--pink); }
+
+/* ==============================================================
    LEADERBOARD TABLE — derpy, borderless
    ============================================================== */
 
@@ -768,6 +936,8 @@ if (gameRoot) {
   const challengeId = gameRoot.dataset.challengeId;
   const startTitle = gameRoot.dataset.startTitle;
   const targetTitle = gameRoot.dataset.targetTitle;
+  const renderer = gameRoot.dataset.renderer || "legacy";
+  const articleQuery = renderer === "experimental" ? "?exp=1" : "";
 
   if (
     articleContainer &&
@@ -884,7 +1054,7 @@ if (gameRoot) {
         return cachedArticle;
       }
 
-      const request = fetch("/api/wikipedia/" + encodeURIComponent(title))
+      const request = fetch("/api/wikipedia/" + encodeURIComponent(title) + articleQuery)
         .then(async (response) => {
           if (!response.ok) {
             throw new Error("Could not load the next article.");
