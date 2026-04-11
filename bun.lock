@@ -51,6 +51,21 @@
         "wrangler": "^4.24.3",
       },
     },
+    "apps/weave": {
+      "name": "@kcodes/weave",
+      "version": "0.1.0",
+      "dependencies": {
+        "@kcodes/auth": "workspace:*",
+        "@kcodes/ui": "workspace:*",
+        "bcryptjs": "^3.0.2",
+        "hono": "^4.9.8",
+      },
+      "devDependencies": {
+        "@cloudflare/workers-types": "^4.20260320.0",
+        "typescript": "^5.9.2",
+        "wrangler": "^4.24.3",
+      },
+    },
     "packages/auth": {
       "name": "@kcodes/auth",
       "version": "0.1.0",
@@ -213,6 +228,8 @@
     "@kcodes/portal": ["@kcodes/portal@workspace:apps/portal"],
 
     "@kcodes/ui": ["@kcodes/ui@workspace:packages/ui"],
+
+    "@kcodes/weave": ["@kcodes/weave@workspace:apps/weave"],
 
     "@poppinss/colors": ["@poppinss/colors@4.1.6", "", { "dependencies": { "kleur": "^4.1.5" } }, "sha512-H9xkIdFswbS8n1d6vmRd8+c10t2Qe+rZITbbDHHkQixH5+2x1FDGmi/0K+WgWiqQFKPSlIYB7jlH6Kpfn6Fleg=="],
 
