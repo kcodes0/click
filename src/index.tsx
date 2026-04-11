@@ -121,10 +121,12 @@ app.get("/", async (c) => {
 
 app.get("/wiki/:title", async (c) => {
   const articleCache = await caches.open("wiki-articles");
+  const renderer = c.req.query("legacy") === "1" ? "legacy" : "experimental";
   const article = await getCachedSanitizedArticle(c.req.param("title"), {
     cache: articleCache,
     cacheUrlBase: c.req.url,
-    waitUntil: (promise) => c.executionCtx.waitUntil(promise)
+    waitUntil: (promise) => c.executionCtx.waitUntil(promise),
+    renderer
   });
   const user = c.get("user");
 
