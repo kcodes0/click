@@ -114,22 +114,41 @@ export const MAZE_CSS = String.raw`/* maze.kcodes.me — game-specific styles */
   stroke-width: 3;
   stroke-linecap: round;
   fill: none;
-  filter: url(#wobble);
+  /* The wobble filter displaces pixels by ~3px which at a 36px cell
+     size nibbles visibly into the click zones and makes the maze feel
+     mushy. Skip it for walls and keep the doodle look with just the
+     round stroke-linecap + dashed cell outline on the head cell. */
 }
 
 .maze-cells .maze-cell {
   fill: transparent;
   stroke: none;
+  cursor: default;
+  pointer-events: all;
+}
+/* Cells that are legal next moves from the current head. game.js adds the
+   class on each refreshPath based on the generator's canMove(). Only these
+   cells get a hover hint so players aren't distracted by every tile they
+   cross with the mouse. */
+.maze-cells .maze-cell.legal {
+  fill: rgba(255, 207, 43, .18);
   cursor: pointer;
 }
-.maze-cells .maze-cell:hover {
-  fill: rgba(255, 207, 43, .25);
+.maze-cells .maze-cell.legal:hover {
+  fill: rgba(255, 207, 43, .45);
 }
 .maze-cells .maze-cell.in-path {
-  fill: rgba(16, 191, 160, .35);
+  fill: rgba(16, 191, 160, .32);
+  cursor: pointer;
+}
+.maze-cells .maze-cell.in-path:hover {
+  fill: rgba(16, 191, 160, .45);
 }
 .maze-cells .maze-cell.head {
-  fill: rgba(255, 107, 26, .35);
+  fill: rgba(255, 107, 26, .42);
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-dasharray: 3 3;
 }
 
 .maze-path {
@@ -163,6 +182,67 @@ export const MAZE_CSS = String.raw`/* maze.kcodes.me — game-specific styles */
   gap: 1rem;
   margin-top: 1.2rem;
   flex-wrap: wrap;
+  align-items: center;
+}
+
+.maze-help-btn {
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  border: 3px dashed var(--ink);
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 1.2rem var(--ff-goofy);
+  cursor: pointer;
+  transform: rotate(-3deg);
+  transition: transform .14s ease, background .14s ease;
+  padding: 0;
+  line-height: 1;
+}
+.maze-help-btn:hover {
+  background: var(--sun);
+  transform: rotate(2deg) scale(1.08);
+}
+.maze-help-btn:focus-visible {
+  outline: 3px dashed var(--orange);
+  outline-offset: 3px;
+}
+
+.maze-rules {
+  margin-top: 1rem;
+  padding: 1rem 1.2rem;
+  border: 3px dashed var(--ink);
+  border-radius: 18px 26px 14px 22px / 22px 14px 26px 16px;
+  background: rgba(255, 251, 240, .75);
+  transform: rotate(-.4deg);
+  max-width: 560px;
+}
+.maze-rules.hidden { display: none; }
+.maze-rules h3 {
+  font: 400 1.4rem var(--ff-goofy);
+  color: var(--pink);
+  margin-bottom: .5rem;
+  display: inline-block;
+  transform: rotate(-2deg);
+}
+.maze-rules ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font: 1rem/1.55 var(--ff-read);
+  color: var(--ink);
+}
+.maze-rules li {
+  padding: .25rem 0 .25rem 1.4rem;
+  position: relative;
+}
+.maze-rules li::before {
+  content: "~";
+  position: absolute;
+  left: .2rem;
+  top: .25rem;
+  color: var(--teal);
+  font-family: var(--ff-goofy);
 }
 
 .maze-side {

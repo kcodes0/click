@@ -80,6 +80,27 @@ function GamePage({
             <button type="button" id="maze-reset" class="btn btn--ghost btn--sm">
               Reset path
             </button>
+            <button
+              type="button"
+              id="maze-help"
+              class="maze-help-btn"
+              aria-label="How to play"
+              aria-expanded="false"
+              aria-controls="maze-rules"
+            >
+              ?
+            </button>
+          </div>
+
+          <div id="maze-rules" class="maze-rules hidden">
+            <h3>How to play</h3>
+            <ul>
+              <li>Click the cell next to the green <strong>S</strong> to start. The timer begins on your first move.</li>
+              <li>Only cells adjacent to your current spot (the orange dashed one) are clickable — the wall between must be open.</li>
+              <li>Click a cell already on your trail to rewind back to it. No penalty for retracing.</li>
+              <li>Reach the pink <strong>E</strong> and your run submits automatically.</li>
+              <li>Hit <em>Reset path</em> any time to start over with a fresh timer.</li>
+            </ul>
           </div>
 
           <aside class="maze-side">

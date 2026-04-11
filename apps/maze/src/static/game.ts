@@ -39,6 +39,8 @@ export const GAME_JS = String.raw`(() => {
   const stepEl = document.getElementById("step-count");
   const resultEl = document.getElementById("game-result");
   const resetButton = document.getElementById("maze-reset");
+  const helpButton = document.getElementById("maze-help");
+  const rulesPanel = document.getElementById("maze-rules");
 
   if (!svg || !cellNodes.length || !pathLine || !timerEl || !stepEl || !resultEl) {
     return;
@@ -102,12 +104,41 @@ export const GAME_JS = String.raw`(() => {
 
   const refreshPath = () => {
     // Repaint cell highlights.
-    cellNodes.forEach((node) => node.classList.remove("in-path", "head"));
+    cellNodes.forEach((node) =>
+      node.classList.remove("in-path", "head", "legal")
+    );
+
     for (let i = 0; i < path.length; i++) {
       const { x, y } = path[i];
       const node = cellIndex.get(x + "," + y);
       if (!node) continue;
       node.classList.add(i === path.length - 1 ? "head" : "in-path");
+    }
+
+    // Tag the cells that are legal next moves from the current head so CSS
+    // can give them a subtle highlight — players can see exactly where they
+    // can go next without having to click around and hope.
+    if (!finished) {
+      const head = path[path.length - 1];
+      const neighbors = [
+        [head.x, head.y - 1],
+        [head.x + 1, head.y],
+        [head.x, head.y + 1],
+        [head.x - 1, head.y]
+      ];
+      for (const [nx, ny] of neighbors) {
+        if (!canMove(head.x, head.y, nx, ny)) continue;
+        const node = cellIndex.get(nx + "," + ny);
+        if (!node) continue;
+        // Don't downgrade an in-path tile back to "legal" — keeping its
+        // trail color reads better than flipping it yellow.
+        if (
+          !node.classList.contains("in-path") &&
+          !node.classList.contains("head")
+        ) {
+          node.classList.add("legal");
+        }
+      }
     }
 
     // Repaint the polyline.
@@ -250,6 +281,13 @@ export const GAME_JS = String.raw`(() => {
   });
 
   resetButton?.addEventListener("click", resetPath);
+
+  if (helpButton && rulesPanel) {
+    helpButton.addEventListener("click", () => {
+      const nowHidden = rulesPanel.classList.toggle("hidden");
+      helpButton.setAttribute("aria-expanded", nowHidden ? "false" : "true");
+    });
+  }
 
   refreshPath();
   setTimer(0);
