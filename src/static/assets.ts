@@ -39,9 +39,10 @@ export const STYLE_CSS = String.raw`/* click! — derpy doodle edition */
   --ff-read: "Papernotes", Georgia, "Times New Roman", serif;
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: rgba(255,107,26,.18); }
 ::selection { background: var(--sun); color: var(--ink); }
 
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 html, body { min-height: 100vh; }
 
 body {
@@ -56,7 +57,10 @@ body {
   color: var(--ink);
   font: 400 18px/1.55 var(--ff-read);
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
+
+button, a, label, summary { touch-action: manipulation; }
 
 h1, h2, h3, h4 {
   font-family: var(--ff-goofy);
@@ -171,6 +175,66 @@ a:hover { color: var(--pink); text-decoration-color: var(--orange); }
   font: 400 1.4rem var(--ff-goofy);
   cursor: pointer;
   padding: 0;
+  color: inherit;
+}
+
+/* Hamburger toggle — hidden on desktop, visible on mobile via media query */
+.nav-toggle-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.nav-toggle {
+  display: none;
+  align-items: center;
+  gap: .55rem;
+  cursor: pointer;
+  padding: .5rem .9rem;
+  border: 3px dashed var(--ink);
+  background: var(--paper);
+  border-radius: 16px 24px 14px 22px / 22px 14px 24px 16px;
+  transform: rotate(-2deg);
+  transition: transform .14s ease, background .14s ease;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.nav-toggle:hover, .nav-toggle:focus-within { background: var(--sun); transform: rotate(1deg) scale(1.04); }
+.nav-toggle-input:focus-visible + .nav-toggle { outline: 3px dashed var(--orange); outline-offset: 3px; }
+.nav-toggle-lines {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 22px;
+}
+.nav-toggle-lines > span {
+  display: block;
+  height: 3px;
+  background: var(--ink);
+  border-radius: 2px;
+  transition: transform .2s ease, opacity .2s ease;
+}
+.nav-toggle-lines > span:nth-child(1) { transform: rotate(-3deg); }
+.nav-toggle-lines > span:nth-child(3) { transform: rotate(3deg); }
+.nav-toggle-word {
+  font: 400 1.2rem var(--ff-goofy);
+  color: var(--ink);
+  transform: rotate(-1deg);
+  display: inline-block;
+}
+.nav-toggle-input:checked + .nav-toggle .nav-toggle-lines > span:nth-child(1) {
+  transform: translateY(7px) rotate(42deg);
+}
+.nav-toggle-input:checked + .nav-toggle .nav-toggle-lines > span:nth-child(2) {
+  opacity: 0;
+}
+.nav-toggle-input:checked + .nav-toggle .nav-toggle-lines > span:nth-child(3) {
+  transform: translateY(-7px) rotate(-42deg);
 }
 
 /* ==============================================================
@@ -391,7 +455,7 @@ input:focus {
 
 .game-shell { position: relative; }
 
-.game-bar {
+.game-topline {
   display: flex;
   justify-content: space-between;
   gap: 2rem 1.5rem;
@@ -401,6 +465,8 @@ input:focus {
   flex-wrap: wrap;
   position: relative;
 }
+
+.game-bar { flex: 1 1 auto; min-width: 0; }
 
 .game-bar-left { max-width: 620px; }
 
@@ -490,6 +556,32 @@ input:focus {
   display: inline-block;
   transform: rotate(-3deg);
 }
+
+.side-collapsible { margin: 0 0 1rem; }
+.side-collapsible > summary {
+  list-style: none;
+  cursor: default;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .8rem;
+}
+.side-collapsible > summary::-webkit-details-marker { display: none; }
+.side-collapsible > summary > span:first-child {
+  font: 400 1.4rem var(--ff-goofy);
+  color: var(--pink);
+  display: inline-block;
+  transform: rotate(-3deg);
+}
+.side-collapsible-caret {
+  display: none;
+  font-size: 1.1rem;
+  color: var(--ink-soft);
+  transition: transform .25s ease;
+  padding: .25rem .4rem;
+}
+.side-collapsible[open] .side-collapsible-caret { transform: rotate(180deg); }
+.side-collapsible > summary + .side-collapsible-body { margin-top: .4rem; }
 
 .share-actions { margin-top: 1.2rem; }
 
@@ -730,9 +822,13 @@ input:focus {
    RESPONSIVE
    ============================================================== */
 
+@media (min-width: 721px) {
+  .nav-toggle-input { display: none; }
+}
+
 @media (max-width: 900px) {
   .game-cols { grid-template-columns: 1fr; }
-  .game-bar { flex-direction: column; }
+  .game-topline { flex-direction: column; }
   .game-stats { width: 100%; }
   .board-item:nth-child(2),
   .board-item:nth-child(3) { padding-left: 0; }
@@ -743,15 +839,250 @@ input:focus {
   }
 }
 
-@media (max-width: 640px) {
+/* =============== TABLET / SMALL LAPTOP =============== */
+@media (max-width: 720px) {
   body { font-size: 17px; }
-  .header-inner { gap: .6rem 1rem; }
-  .nav { gap: 1rem; font-size: 1.2rem; }
+
+  .wrap { width: min(1080px, calc(100% - 1.6rem)); }
+
+  /* Header — swap full nav for hamburger drawer */
+  .header { padding: 1rem 0 .8rem; }
+  .header-inner {
+    gap: .5rem;
+    align-items: center;
+    flex-wrap: nowrap;
+    position: relative;
+  }
   .logo { font-size: 2.1rem; }
-  .logo-bang { font-size: 2.4rem; }
-  .hero { padding: 2.2rem 0 2rem; }
-  .game-stats { gap: 1rem; }
-  .article-paper { padding: 1.4rem 1.3rem; }
+  .logo-bang { font-size: 2.5rem; }
+
+  .nav-toggle { display: inline-flex; }
+
+  .nav {
+    display: none;
+    position: absolute;
+    right: -.2rem;
+    top: calc(100% + .8rem);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.3rem 1.6rem 1.4rem;
+    min-width: 190px;
+    background: var(--paper);
+    border: 3px dashed var(--ink);
+    border-radius: 22px 14px 26px 16px / 16px 26px 14px 24px;
+    box-shadow: 0 14px 32px rgba(42,28,16,.18);
+    transform: rotate(-1.2deg);
+    z-index: 40;
+    font-size: 1.35rem;
+  }
+  .nav-toggle-input:checked ~ .nav { display: flex; }
+  .nav > * {
+    transform: none !important;
+    width: 100%;
+  }
+  .nav a, .nav-btn { padding: .25rem 0; }
+  .nav a:hover, .nav-btn:hover {
+    transform: rotate(-1deg) scale(1.04) !important;
+  }
+
+  /* Hero — snugger on phones */
+  .hero { padding: 2rem 0 1.8rem; }
+  .hero::before { font-size: 2rem; top: .4rem; right: 5%; }
+  .hero::after { font-size: 1.8rem; bottom: .4rem; left: 3%; }
+  .hero h1 { margin-bottom: 1.1rem; }
+  .hero-desc { font-size: 1.2rem; }
+  .hero-btns { gap: 1rem; margin-top: 1.4rem; }
+  .btn { font-size: 1.25rem; padding: .65rem 1.3rem; }
+
+  /* Homepage board — kill the staggered indent that breaks on narrow screens */
+  .board { padding: 1.2rem 0 2.2rem; }
+  .board-grid { gap: 1.6rem; }
+  .board-item,
+  .board-item:nth-child(1),
+  .board-item:nth-child(2),
+  .board-item:nth-child(3) {
+    transform: none;
+    padding-left: 0;
+  }
+  .route { gap: .5rem; font-size: clamp(1.4rem, 6vw, 2rem); }
+
+  /* =============== GAME PAGE =============== */
+  .page-content { padding: 1.2rem 0 2.5rem; }
+
+  .game-topline {
+    display: contents; /* unwrap so .game-stats can be sticky across full shell */
+  }
+  .game-bar {
+    padding-bottom: .6rem;
+    margin-bottom: .6rem;
+  }
+  .game-bar-left { max-width: 100%; }
+  .game-title {
+    font-size: 1.4rem;
+    line-height: 1.15;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .35rem .5rem;
+    align-items: baseline;
+  }
+  .game-title > :nth-child(1),
+  .game-title > :nth-child(3) { transform: none; }
+  .game-arrow { padding: 0 .15rem; }
+
+  /* Sticky compact HUD — stays in view while reading */
+  .game-stats {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: .4rem .9rem;
+    align-items: center;
+    width: calc(100% + 1.6rem);
+    margin: 0 -.8rem 1rem;
+    padding: .55rem .9rem;
+    background: var(--paper);
+    background-image: linear-gradient(var(--paper), var(--paper));
+    border-top: 3px dashed var(--ink);
+    border-bottom: 3px dashed var(--ink);
+    box-shadow: 0 6px 14px -8px rgba(42,28,16,.35);
+  }
+  .stat {
+    transform: none !important;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    line-height: 1;
+    text-align: left;
+  }
+  .stat--timer { order: 1; }
+  .stat--target { order: 2; min-width: 0; overflow: hidden; }
+  .stat:not(.stat--timer):not(.stat--target) { order: 3; text-align: right; }
+
+  .stat-label {
+    font-size: .72rem;
+    letter-spacing: .02em;
+    text-transform: lowercase;
+    margin-bottom: .05rem;
+  }
+  .stat-val {
+    font-size: 1.1rem;
+    line-height: 1.05;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .stat--timer .stat-val {
+    font-size: 1.55rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat--target .stat-val {
+    max-width: 100%;
+    font-size: 1rem;
+  }
+
+  /* Article paper — more breathing room, less rigid padding */
+  .game-cols { gap: 1.6rem; }
+  .article-paper {
+    padding: 1.2rem 1.1rem;
+    border-radius: 2px;
+  }
+  .article-paper h2 { font-size: 1.35rem; }
+
+  /* Article body — bump touch targets and readability */
+  .article-body { font-size: 16.5px; line-height: 1.7; }
+  .article-body p { margin: .75rem 0; }
+  .article-body a[data-wiki-target] {
+    padding: .12rem .05rem;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 3px;
+  }
+  .article-body table { font-size: .85rem; }
+  .article-body pre { font-size: .82em; }
+
+  /* Side panel collapses to a details drawer under the article */
+  .game-side { padding-top: 0; }
+  .side-collapsible {
+    border: 3px dashed var(--ink);
+    border-radius: 18px 26px 14px 22px / 20px 14px 26px 16px;
+    padding: .7rem 1rem .2rem;
+    background: rgba(255,251,240,.6);
+  }
+  .side-collapsible > summary {
+    cursor: pointer;
+    padding: .3rem 0;
+  }
+  .side-collapsible-caret { display: inline-block; }
+  .side-collapsible:not([open]) > summary {
+    padding-bottom: .4rem;
+  }
+  .side-collapsible[open] > summary {
+    border-bottom: 2px dotted rgba(42,28,16,.2);
+    margin-bottom: .5rem;
+    padding-bottom: .5rem;
+  }
+  .side-collapsible-body { padding-bottom: .4rem; }
+
+  .share-actions { margin-top: 1rem; }
+
+  /* Leaderboard tables — tighter and scrollable if needed */
+  .board-table { font-size: 1rem; }
+  .board-table th, .board-table td { padding: .45rem .3rem; }
+  .board-table td:first-child { font-size: 1.25rem; width: 2rem; }
+  .board-table td:nth-child(2) {
+    max-width: 38vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* Archive list stacks cleanly */
+  .archive-list li { gap: .3rem; padding: .7rem 0; }
+  .archive-list li a { font-size: 1.3rem; }
+  .archive-list li span { font-size: 1rem; width: 100%; }
+
+  /* Auth forms — full width inputs, bigger tap targets */
+  .auth-box { margin-top: .4rem; }
+  input {
+    font-size: 16px; /* prevents iOS autozoom */
+    padding: .8rem 1rem;
+  }
+  .form-stack button { justify-self: stretch; text-align: center; width: 100%; }
+
+  /* Banners a touch smaller */
+  .error-banner, .success-banner {
+    font-size: 1.1rem;
+    padding: .8rem 1rem;
+  }
+
+  .footer { padding: 2.5rem 0 1.8rem; font-size: 1.1rem; }
+}
+
+/* =============== SMALL PHONES =============== */
+@media (max-width: 420px) {
+  .wrap { width: calc(100% - 1.2rem); }
+  .logo { font-size: 1.9rem; }
+  .logo-bang { font-size: 2.2rem; }
+  .hero h1 { font-size: clamp(2.1rem, 11vw, 3rem); }
+  .game-title { font-size: 1.25rem; }
+  .stat-val { font-size: 1rem; }
+  .stat--timer .stat-val { font-size: 1.4rem; }
+  .stat--target .stat-val { font-size: .92rem; }
+  .article-paper { padding: 1rem .9rem; }
+  .board-table td:nth-child(4),
+  .board-table th:nth-child(4) { display: none; }
+}
+
+/* =============== LANDSCAPE PHONE — keep sticky HUD tiny =============== */
+@media (max-width: 900px) and (orientation: landscape) and (max-height: 500px) {
+  .header { padding: .6rem 0 .4rem; }
+  .hero { padding: 1.2rem 0 1rem; }
+  .game-stats {
+    padding: .35rem .8rem;
+  }
+  .stat--timer .stat-val { font-size: 1.3rem; }
+  .stat-label { display: none; }
 }
 `;
 
