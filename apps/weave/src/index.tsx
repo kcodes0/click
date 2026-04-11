@@ -4,6 +4,7 @@ import { mountUiAssets } from "@kcodes/ui";
 import { Hono } from "hono";
 import { Layout } from "./components/Layout";
 import gameRoutes from "./routes/game";
+import { GAME_JS } from "./static/game";
 import type { AppVars, Bindings } from "./types";
 
 const app = new Hono<{ Bindings: Bindings; Variables: AppVars }>();
@@ -11,6 +12,13 @@ const app = new Hono<{ Bindings: Bindings; Variables: AppVars }>();
 app.use("*", authMiddleware);
 
 mountUiAssets(app);
+
+app.get("/static/game.js", (c) =>
+  c.body(GAME_JS, 200, {
+    "content-type": "application/javascript; charset=utf-8",
+    "cache-control": "public, max-age=3600"
+  })
+);
 
 app.get("/", (c) => {
   const user = c.get("user");
