@@ -40,8 +40,17 @@ const GAMES: GameCard[] = [
     bang: "?",
     tag: "paper maze",
     desc: "Race through a hand-drawn maze. New maze each day, leaderboard for best time.",
-    meta: "in development",
-    status: "soon"
+    meta: "live · daily challenge",
+    status: "live"
+  },
+  {
+    href: "https://weave.kcodes.me",
+    title: "weave",
+    bang: "!",
+    tag: "letter weave",
+    desc: "5×5 Boggle-style grid. Trace adjacent letters to find as many words as you can in 3 minutes. Big words = big points.",
+    meta: "live · daily challenge",
+    status: "live"
   }
 ];
 
