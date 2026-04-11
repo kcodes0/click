@@ -1,23 +1,18 @@
 {
-  "name": "click-game",
+  "name": "kcodes-games",
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "wrangler dev",
-    "typecheck": "tsc --noEmit",
-    "deploy": "wrangler deploy",
-    "db:migrate:local": "wrangler d1 migrations apply DB --local",
-    "db:migrate:remote": "wrangler d1 migrations apply DB --remote"
-  },
-  "dependencies": {
-    "bcryptjs": "^3.0.2",
-    "hono": "^4.9.8",
-    "linkedom": "^0.18.12"
-  },
-  "devDependencies": {
-    "@cloudflare/workers-types": "^4.20260320.0",
-    "typescript": "^5.9.2",
-    "wrangler": "^4.24.3"
+    "dev": "cd apps/click && bun run dev",
+    "dev:click": "cd apps/click && bun run dev",
+    "typecheck": "cd apps/click && bun run typecheck",
+    "deploy:click": "cd apps/click && bun run deploy",
+    "db:migrate:local": "cd apps/click && bun run db:migrate:local",
+    "db:migrate:remote": "cd apps/click && bun run db:migrate:remote"
   }
 }
