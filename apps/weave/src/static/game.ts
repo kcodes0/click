@@ -210,20 +210,26 @@ export const GAME_JS = String.raw`(() => {
     paintFoundWords();
   };
 
-  // --- handle tile clicks ---
-  const handleTileClick = (node) => {
-    if (finished) return;
+  // Add one tile to the current path if the move is legal. Shared by both
+  // click-to-step and drag-to-trace input paths so they stay consistent.
+  // Returns true if the tile was actually appended (for the drag code to
+  // know whether to mark dragMoved).
+  const addTileToPath = (node) => {
+    if (finished) return false;
     const idx = Number(node.dataset.index);
-    if (Number.isNaN(idx)) return;
+    if (Number.isNaN(idx)) return false;
 
-    // Clicking a tile already in the current path — truncate back to it
-    // so players can undo the tail without clearing everything.
+    // Tapping a tile that's already on the trail truncates back to it so
+    // players can undo a wrong turn without a full clear. When a drag is
+    // active this also lets the player backtrack by dragging back over
+    // their own path.
     const existing = currentPath.indexOf(idx);
     if (existing !== -1) {
+      if (existing === currentPath.length - 1) return false;
       currentPath.length = existing + 1;
       paintCurrentWord();
       paintTiles();
-      return;
+      return false;
     }
 
     // First letter — always allowed; start the run clock if this is the
@@ -233,18 +239,19 @@ export const GAME_JS = String.raw`(() => {
       currentPath.push(idx);
       paintCurrentWord();
       paintTiles();
-      return;
+      return true;
     }
 
     // Subsequent letter must touch the previous tile.
     const last = currentPath[currentPath.length - 1];
     if (!isAdjacent(last, idx)) {
-      return;
+      return false;
     }
 
     currentPath.push(idx);
     paintCurrentWord();
     paintTiles();
+    return true;
   };
 
   // --- submit the full run to the server ---
@@ -336,14 +343,101 @@ export const GAME_JS = String.raw`(() => {
     await submitRun(timeMs);
   };
 
-  // --- wiring ---
+  // --- input: pointer events cover both mouse and touch ---
+  //
+  // Two modes coexist:
+  //   click-to-step  — each pointerdown adds the tapped tile to the word.
+  //                    Players build words one letter at a time and press
+  //                    Enter / Submit when done. Good for precision.
+  //   drag-to-trace  — pointerdown starts a drag; while held, moving the
+  //                    pointer across adjacent tiles extends the word;
+  //                    releasing auto-submits if the word is 4+ letters.
+  //                    Good for classic Boggle muscle memory.
+  //
+  // The two share addTileToPath() for all adjacency / no-reuse logic, so
+  // they can't disagree. dragMoved tracks whether the pointer actually
+  // visited a new tile between down and up — single taps stay in
+  // click-to-step mode and never auto-submit.
+  let pointerActive = false;
+  let dragMoved = false;
+
+  // Find the .weave-tile under a point, if any. Used during drag to
+  // translate document-level pointermove events into tile hits. We go
+  // through document.elementFromPoint because tile-level pointerenter
+  // doesn't fire reliably for touch pointers in every browser.
+  const tileAtPoint = (x, y) => {
+    const el = document.elementFromPoint(x, y);
+    if (!el || !el.closest) return null;
+    return el.closest(".weave-tile");
+  };
+
+  const onPointerDown = (node, event) => {
+    if (finished) return;
+    // preventDefault stops text selection and mobile long-press menus
+    // during a drag. Also keeps the button from stealing focus, so the
+    // document-level Enter handler still routes to submitCurrent().
+    event.preventDefault();
+    pointerActive = true;
+    dragMoved = false;
+    addTileToPath(node);
+    // Blur any stray focus so keyboard Enter goes to our handler rather
+    // than re-triggering whichever button was last focused.
+    if (document.activeElement && document.activeElement.blur) {
+      document.activeElement.blur();
+    }
+  };
+
+  const onPointerMove = (event) => {
+    if (!pointerActive) return;
+    const node = tileAtPoint(event.clientX, event.clientY);
+    if (!node) return;
+    const idx = Number(node.dataset.index);
+    if (Number.isNaN(idx)) return;
+    // Skip if the pointer is still over the same tile as the last step —
+    // no-op prevents redundant paints while the finger hovers.
+    if (
+      currentPath.length > 0 &&
+      currentPath[currentPath.length - 1] === idx
+    ) {
+      return;
+    }
+    const added = addTileToPath(node);
+    if (added) dragMoved = true;
+  };
+
+  const onPointerEnd = () => {
+    if (!pointerActive) return;
+    pointerActive = false;
+    if (!dragMoved) {
+      // Single tap — leave the tile on the path so the player can keep
+      // tapping more tiles or press Enter to submit.
+      return;
+    }
+    // Actual drag — auto-submit. submitCurrent() already rejects words
+    // shorter than 4 letters (flashes bad + clears the partial path).
+    submitCurrent();
+  };
+
   tileNodes.forEach((node) => {
-    node.addEventListener("click", () => handleTileClick(node));
+    node.addEventListener("pointerdown", (event) => onPointerDown(node, event));
   });
 
-  submitButton.addEventListener("click", submitCurrent);
-  clearButton.addEventListener("click", () => { clearCurrent(); });
-  finishButton.addEventListener("click", () => { void finishRun("manual"); });
+  document.addEventListener("pointermove", onPointerMove);
+  document.addEventListener("pointerup", onPointerEnd);
+  document.addEventListener("pointercancel", onPointerEnd);
+
+  submitButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    submitCurrent();
+  });
+  clearButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    clearCurrent();
+  });
+  finishButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    void finishRun("manual");
+  });
 
   document.addEventListener("keydown", (event) => {
     if (finished) return;

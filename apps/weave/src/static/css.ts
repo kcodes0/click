@@ -153,10 +153,15 @@ export const STYLE_CSS = String.raw`/* letter weave — game-specific styles */
   cursor: pointer;
   user-select: none;
   -webkit-user-select: none;
+  /* touch-action: none prevents touch-drag from being hijacked by the
+     browser's scroll / zoom gestures, which is critical for drag-to-trace
+     on phones. */
+  touch-action: none;
   transition: transform .12s ease, background .12s ease;
   padding: 0;
   text-transform: uppercase;
   aspect-ratio: 1;
+  -webkit-tap-highlight-color: transparent;
 }
 .weave-tile:nth-child(6n) { transform: rotate(-2deg); }
 .weave-tile:nth-child(6n+1) { transform: rotate(1.5deg); }

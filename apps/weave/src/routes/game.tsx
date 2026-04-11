@@ -68,18 +68,18 @@ function GamePage({
           )}
           <div id="game-result" class="result-banner hidden" />
 
+          <div class="weave-canvas">
+            <LetterGrid board={board} />
+          </div>
+
           <div class="weave-current">
             <span
               class="weave-current-word weave-current-word--empty"
               id="weave-current"
             >
-              tap letters to spell a word
+              tap or drag letters to spell a word
             </span>
-            <span class="weave-current-hint">enter to submit</span>
-          </div>
-
-          <div class="weave-canvas">
-            <LetterGrid board={board} />
+            <span class="weave-current-hint">release to submit</span>
           </div>
 
           <div class="weave-actions">
@@ -119,11 +119,11 @@ function GamePage({
           <div id="weave-rules" class="weave-rules hidden">
             <h3>How to play</h3>
             <ul>
-              <li>Tap letters to spell a word. Each next tile must touch the previous one (horizontal, vertical, or diagonal).</li>
-              <li>You can't reuse the same tile within a single word.</li>
+              <li><strong>Drag</strong> across adjacent letters to trace a word, then release — it auto-submits if it's 4+ letters and in the dictionary.</li>
+              <li>Or <strong>tap</strong> letters one at a time and hit Enter / <em>Submit word</em> when you're done. Each next tile must touch the previous one (horizontal, vertical, or diagonal).</li>
+              <li>You can't reuse the same tile within a single word. Drag back over your trail to undo the tail.</li>
               <li>Minimum 4 letters. Longer words are worth way more — 8+ letters gets you 11 points.</li>
-              <li>Press <em>Submit word</em> (or hit Enter) to lock a word in. Already-found words get ignored.</li>
-              <li>You get 3 minutes. The run auto-submits when the timer runs out, or tap <em>Finish run</em> to send it early.</li>
+              <li>You get 3 minutes. The run auto-submits when time runs out, or tap <em>Finish run</em> to send it early.</li>
             </ul>
           </div>
 
