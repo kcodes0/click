@@ -701,6 +701,34 @@ input:focus {
   margin: 1.2rem 0;
 }
 
+/* Figures — strictly bounded, no floats, never exceed the column. */
+.article-x-figure {
+  margin: 1.1rem auto;
+  padding: 0;
+  display: block;
+  text-align: center;
+  max-width: min(100%, 540px);
+}
+.article-x-img {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  max-height: 380px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border: 1px solid #d8c9a5;
+  background: rgba(255, 251, 240, .5);
+}
+.article-x-figcaption {
+  margin-top: .45rem;
+  font: italic .85rem/1.45 var(--ff-read);
+  color: #6a5f4f;
+  text-align: center;
+  padding: 0 .4rem;
+  overflow-wrap: anywhere;
+}
+
 .article-x-code {
   font: .88em ui-monospace, "SF Mono", Menlo, monospace;
   background: rgba(0,0,0,.04);
@@ -767,6 +795,17 @@ input:focus {
   margin: 0;
   color: #3a2f1f;
   overflow-wrap: anywhere;
+}
+.article-x-infobox-img {
+  display: block;
+  margin: .3rem auto;
+  max-width: 100%;
+  max-height: 260px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border: 1px solid #d8c9a5;
+  background: rgba(255, 251, 240, .5);
 }
 
 /* Clean tables — never float, horizontal scroll if needed. */

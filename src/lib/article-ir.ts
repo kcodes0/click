@@ -21,7 +21,15 @@ type InlineRun =
 type InfoboxItem =
   | { kind: "section"; title: string }
   | { kind: "pair"; label: string; value: InlineRun[] }
-  | { kind: "note"; runs: InlineRun[] };
+  | { kind: "note"; runs: InlineRun[] }
+  | {
+      kind: "image";
+      src: string;
+      srcset: string | null;
+      alt: string;
+      width: number | null;
+      height: number | null;
+    };
 
 type Block =
   | { kind: "heading"; level: 2 | 3; text: string }
@@ -35,7 +43,16 @@ type Block =
       headers: InlineRun[][] | null;
       rows: InlineRun[][][];
     }
-  | { kind: "infobox"; title: string | null; items: InfoboxItem[] };
+  | { kind: "infobox"; title: string | null; items: InfoboxItem[] }
+  | {
+      kind: "figure";
+      src: string;
+      srcset: string | null;
+      alt: string;
+      width: number | null;
+      height: number | null;
+      caption: InlineRun[] | null;
+    };
 
 const NODE_TEXT = 3;
 const NODE_ELEMENT = 1;
@@ -267,6 +284,26 @@ function buildInfobox(table: any): Block {
       }
     }
 
+    // A single data cell containing an image becomes an image item.
+    if (allData && cellEls.length === 1) {
+      const cell = cellEls[0];
+      const img = cell.querySelector && cell.querySelector("img");
+      if (img) {
+        const fig = buildFigure(cell);
+        if (fig && fig.kind === "figure") {
+          items.push({
+            kind: "image",
+            src: fig.src,
+            srcset: fig.srcset,
+            alt: fig.alt,
+            width: fig.width,
+            height: fig.height
+          });
+          continue;
+        }
+      }
+    }
+
     // Data-only row(s) — fold cells into a single note.
     if (allData) {
       const merged: InlineRun[] = [];
@@ -333,6 +370,83 @@ function buildTable(table: any): Block {
   }
 
   return { kind: "table", caption, headers, rows };
+}
+
+// Minimum intrinsic pixel size for an image to be considered content.
+// Smaller images are usually decorative icons (flags, sound/video icons,
+// disambig symbols) and just clutter the read view.
+const FIGURE_MIN_DIMENSION = 60;
+
+function isSafeImageUrl(src: string): boolean {
+  if (!src) return false;
+  if (src.startsWith("data:")) return false;
+  if (src.startsWith("//")) return true;
+  return /^https?:\/\//i.test(src);
+}
+
+function absolutizeUrl(src: string): string {
+  if (src.startsWith("//")) return "https:" + src;
+  return src;
+}
+
+function absolutizeSrcset(raw: string): string | null {
+  if (!raw) return null;
+  const parts = raw
+    .split(",")
+    .map((entry) => entry.trim())
+    .filter(Boolean)
+    .map((entry) => {
+      // An srcset entry is "<url> <descriptor>"; only the URL needs fixing.
+      const match = entry.match(/^(\S+)(\s+.*)?$/);
+      if (!match) return null;
+      const url = match[1];
+      const rest = match[2] || "";
+      if (!isSafeImageUrl(url)) return null;
+      return absolutizeUrl(url) + rest;
+    })
+    .filter((v): v is string => v !== null);
+  return parts.length ? parts.join(", ") : null;
+}
+
+function buildFigure(container: any): Block | null {
+  const img = container.querySelector && container.querySelector("img");
+  if (!img) return null;
+
+  const rawSrc = img.getAttribute("src") || "";
+  if (!isSafeImageUrl(rawSrc)) return null;
+  const src = absolutizeUrl(rawSrc);
+
+  const rawSrcset = img.getAttribute("srcset") || "";
+  const srcset = absolutizeSrcset(rawSrcset);
+
+  const widthAttr = parseInt(img.getAttribute("width") || "", 10);
+  const heightAttr = parseInt(img.getAttribute("height") || "", 10);
+  const width = Number.isFinite(widthAttr) && widthAttr > 0 ? widthAttr : null;
+  const height = Number.isFinite(heightAttr) && heightAttr > 0 ? heightAttr : null;
+
+  // Drop decorative icons — both intrinsic dimensions too small.
+  if (
+    width !== null &&
+    height !== null &&
+    width < FIGURE_MIN_DIMENSION &&
+    height < FIGURE_MIN_DIMENSION
+  ) {
+    return null;
+  }
+
+  const alt = img.getAttribute("alt") || "";
+
+  let caption: InlineRun[] | null = null;
+  const captionEl =
+    (container.querySelector && container.querySelector("figcaption")) ||
+    (container.querySelector && container.querySelector(".thumbcaption")) ||
+    (container.querySelector && container.querySelector(".gallerytext"));
+  if (captionEl) {
+    const runs = extractInline(captionEl);
+    if (!runsEmpty(runs)) caption = runs;
+  }
+
+  return { kind: "figure", src, srcset, alt, width, height, caption };
 }
 
 function buildBlocks(root: any): Block[] {
@@ -409,12 +523,27 @@ function buildBlocks(root: any): Block[] {
       continue;
     }
 
-    if (
-      tag === "div" ||
-      tag === "section" ||
-      tag === "details" ||
-      tag === "figure"
-    ) {
+    if (tag === "figure") {
+      const fig = buildFigure(child);
+      if (fig) {
+        blocks.push(fig);
+      } else {
+        blocks.push(...buildBlocks(child));
+      }
+      continue;
+    }
+
+    if (tag === "div" && classContains(child, "thumb")) {
+      const fig = buildFigure(child);
+      if (fig) {
+        blocks.push(fig);
+      } else {
+        blocks.push(...buildBlocks(child));
+      }
+      continue;
+    }
+
+    if (tag === "div" || tag === "section" || tag === "details") {
       // Recurse into structural wrappers so headings/paragraphs inside
       // `.mw-parser-output > div > p` are still picked up.
       blocks.push(...buildBlocks(child));
@@ -525,6 +654,15 @@ function renderBlock(block: Block, out: string[], links: Set<string>): void {
             out.push(
               `<div class="article-x-infobox-section">${escapeHtml(item.title)}</div>`
             );
+          } else if (item.kind === "image") {
+            out.push(
+              `<img class="article-x-infobox-img" src="${escapeHtml(item.src)}" loading="lazy" decoding="async" referrerpolicy="no-referrer"`
+            );
+            if (item.srcset) out.push(` srcset="${escapeHtml(item.srcset)}"`);
+            if (item.alt) out.push(` alt="${escapeHtml(item.alt)}"`);
+            if (item.width !== null) out.push(` width="${item.width}"`);
+            if (item.height !== null) out.push(` height="${item.height}"`);
+            out.push(` />`);
           } else if (item.kind === "pair") {
             out.push(`<div class="article-x-infobox-pair">`);
             out.push(
@@ -543,6 +681,24 @@ function renderBlock(block: Block, out: string[], links: Set<string>): void {
         out.push(`</div>`);
       }
       out.push(`</aside>`);
+      break;
+    }
+    case "figure": {
+      out.push(`<figure class="article-x-figure">`);
+      out.push(
+        `<img class="article-x-img" src="${escapeHtml(block.src)}" loading="lazy" decoding="async" referrerpolicy="no-referrer"`
+      );
+      if (block.srcset) out.push(` srcset="${escapeHtml(block.srcset)}"`);
+      if (block.alt) out.push(` alt="${escapeHtml(block.alt)}"`);
+      if (block.width !== null) out.push(` width="${block.width}"`);
+      if (block.height !== null) out.push(` height="${block.height}"`);
+      out.push(` />`);
+      if (block.caption) {
+        out.push(`<figcaption class="article-x-figcaption">`);
+        renderRuns(block.caption, out, links);
+        out.push(`</figcaption>`);
+      }
+      out.push(`</figure>`);
       break;
     }
     case "table": {
