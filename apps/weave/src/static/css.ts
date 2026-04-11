@@ -88,27 +88,32 @@ export const STYLE_CSS = String.raw`/* letter weave — game-specific styles */
 
 .weave-current {
   margin: 1rem auto 1.2rem;
-  padding: .7rem 1rem;
+  padding: .7rem 1rem .7rem 1.3rem;
   border: 3px dashed var(--ink);
   border-radius: 18px 26px 14px 22px / 22px 14px 26px 16px;
   background: var(--paper);
   max-width: 560px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: .8rem;
+  gap: .9rem;
   transform: rotate(-.3deg);
+}
+.weave-current-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
 }
 .weave-current-word {
   font: 400 2rem var(--ff-goofy);
   color: var(--orange);
   letter-spacing: .08em;
   min-height: 2rem;
-  flex: 1 1 auto;
-  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: color .12s ease;
 }
 .weave-current-word--empty {
   color: var(--ink-soft);
@@ -116,10 +121,42 @@ export const STYLE_CSS = String.raw`/* letter weave — game-specific styles */
   font-family: var(--ff-read);
   font-style: italic;
 }
+.weave-current-word--bad {
+  color: var(--red);
+}
+.weave-current-word--ok {
+  color: var(--teal);
+}
 .weave-current-hint {
-  font: 400 .95rem var(--ff-read);
+  font: 400 .9rem var(--ff-read);
   color: var(--ink-soft);
-  white-space: nowrap;
+}
+
+/* Big "commit this word" button sitting inline with the current-word
+   strip. More prominent than a ghost button tucked below the grid. */
+.weave-current-submit {
+  flex: 0 0 auto;
+  font: 400 1.2rem var(--ff-goofy);
+  color: var(--ink);
+  background: var(--sun);
+  border: 3px solid var(--ink);
+  border-radius: 14px 22px 14px 22px / 20px 14px 22px 14px;
+  padding: .6rem 1.1rem;
+  cursor: pointer;
+  transform: rotate(1.5deg);
+  transition: transform .12s ease, background .12s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.weave-current-submit:hover {
+  background: var(--orange);
+  color: var(--paper);
+  transform: rotate(-1deg) scale(1.04);
+}
+.weave-current-submit:active { transform: rotate(0) scale(.97); }
+.weave-current-submit:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+  transform: rotate(1.5deg);
 }
 
 /* ==============================================================
@@ -138,6 +175,21 @@ export const STYLE_CSS = String.raw`/* letter weave — game-specific styles */
   gap: .7rem;
   width: min(100%, 500px);
   aspect-ratio: 1;
+}
+
+/* Shake animation applied to the grid when a submit bounces — tells the
+   player loud and clear that the word was rejected without blocking the
+   rest of the page. Added/removed by game.js via the .shake class. */
+@keyframes weave-shake {
+  0%, 100% { transform: translateX(0); }
+  15% { transform: translateX(-8px) rotate(-.6deg); }
+  30% { transform: translateX(7px) rotate(.5deg); }
+  45% { transform: translateX(-5px) rotate(-.3deg); }
+  60% { transform: translateX(4px) rotate(.3deg); }
+  75% { transform: translateX(-2px); }
+}
+.weave-grid.shake {
+  animation: weave-shake .45s ease-in-out;
 }
 
 .weave-tile {

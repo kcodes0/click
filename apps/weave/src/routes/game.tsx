@@ -73,23 +73,27 @@ function GamePage({
           </div>
 
           <div class="weave-current">
-            <span
-              class="weave-current-word weave-current-word--empty"
-              id="weave-current"
-            >
-              tap or drag letters to spell a word
-            </span>
-            <span class="weave-current-hint">release to submit</span>
-          </div>
-
-          <div class="weave-actions">
+            <div class="weave-current-text">
+              <span
+                class="weave-current-word weave-current-word--empty"
+                id="weave-current"
+              >
+                tap or drag letters
+              </span>
+              <span class="weave-current-hint" id="weave-hint">
+                release a drag to submit, or use the button
+              </span>
+            </div>
             <button
               type="button"
               id="weave-submit"
-              class="btn btn--ghost btn--sm"
+              class="weave-current-submit"
             >
-              Submit word
+              Submit
             </button>
+          </div>
+
+          <div class="weave-actions">
             <button
               type="button"
               id="weave-clear"

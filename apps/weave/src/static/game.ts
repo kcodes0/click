@@ -21,8 +21,9 @@ export const GAME_JS = String.raw`(() => {
   const RUN_DURATION_MS = 3 * 60 * 1000;
 
   const tileNodes = shell.querySelectorAll(".weave-tile");
+  const grid = shell.querySelector(".weave-grid");
   const currentEl = document.getElementById("weave-current");
-  const currentHintEl = shell.querySelector(".weave-current-hint");
+  const currentHintEl = document.getElementById("weave-hint");
   const timerEl = document.getElementById("timer");
   const scoreEl = document.getElementById("score");
   const wordCountEl = document.getElementById("word-count");
@@ -92,6 +93,7 @@ export const GAME_JS = String.raw`(() => {
   // like "RDFC +1" flash into the list during play.
   let dictionary = null;
   let dictionaryLoadFailed = false;
+  const originalHint = currentHintEl ? currentHintEl.textContent || "" : "";
   const dictionaryReady = fetch("/static/dictionary.txt")
     .then((r) => {
       if (!r.ok) throw new Error("dict http " + r.status);
@@ -104,19 +106,19 @@ export const GAME_JS = String.raw`(() => {
       }
       dictionary = set;
       if (currentHintEl && !finished) {
-        currentHintEl.textContent = "release to submit";
+        currentHintEl.textContent = originalHint;
       }
     })
     .catch(() => {
       // Network hiccup — fall back to "optimistic accept, server
       // decides". Players will still see the server strike-through at
-      // the end. Surface the state so they know dictionary check is
-      // offline.
+      // the end. Surface the state so they know the instant-check is off.
       dictionaryLoadFailed = true;
       if (currentHintEl && !finished) {
-        currentHintEl.textContent = "offline check";
+        currentHintEl.textContent = "offline check — server will verify";
       }
     });
+  void dictionaryReady;
 
   if (currentHintEl) {
     currentHintEl.textContent = "loading dictionary…";
@@ -157,7 +159,7 @@ export const GAME_JS = String.raw`(() => {
   // --- UI painters ---
   const paintCurrentWord = () => {
     if (currentPath.length === 0) {
-      currentEl.textContent = "tap letters to spell a word";
+      currentEl.textContent = "tap or drag letters";
       currentEl.classList.add("weave-current-word--empty");
       return;
     }
@@ -209,14 +211,26 @@ export const GAME_JS = String.raw`(() => {
     resultEl.textContent = "";
   };
 
-  // Flash the current word strip briefly to acknowledge success / error.
+  // Flash the current word strip (and shake the grid on bad) to make
+  // accept/reject impossible to miss.
+  let flashTimer = 0;
   const flashCurrent = (kind) => {
-    currentEl.style.transition = "color .15s ease";
-    const original = currentEl.style.color;
-    currentEl.style.color = kind === "ok" ? "var(--teal)" : "var(--red)";
-    setTimeout(() => {
-      currentEl.style.color = original;
-    }, 200);
+    currentEl.classList.remove("weave-current-word--ok", "weave-current-word--bad");
+    currentEl.classList.add(
+      kind === "ok" ? "weave-current-word--ok" : "weave-current-word--bad"
+    );
+    if (flashTimer) clearTimeout(flashTimer);
+    flashTimer = setTimeout(() => {
+      currentEl.classList.remove("weave-current-word--ok", "weave-current-word--bad");
+    }, 380);
+
+    if (kind === "bad" && grid) {
+      grid.classList.remove("shake");
+      // Force a reflow so the animation restarts if the class was just removed.
+      void grid.offsetWidth;
+      grid.classList.add("shake");
+      setTimeout(() => grid.classList.remove("shake"), 500);
+    }
   };
 
   const clearCurrent = () => {
