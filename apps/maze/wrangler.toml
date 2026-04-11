@@ -2,6 +2,10 @@ name = "kcodes-maze"
 main = "src/index.tsx"
 compatibility_date = "2026-03-28"
 
+[[routes]]
+pattern = "maze.kcodes.me"
+custom_domain = true
+
 # Production cookie domain. The auth middleware ignores this on localhost,
 # so dev still works with host-only cookies.
 [vars]
