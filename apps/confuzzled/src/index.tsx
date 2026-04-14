@@ -6,7 +6,9 @@ import { Layout } from "./components/Layout";
 import apiRoutes from "./routes/api";
 import authRoutes from "./routes/auth";
 import gameRoutes from "./routes/game";
-import { GAME_MATH_JS } from "./static/game-math";
+import { GAME_NONOGRAM_JS } from "./static/game-nonogram";
+import { GAME_STARBATTLE_JS } from "./static/game-starbattle";
+import { GAME_TENTS_JS } from "./static/game-tents";
 import type { AppVars, Bindings } from "./types";
 
 const app = new Hono<{ Bindings: Bindings; Variables: AppVars }>();
@@ -20,7 +22,9 @@ const JS_HEADERS = {
   "cache-control": "public, max-age=3600"
 };
 
-app.get("/static/game-math.js", (c) => c.body(GAME_MATH_JS, 200, JS_HEADERS));
+app.get("/static/game-nonogram.js", (c) => c.body(GAME_NONOGRAM_JS, 200, JS_HEADERS));
+app.get("/static/game-starbattle.js", (c) => c.body(GAME_STARBATTLE_JS, 200, JS_HEADERS));
+app.get("/static/game-tents.js", (c) => c.body(GAME_TENTS_JS, 200, JS_HEADERS));
 
 app.get("/", (c) => {
   const user = c.get("user");
@@ -34,18 +38,18 @@ app.get("/", (c) => {
             <span class="wob-2">fuzzled</span>
           </h1>
           <p>
-            One hard math problem every day at noon UTC. Competition-style.
-            Solve it fast, climb the leaderboard.
+            3 fresh spatial puzzles every day at noon UTC. Nonogram, Star Battle,
+            and Tents &amp; Trees. Solve all three for the best time.
           </p>
           <div>
-            <a href="/play/daily" class="btn">Solve today's problem</a>
+            <a href="/play/daily" class="btn">Play today's puzzles</a>
           </div>
         </div>
       </section>
 
       <footer class="footer">
         <div class="wrap">
-          <p>inspired by math olympiad & BmMT.</p>
+          <p>pure logic. no guessing. every cell counts.</p>
         </div>
       </footer>
     </Layout>

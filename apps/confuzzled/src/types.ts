@@ -28,3 +28,13 @@ export type LeaderboardEntry = {
   timeMs: number;
   completedAt: string;
 };
+
+export type CombinedLeaderboardEntry = {
+  userId: string;
+  username: string;
+  puzzlesCompleted: number;
+  totalTimeMs: number;
+  nonogramTimeMs: number | null;
+  starbattleTimeMs: number | null;
+  tentsTimeMs: number | null;
+};

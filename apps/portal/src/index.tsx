@@ -38,8 +38,8 @@ const GAMES: GameCard[] = [
     href: "https://confuzzled.kcodes.me",
     title: "confuzzled",
     bang: "!",
-    tag: "math competition",
-    desc: "One hard competition math problem every day. BmMT-inspired. Solve it fast, climb the leaderboard.",
+    tag: "spatial puzzles",
+    desc: "3 daily spatial logic puzzles — Nonogram, Star Battle, and Tents & Trees. Solve all three for the best time.",
     meta: "live · daily challenge",
     status: "live"
   }
