@@ -1,6 +1,6 @@
 import { createPuzzle, getDailyPuzzleByDate } from "../db/queries";
 import type { PuzzleRow } from "../types";
-import { hashStringToSeed } from "./mathpuzzle";
+import { hashStringToSeed } from "./prng";
 import { PUZZLE_TYPES } from "./puzzle-types";
 import { getDailyDateKey, nowMs } from "./time";
 

@@ -1,4 +1,5 @@
 import type {
+  CombinedLeaderboardEntry,
   LeaderboardEntry,
   PuzzleRow,
   PuzzleSolveRow
@@ -120,5 +121,32 @@ export async function getPuzzleLeaderboard(
     )
     .bind(puzzleId)
     .all<LeaderboardEntry>();
+  return rows.results;
+}
+
+export async function getDailyCombinedLeaderboard(
+  db: D1Database,
+  dateKey: string
+): Promise<CombinedLeaderboardEntry[]> {
+  const rows = await db
+    .prepare(
+      `SELECT
+         u.id AS userId,
+         u.username AS username,
+         COUNT(ps.id) AS puzzlesCompleted,
+         SUM(ps.time_ms) AS totalTimeMs,
+         MAX(CASE WHEN p.type = 'nonogram' THEN ps.time_ms END) AS nonogramTimeMs,
+         MAX(CASE WHEN p.type = 'starbattle' THEN ps.time_ms END) AS starbattleTimeMs,
+         MAX(CASE WHEN p.type = 'tents' THEN ps.time_ms END) AS tentsTimeMs
+       FROM users u
+       JOIN puzzle_solves ps ON ps.user_id = u.id
+       JOIN puzzles p ON p.id = ps.puzzle_id
+       WHERE p.daily_date = ?
+       GROUP BY u.id
+       ORDER BY puzzlesCompleted DESC, totalTimeMs ASC
+       LIMIT 50`
+    )
+    .bind(dateKey)
+    .all<CombinedLeaderboardEntry>();
   return rows.results;
 }

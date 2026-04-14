@@ -1,9 +1,11 @@
-import { generateMathPuzzle, verifyMathAnswer } from "./mathpuzzle";
+import { generateNonogram, verifyNonogramSolution } from "./nonogram";
+import { generateStarBattle, verifyStarBattleSolution } from "./starbattle";
+import { generateTents, verifyTentsSolution } from "./tents";
 
 export type PuzzleTypeDef = {
   type: string;
   displayName: string;
-  difficulty: "Hard";
+  difficulty: "Medium" | "Hard" | "Expert";
   order: number;
   width: number;
   height: number;
@@ -22,14 +24,34 @@ export type PuzzleTypeDef = {
 
 export const PUZZLE_TYPES: PuzzleTypeDef[] = [
   {
-    type: "math",
-    displayName: "Daily Challenge",
-    difficulty: "Hard",
+    type: "nonogram",
+    displayName: "Nonogram",
+    difficulty: "Medium",
     order: 1,
-    width: 0,
-    height: 0,
-    generate: generateMathPuzzle,
-    verify: verifyMathAnswer
+    width: 8,
+    height: 8,
+    generate: generateNonogram,
+    verify: verifyNonogramSolution
+  },
+  {
+    type: "starbattle",
+    displayName: "Star Battle",
+    difficulty: "Hard",
+    order: 2,
+    width: 8,
+    height: 8,
+    generate: generateStarBattle,
+    verify: verifyStarBattleSolution
+  },
+  {
+    type: "tents",
+    displayName: "Tents & Trees",
+    difficulty: "Expert",
+    order: 3,
+    width: 8,
+    height: 8,
+    generate: generateTents,
+    verify: verifyTentsSolution
   }
 ];
 
