@@ -1,5 +1,6 @@
 // Signal puzzle: route colored signals from transmitters to receivers by
-// placing / and \ mirrors. Every non-wall cell must have a mirror.
+// placing / and \ mirrors. Grid stays mostly open — every non-wall cell
+// must have a mirror, and ALL mirrors affect signal routing.
 
 type Direction = "N" | "S" | "E" | "W";
 
@@ -107,19 +108,6 @@ function traceSignal(
   return null;
 }
 
-function allEdgePositions(W: number, H: number): EdgePos[] {
-  const result: EdgePos[] = [];
-  for (let i = 0; i < W; i++) {
-    result.push({ edge: "top", pos: i });
-    result.push({ edge: "bottom", pos: i });
-  }
-  for (let i = 0; i < H; i++) {
-    result.push({ edge: "left", pos: i });
-    result.push({ edge: "right", pos: i });
-  }
-  return result;
-}
-
 function edgeKey(ep: EdgePos): string {
   return `${ep.edge}:${ep.pos}`;
 }
@@ -136,6 +124,8 @@ function solveBrute(
     if (cells[i] === ".") empties.push(i);
   }
 
+  if (empties.length > 20) return [];
+
   const solutions: string[][] = [];
   const total = 1 << empties.length;
 
@@ -146,6 +136,7 @@ function solveBrute(
     }
 
     let valid = true;
+    const usedCells = new Set<number>();
     for (const sig of signals) {
       const result = traceSignal(test, W, H, sig.from);
       if (
@@ -156,6 +147,14 @@ function solveBrute(
         valid = false;
         break;
       }
+      for (const c of result.path) {
+        if (usedCells.has(c)) {
+          valid = false;
+          break;
+        }
+        usedCells.add(c);
+      }
+      if (!valid) break;
     }
     if (valid) solutions.push(test);
   }
@@ -176,13 +175,11 @@ function tryGenerateSignal(
   const n = W * H;
   const cells: string[] = new Array(n);
 
-  // Fill all cells with random mirrors
-  for (let i = 0; i < n; i++) {
-    cells[i] = rng() < 0.5 ? "/" : "\\";
-  }
+  // Place walls (~30% density, point-symmetric) so we get ~25 non-wall cells
+  for (let i = 0; i < n; i++) cells[i] = ".";
 
-  // Place a few walls (~8%, symmetric)
-  const wallTarget = Math.floor(n * 0.08);
+  const wallDensity = 0.28 + rng() * 0.06;
+  const wallTarget = Math.floor(n * wallDensity);
   for (let i = 0; i < Math.ceil(wallTarget / 2); i++) {
     const x = Math.floor(rng() * W);
     const y = Math.floor(rng() * H);
@@ -190,23 +187,46 @@ function tryGenerateSignal(
     cells[(H - 1 - y) * W + (W - 1 - x)] = "#";
   }
 
+  // Reject if any row/col is entirely walls (signals can't pass)
+  for (let y = 0; y < H; y++) {
+    let allWall = true;
+    for (let x = 0; x < W; x++) {
+      if (cells[y * W + x] !== "#") allWall = false;
+    }
+    if (allWall) return null;
+  }
+
+  // Fill all non-wall cells with random / or \
+  for (let i = 0; i < n; i++) {
+    if (cells[i] !== "#") {
+      cells[i] = rng() < 0.5 ? "/" : "\\";
+    }
+  }
+
   // Trace all edge-to-edge signals
-  const edges = allEdgePositions(W, H);
+  const allEdges: EdgePos[] = [];
+  for (let i = 0; i < W; i++) {
+    allEdges.push({ edge: "top", pos: i });
+    allEdges.push({ edge: "bottom", pos: i });
+  }
+  for (let i = 0; i < H; i++) {
+    allEdges.push({ edge: "left", pos: i });
+    allEdges.push({ edge: "right", pos: i });
+  }
+
   type TracedSignal = { from: EdgePos; to: EdgePos; path: number[] };
   const traced: TracedSignal[] = [];
-  const usedExits = new Set<string>();
 
-  for (const entry of edges) {
+  for (const entry of allEdges) {
     const result = traceSignal(cells, W, H, entry);
     if (!result || result.path.length < 3) continue;
     const ek = edgeKey(entry);
     const xk = edgeKey(result.exit);
     if (ek === xk) continue;
-    if (usedExits.has(xk)) continue;
     traced.push({ from: entry, to: result.exit, path: result.path });
   }
 
-  // Pick non-overlapping signal pairs
+  // Pick 3 non-overlapping signal pairs (paths can't share cells)
   for (let i = traced.length - 1; i > 0; i--) {
     const j = Math.floor(rng() * (i + 1));
     [traced[i], traced[j]] = [traced[j], traced[i]];
@@ -237,26 +257,6 @@ function tryGenerateSignal(
 
   if (chosen.length < 3) return null;
 
-  // Turn non-path non-wall cells into walls
-  for (let i = 0; i < n; i++) {
-    if (cells[i] !== "#" && !usedCells.has(i)) {
-      cells[i] = "#";
-    }
-  }
-
-  // Record full solution
-  const solutionMap: Record<number, string> = {};
-  for (const c of usedCells) {
-    if (cells[c] !== "#") solutionMap[c] = cells[c];
-  }
-
-  // Try removing mirrors (making them empty for player to fill)
-  const pathList = Array.from(usedCells);
-  for (let i = pathList.length - 1; i > 0; i--) {
-    const j = Math.floor(rng() * (i + 1));
-    [pathList[i], pathList[j]] = [pathList[j], pathList[i]];
-  }
-
   const signals: SignalPair[] = chosen.map((t, idx) => ({
     id: String.fromCharCode(65 + idx),
     color: SIGNAL_COLORS[idx],
@@ -264,22 +264,39 @@ function tryGenerateSignal(
     to: t.to
   }));
 
-  const puzzleCells = cells.slice();
-  let removedCount = 0;
+  // Record the full solution
+  const solutionMap: Record<number, string> = {};
+  for (let i = 0; i < n; i++) {
+    if (cells[i] !== "#") solutionMap[i] = cells[i];
+  }
 
-  for (const ci of pathList) {
-    if (puzzleCells[ci] === "#") continue;
+  // Strip mirrors while maintaining uniqueness (max 18 empty cells)
+  const nonWallIdxs: number[] = [];
+  for (let i = 0; i < n; i++) {
+    if (cells[i] !== "#") nonWallIdxs.push(i);
+  }
+  for (let i = nonWallIdxs.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [nonWallIdxs[i], nonWallIdxs[j]] = [nonWallIdxs[j], nonWallIdxs[i]];
+  }
+
+  const puzzleCells = cells.slice();
+  let emptyCount = 0;
+  const maxEmpty = 18;
+
+  for (const ci of nonWallIdxs) {
+    if (emptyCount >= maxEmpty) break;
     const saved = puzzleCells[ci];
     puzzleCells[ci] = ".";
     const sols = solveBrute(puzzleCells, W, H, signals, 2);
     if (sols.length === 1) {
-      removedCount++;
+      emptyCount++;
     } else {
       puzzleCells[ci] = saved;
     }
   }
 
-  if (removedCount < 4) return null;
+  if (emptyCount < 4) return null;
 
   const gridData: SignalGridData = { cells: puzzleCells, signals };
 
@@ -328,18 +345,18 @@ export function verifySignalSolution(
       return { valid: false, reason: "Unfilled cell" };
   }
 
+  const usedCells = new Set<number>();
   for (const sig of data.signals) {
     const result = traceSignal(cells, width, height, sig.from);
     if (!result)
-      return {
-        valid: false,
-        reason: `Signal ${sig.id} is blocked`
-      };
+      return { valid: false, reason: `Signal ${sig.id} is blocked` };
     if (result.exit.edge !== sig.to.edge || result.exit.pos !== sig.to.pos)
-      return {
-        valid: false,
-        reason: `Signal ${sig.id} reaches wrong target`
-      };
+      return { valid: false, reason: `Signal ${sig.id} reaches wrong target` };
+    for (const c of result.path) {
+      if (usedCells.has(c))
+        return { valid: false, reason: "Signal paths overlap" };
+      usedCells.add(c);
+    }
   }
 
   return { valid: true };

@@ -484,12 +484,55 @@ export const PUZZLE_CSS = String.raw`/* confuzzled — puzzle-specific styles */
    SIGNAL PUZZLE
    ============================================================== */
 
+.sig-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  width: min(100%, 420px);
+  margin: 0 auto;
+}
+.sig-mid {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+}
+.sig-edge {
+  display: flex;
+  justify-content: space-around;
+}
+.sig-edge--top, .sig-edge--bottom {
+  flex-direction: row;
+  width: 100%;
+  padding: 0 calc(100% * 0.02);
+}
+.sig-edge--left, .sig-edge--right {
+  flex-direction: column;
+  justify-content: space-around;
+  width: 1.6rem;
+  flex-shrink: 0;
+}
+.sig-grid { flex: 1; }
+.sig-marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  min-width: 1.4rem;
+  min-height: 1.4rem;
+}
+.sig-marker--active {
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
 .sig-cell--fwd, .sig-cell--bwd {
   font: 700 clamp(1.4rem, 5vw, 2.2rem) var(--ff-goofy);
   color: var(--ink);
 }
 .sig-cell--fixed {
   background: var(--paper-2);
+  cursor: default;
 }
 .sig-mirror {
   font: 700 clamp(1.4rem, 5vw, 2.2rem) var(--ff-goofy);
