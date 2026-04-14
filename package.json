@@ -10,8 +10,13 @@
   "scripts": {
     "dev": "cd apps/click && bun run dev",
     "dev:click": "cd apps/click && bun run dev",
+    "dev:confuzzled": "cd apps/confuzzled && bun run dev",
+    "dev:portal": "cd apps/portal && bun run dev",
     "typecheck": "cd apps/click && bun run typecheck",
     "deploy:click": "cd apps/click && bun run deploy",
+    "deploy:confuzzled": "cd apps/confuzzled && bun run deploy",
+    "deploy:portal": "cd apps/portal && bun run deploy",
+    "deploy:all": "bun run deploy:click && bun run deploy:confuzzled && bun run deploy:portal",
     "db:migrate:local": "cd apps/click && bun run db:migrate:local",
     "db:migrate:remote": "cd apps/click && bun run db:migrate:remote"
   }
