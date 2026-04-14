@@ -1,11 +1,9 @@
-import { generateAkari, verifyAkariSolution } from "./akari";
-import { generateFrost, verifyFrostSolution } from "./frost";
-import { generateSignal, verifySignalSolution } from "./signal";
+import { generateMathPuzzle, verifyMathAnswer } from "./mathpuzzle";
 
 export type PuzzleTypeDef = {
   type: string;
   displayName: string;
-  difficulty: "Medium" | "Hard" | "Super Hard";
+  difficulty: "Hard";
   order: number;
   width: number;
   height: number;
@@ -24,40 +22,14 @@ export type PuzzleTypeDef = {
 
 export const PUZZLE_TYPES: PuzzleTypeDef[] = [
   {
-    type: "akari",
-    displayName: "Light Up",
-    difficulty: "Medium",
-    order: 1,
-    width: 7,
-    height: 7,
-    generate: (w, h, seed) => {
-      const p = generateAkari(w, h, seed);
-      return { ...p, solution: JSON.stringify(p.solution) };
-    },
-    verify: (grid, w, h, answer) =>
-      verifyAkariSolution(grid, w, h, answer as number[])
-  },
-  {
-    type: "signal",
-    displayName: "Signal",
+    type: "math",
+    displayName: "Daily Challenge",
     difficulty: "Hard",
-    order: 2,
-    width: 6,
-    height: 6,
-    generate: generateSignal,
-    verify: (grid, w, h, answer) =>
-      verifySignalSolution(grid, w, h, answer as Record<string, string>)
-  },
-  {
-    type: "frost",
-    displayName: "Frost",
-    difficulty: "Super Hard",
-    order: 3,
-    width: 7,
-    height: 7,
-    generate: generateFrost,
-    verify: (grid, w, h, answer) =>
-      verifyFrostSolution(grid, w, h, answer as number[])
+    order: 1,
+    width: 0,
+    height: 0,
+    generate: generateMathPuzzle,
+    verify: verifyMathAnswer
   }
 ];
 

@@ -1,4 +1,4 @@
-export const PUZZLE_CSS = String.raw`/* confuzzled — puzzle-specific styles */
+export const PUZZLE_CSS = String.raw`/* confuzzled — math puzzle styles */
 
 /* ==============================================================
    HOME HERO
@@ -10,7 +10,7 @@ export const PUZZLE_CSS = String.raw`/* confuzzled — puzzle-specific styles */
   text-align: center;
 }
 .pz-hero::before {
-  content: "★";
+  content: "∑";
   position: absolute;
   top: 1rem; left: 12%;
   font-size: 2.4rem;
@@ -18,7 +18,7 @@ export const PUZZLE_CSS = String.raw`/* confuzzled — puzzle-specific styles */
   transform: rotate(-12deg);
 }
 .pz-hero::after {
-  content: "✦";
+  content: "π";
   position: absolute;
   top: 1rem; right: 10%;
   font-size: 2.2rem;
@@ -47,7 +47,7 @@ export const PUZZLE_CSS = String.raw`/* confuzzled — puzzle-specific styles */
    GAME PAGE
    ============================================================== */
 
-.pz-shell { position: relative; }
+.pz-shell { position: relative; max-width: 700px; margin: 0 auto; }
 
 .pz-topline {
   display: flex;
@@ -78,122 +78,110 @@ export const PUZZLE_CSS = String.raw`/* confuzzled — puzzle-specific styles */
 .pz-stats .stat--timer .stat-val { color: var(--orange); font-size: 2rem; }
 
 /* ==============================================================
-   PUZZLE GRID
+   MATH PROBLEM DISPLAY
    ============================================================== */
 
-.pz-canvas {
-  display: flex;
-  justify-content: center;
-  padding: 1rem 0 1.4rem;
-}
-
-.pz-grid {
-  display: grid;
-  gap: 0;
-  width: min(100%, 420px);
-  aspect-ratio: 1;
-  border: 3px solid var(--ink);
+.math-category {
+  display: inline-block;
+  font: 700 .75rem var(--ff-read);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  padding: .2rem .6rem;
   border-radius: 6px;
-  overflow: hidden;
+  color: var(--paper);
+  background: var(--lav);
+  margin-bottom: .8rem;
+}
+.math-category--algebra { background: var(--orange); }
+.math-category--number-theory { background: var(--teal); }
+.math-category--combinatorics { background: var(--pink); }
+.math-category--geometry { background: var(--lav); }
+
+.math-problem {
+  padding: 1.2rem 0;
 }
 
-.pz-cell {
-  position: relative;
+.math-statement {
+  font: 1.25rem/1.8 var(--ff-read);
+  color: var(--ink);
+  padding: 1.4rem 1.6rem;
+  border: 3px solid var(--ink);
+  border-radius: 16px 22px 14px 20px / 20px 14px 22px 16px;
+  background: var(--paper);
+  max-width: 100%;
+}
+
+.math-statement .katex-display {
+  margin: .8rem 0;
+}
+
+/* ==============================================================
+   ANSWER INPUT
+   ============================================================== */
+
+.math-answer-row {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  gap: .8rem;
+  margin-top: 1.4rem;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.math-input {
+  flex: 1 1 200px;
+  font: 1.2rem var(--ff-read);
+  padding: .7rem 1rem;
+  border: 3px solid var(--ink);
+  border-radius: 12px 16px 10px 14px / 14px 10px 16px 12px;
   background: var(--paper);
   color: var(--ink);
-  font: 400 clamp(1.1rem, 4vw, 1.6rem) var(--ff-goofy);
-  border: 1px solid rgba(42, 28, 16, .25);
-  cursor: pointer;
-  user-select: none;
-  -webkit-user-select: none;
-  padding: 0;
-  aspect-ratio: 1;
-  -webkit-tap-highlight-color: transparent;
-  transition: background .1s ease;
+  outline: none;
+  transition: border-color .15s ease;
+  min-width: 0;
 }
-
-.pz-cell:hover:not(:disabled) {
-  background: rgba(255, 207, 43, .15);
+.math-input:focus {
+  border-color: var(--lav);
+  box-shadow: 0 0 0 3px rgba(137, 101, 224, .15);
 }
-
-.pz-cell:focus-visible {
-  outline: 3px dashed var(--orange);
-  outline-offset: -3px;
-  z-index: 2;
-}
-
-/* Walls */
-.pz-cell--wall {
-  background: var(--ink);
-  cursor: default;
-}
-.pz-cell--wall:hover { background: var(--ink); }
-.pz-cell--num {
-  background: var(--ink);
-}
-.pz-wall-num {
-  color: var(--paper);
-  font: 700 clamp(1.2rem, 4.5vw, 1.8rem) var(--ff-goofy);
-}
-
-/* Numbered wall error (too many adjacent bulbs) */
-.pz-cell--wall-error .pz-wall-num {
-  color: var(--red);
-}
-
-/* Bulb placed */
-.pz-cell--bulb {
-  background: var(--sun);
-}
-.pz-cell--bulb::after {
-  content: "★";
-  font-size: clamp(1.4rem, 5vw, 2rem);
-  color: var(--orange);
-  line-height: 1;
-}
-
-/* Lit by a nearby bulb */
-.pz-cell--lit {
-  background: rgba(255, 207, 43, .22);
-}
-
-/* X marker (definitely no bulb) */
-.pz-cell--x::after {
-  content: "×";
-  font-size: clamp(1.4rem, 5vw, 2rem);
+.math-input::placeholder {
   color: var(--ink-soft);
-  line-height: 1;
   opacity: .5;
 }
-
-/* Conflict — two bulbs seeing each other */
-.pz-cell--conflict {
-  background: rgba(220, 38, 38, .25);
-}
-.pz-cell--conflict::after {
-  color: var(--red);
+.math-input:disabled {
+  opacity: .5;
+  cursor: not-allowed;
 }
 
-/* Solved flash */
-@keyframes pz-solved {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.02); }
-  100% { transform: scale(1); }
-}
-.pz-grid.solved {
-  animation: pz-solved .5s ease;
-}
-.pz-grid.solved .pz-cell:not(.pz-cell--wall) {
-  background: rgba(16, 191, 160, .18);
-}
-.pz-grid.solved .pz-cell--bulb {
-  background: var(--teal);
-}
-.pz-grid.solved .pz-cell--bulb::after {
+.math-submit {
+  font: 700 1.1rem var(--ff-goofy);
+  padding: .7rem 1.8rem;
+  border: 3px solid var(--ink);
+  border-radius: 10px 16px 12px 14px / 14px 12px 16px 10px;
+  background: var(--lav);
   color: var(--paper);
+  cursor: pointer;
+  transition: transform .1s ease, background .1s ease;
+  white-space: nowrap;
+}
+.math-submit:hover:not(:disabled) {
+  transform: rotate(-1deg) scale(1.03);
+  background: var(--orange);
+}
+.math-submit:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+/* ==============================================================
+   ATTEMPTS COUNTER
+   ============================================================== */
+
+.math-meta {
+  display: flex;
+  gap: 1.4rem;
+  margin-top: .8rem;
+  font: .95rem var(--ff-read);
+  color: var(--ink-soft);
 }
 
 /* ==============================================================
@@ -220,92 +208,13 @@ export const PUZZLE_CSS = String.raw`/* confuzzled — puzzle-specific styles */
   background: rgba(255, 251, 240, .85);
   max-width: 600px;
 }
-.pz-rules-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: .8rem;
-  margin-bottom: .6rem;
-}
 .pz-rules h3 {
   font: 400 1.4rem var(--ff-goofy);
   color: var(--lav);
   display: inline-block;
   transform: rotate(-2deg);
-  margin: 0;
+  margin: 0 0 .6rem;
 }
-.pz-help-btn {
-  border: 2px dashed var(--ink-soft);
-  background: var(--paper);
-  color: var(--ink-soft);
-  font: 400 .85rem var(--ff-read);
-  cursor: pointer;
-  padding: .2rem .7rem;
-  border-radius: 8px;
-  transition: background .12s ease;
-}
-.pz-help-btn:hover { background: var(--sun); color: var(--ink); }
-.pz-help-btn:focus-visible { outline: 3px dashed var(--orange); outline-offset: 3px; }
-
-.pz-rules-body.hidden { display: none; }
-
-/* Visual legend */
-.pz-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: .5rem .9rem;
-  margin-bottom: .9rem;
-  padding: .6rem .8rem;
-  background: var(--paper);
-  border: 2px solid rgba(42, 28, 16, .15);
-  border-radius: 10px;
-}
-.pz-legend-item {
-  display: flex;
-  align-items: center;
-  gap: .35rem;
-  font: .85rem var(--ff-read);
-  color: var(--ink-soft);
-}
-.pz-legend-swatch {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.6rem;
-  height: 1.6rem;
-  border: 2px solid rgba(42, 28, 16, .3);
-  border-radius: 4px;
-  font-size: .85rem;
-  line-height: 1;
-  flex-shrink: 0;
-}
-.pz-legend--empty { background: var(--paper); }
-.pz-legend--wall { background: var(--ink); }
-.pz-legend--num {
-  background: var(--ink);
-  color: var(--paper);
-  font-weight: 700;
-  font-family: var(--ff-goofy);
-}
-.pz-legend--bulb {
-  background: var(--sun);
-}
-.pz-legend--bulb::after {
-  content: "\2605";
-  color: var(--orange);
-  font-size: 1rem;
-}
-.pz-legend--xmark {
-  background: var(--paper);
-}
-.pz-legend--xmark::after {
-  content: "\00d7";
-  color: var(--ink-soft);
-  font-size: 1.1rem;
-  opacity: .6;
-}
-
-/* Numbered rules */
 .pz-rules-list {
   margin: 0 0 .6rem;
   padding: 0 0 0 1.5rem;
@@ -321,12 +230,23 @@ export const PUZZLE_CSS = String.raw`/* confuzzled — puzzle-specific styles */
   font-weight: 700;
 }
 
-.pz-rules-goal {
-  font: italic .95rem/1.5 var(--ff-read);
-  color: var(--ink-soft);
-  margin: 0;
-  padding-top: .3rem;
-  border-top: 2px dotted rgba(42, 28, 16, .2);
+/* ==============================================================
+   RESULT BANNER
+   ============================================================== */
+
+.result-banner {
+  margin: .8rem 0;
+  padding: .8rem 1.2rem;
+  border: 3px dashed var(--teal);
+  border-radius: 14px 22px 14px 22px / 20px 14px 22px 14px;
+  background: rgba(16, 191, 160, .12);
+  font-family: var(--ff-read);
+  transform: rotate(-.3deg);
+}
+.result-banner.hidden { display: none; }
+.result-banner--error {
+  border-color: var(--red);
+  background: rgba(220, 38, 38, .08);
 }
 
 /* ==============================================================
@@ -370,232 +290,21 @@ export const PUZZLE_CSS = String.raw`/* confuzzled — puzzle-specific styles */
 .board-table tbody tr:nth-child(3) td:first-child { color: var(--orange); }
 
 /* ==============================================================
-   RESULT BANNER
+   DIFFICULTY STARS
    ============================================================== */
 
-.result-banner {
-  margin: .8rem 0;
-  padding: .8rem 1.2rem;
-  border: 3px dashed var(--teal);
-  border-radius: 14px 22px 14px 22px / 20px 14px 22px 14px;
-  background: rgba(16, 191, 160, .12);
-  font-family: var(--ff-read);
-  transform: rotate(-.3deg);
+.diff-stars {
+  color: var(--orange);
+  letter-spacing: 2px;
+  font-size: 1.1rem;
 }
-.result-banner.hidden { display: none; }
 
 @media (max-width: 720px) {
   .pz-topline { flex-direction: column; gap: .6rem; }
   .pz-stats { width: 100%; }
   .pz-title { font-size: 1.6rem; }
-  .pz-grid { width: 100%; }
-  .board-table--wide { font-size: .85rem; }
-  .board-table--wide th, .board-table--wide td { padding: .35rem .25rem; }
-}
-
-/* ==============================================================
-   DAILY HUB
-   ============================================================== */
-
-.hub { max-width: 700px; margin: 0 auto; }
-
-.hub-header {
-  text-align: center;
-  margin-bottom: 1.6rem;
-}
-.hub-date {
-  font: 400 2rem var(--ff-goofy);
-  color: var(--lav);
-  transform: rotate(-1.5deg);
-  display: inline-block;
-}
-.hub-subtitle {
-  font: 1rem var(--ff-read);
-  color: var(--ink-soft);
-  margin-top: .3rem;
-}
-
-.hub-cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.hub-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: .4rem;
-  padding: 1.2rem .8rem;
-  border: 3px solid var(--ink);
-  border-radius: 16px 22px 14px 20px / 20px 14px 22px 16px;
-  background: var(--paper);
-  text-decoration: none;
-  color: var(--ink);
-  transition: transform .12s ease, background .12s ease;
-  text-align: center;
-}
-.hub-card:hover {
-  transform: rotate(-1deg) scale(1.03);
-  background: var(--paper-2);
-}
-
-.hub-card-diff {
-  font: 700 .75rem var(--ff-read);
-  text-transform: uppercase;
-  letter-spacing: .08em;
-  padding: .15rem .5rem;
-  border-radius: 6px;
-  color: var(--paper);
-}
-.hub-card--medium .hub-card-diff { background: var(--teal); }
-.hub-card--hard .hub-card-diff { background: var(--orange); }
-.hub-card--super .hub-card-diff { background: var(--pink); }
-
-.hub-card-name {
-  font: 400 1.4rem var(--ff-goofy);
-  color: var(--ink);
-}
-.hub-card-cta {
-  font: 400 1.1rem var(--ff-goofy);
-  color: var(--lav);
-}
-.hub-card-time {
-  font: 400 1.3rem var(--ff-goofy);
-  color: var(--teal);
-}
-
-.hub-card--done {
-  border-style: dashed;
-  border-color: var(--teal);
-  background: rgba(16, 191, 160, .08);
-}
-
-.hub-leaderboard { margin-top: 1rem; }
-
-.board-table--wide { overflow-x: auto; display: block; }
-
-@media (max-width: 600px) {
-  .hub-cards { grid-template-columns: 1fr; }
-}
-
-/* ==============================================================
-   SIGNAL PUZZLE
-   ============================================================== */
-
-.sig-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
-  width: min(100%, 420px);
-  margin: 0 auto;
-}
-.sig-mid {
-  display: flex;
-  align-items: stretch;
-  width: 100%;
-}
-.sig-edge {
-  display: flex;
-  justify-content: space-around;
-}
-.sig-edge--top, .sig-edge--bottom {
-  flex-direction: row;
-  width: 100%;
-  padding: 0 calc(100% * 0.02);
-}
-.sig-edge--left, .sig-edge--right {
-  flex-direction: column;
-  justify-content: space-around;
-  width: 1.6rem;
-  flex-shrink: 0;
-}
-.sig-grid { flex: 1; }
-.sig-marker {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
-  min-width: 1.4rem;
-  min-height: 1.4rem;
-}
-.sig-marker--active {
-  font-weight: 700;
-  font-size: 1.3rem;
-}
-
-/* Player-placed mirrors — bold, bright */
-.sig-cell--fwd, .sig-cell--bwd {
-  font: 700 clamp(1.4rem, 5vw, 2.2rem) var(--ff-goofy);
-  color: var(--ink);
-  background: var(--paper);
-}
-
-/* Fixed/clue mirrors — locked look, can't change */
-.sig-cell--fixed {
-  background: var(--ink);
-  cursor: default;
-  opacity: 1;
-}
-.sig-cell--fixed:hover { background: var(--ink); }
-.sig-mirror {
-  font: 700 clamp(1.4rem, 5vw, 2.2rem) var(--ff-goofy);
-  color: var(--paper);
-}
-
-/* Empty cells the player needs to fill */
-.sig-cell--empty {
-  background: var(--paper);
-}
-.sig-cell--empty::after {
-  content: "\00b7";
-  font-size: 1.5rem;
-  color: var(--ink-soft);
-  opacity: .3;
-}
-
-.sig-path-a { background: rgba(255, 107, 26, .2) !important; }
-.sig-path-b { background: rgba(79, 184, 255, .2) !important; }
-.sig-path-c { background: rgba(255, 79, 154, .2) !important; }
-.sig-cell--conflict { background: rgba(220, 38, 38, .25) !important; }
-
-/* ==============================================================
-   FROST PUZZLE
-   ============================================================== */
-
-.frost-cell { position: relative; }
-.frost-num {
-  font: 700 clamp(1rem, 4vw, 1.5rem) var(--ff-goofy);
-  color: var(--ink);
-  z-index: 1;
-}
-.frost-arrow {
-  position: absolute;
-  top: 2px;
-  right: 3px;
-  font-size: .7rem;
-  color: var(--ink-soft);
-  z-index: 1;
-}
-
-.frost-cell--ice {
-  background: rgba(79, 184, 255, .35);
-}
-.frost-cell--noice {
-  background: var(--paper);
-}
-.frost-cell--noice::after {
-  content: "\00d7";
-  font-size: clamp(1rem, 4vw, 1.5rem);
-  color: var(--ink-soft);
-  opacity: .4;
-}
-.frost-cell--unknown { background: var(--paper); }
-.frost-cell--error .frost-num { color: var(--red); }
-
-.frost-grid.solved .frost-cell--ice {
-  background: rgba(16, 191, 160, .3);
+  .math-statement { font-size: 1.1rem; padding: 1rem 1.2rem; }
+  .math-answer-row { flex-direction: column; }
+  .math-submit { width: 100%; }
 }
 `;

@@ -52,7 +52,7 @@ api.post("/solves", async (c) => {
   );
 
   if (!valid) {
-    return c.json({ error: `Invalid solution: ${reason}` }, 400);
+    return c.json({ error: reason || "Incorrect answer" }, 400);
   }
 
   const solveId = crypto.randomUUID();

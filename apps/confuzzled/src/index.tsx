@@ -5,9 +5,7 @@ import { Hono } from "hono";
 import { Layout } from "./components/Layout";
 import apiRoutes from "./routes/api";
 import gameRoutes from "./routes/game";
-import { GAME_AKARI_JS } from "./static/game-akari";
-import { GAME_FROST_JS } from "./static/game-frost";
-import { GAME_SIGNAL_JS } from "./static/game-signal";
+import { GAME_MATH_JS } from "./static/game-math";
 import type { AppVars, Bindings } from "./types";
 
 const app = new Hono<{ Bindings: Bindings; Variables: AppVars }>();
@@ -21,9 +19,7 @@ const JS_HEADERS = {
   "cache-control": "public, max-age=3600"
 };
 
-app.get("/static/game-akari.js", (c) => c.body(GAME_AKARI_JS, 200, JS_HEADERS));
-app.get("/static/game-signal.js", (c) => c.body(GAME_SIGNAL_JS, 200, JS_HEADERS));
-app.get("/static/game-frost.js", (c) => c.body(GAME_FROST_JS, 200, JS_HEADERS));
+app.get("/static/game-math.js", (c) => c.body(GAME_MATH_JS, 200, JS_HEADERS));
 
 app.get("/", (c) => {
   const user = c.get("user");
@@ -37,18 +33,18 @@ app.get("/", (c) => {
             <span class="wob-2">fuzzled</span>
           </h1>
           <p>
-            3 fresh logic puzzles drop every day at noon UTC. Medium, Hard, and
-            Super Hard. Solve all three for the best leaderboard time.
+            One hard math problem every day at noon UTC. Competition-style.
+            Solve it fast, climb the leaderboard.
           </p>
           <div>
-            <a href="/play/daily" class="btn">Play today's puzzles</a>
+            <a href="/play/daily" class="btn">Solve today's problem</a>
           </div>
         </div>
       </section>
 
       <footer class="footer">
         <div class="wrap">
-          <p>pure logic. no guessing. every cell counts.</p>
+          <p>inspired by math olympiad & BmMT.</p>
         </div>
       </footer>
     </Layout>

@@ -28,13 +28,3 @@ export type LeaderboardEntry = {
   timeMs: number;
   completedAt: string;
 };
-
-export type CombinedLeaderboardEntry = {
-  userId: string;
-  username: string;
-  puzzlesCompleted: number;
-  totalTimeMs: number;
-  akariTimeMs: number | null;
-  signalTimeMs: number | null;
-  frostTimeMs: number | null;
-};

@@ -35,29 +35,11 @@ const GAMES: GameCard[] = [
     status: "live"
   },
   {
-    href: "https://maze.kcodes.me",
-    title: "maze",
-    bang: "?",
-    tag: "paper maze",
-    desc: "Race through a hand-drawn maze. New maze each day, leaderboard for best time.",
-    meta: "live · daily challenge",
-    status: "live"
-  },
-  {
-    href: "https://weave.kcodes.me",
-    title: "weave",
-    bang: "!",
-    tag: "letter weave",
-    desc: "5×5 Boggle-style grid. Trace adjacent letters to find as many words as you can in 3 minutes. Big words = big points.",
-    meta: "live · daily challenge",
-    status: "live"
-  },
-  {
     href: "https://confuzzled.kcodes.me",
     title: "confuzzled",
     bang: "!",
-    tag: "logic puzzles",
-    desc: "Light Up puzzle: place bulbs to illuminate every cell. Numbers on walls constrain your options. Pure deduction, no guessing.",
+    tag: "math competition",
+    desc: "One hard competition math problem every day. BmMT-inspired. Solve it fast, climb the leaderboard.",
     meta: "live · daily challenge",
     status: "live"
   }

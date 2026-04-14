@@ -24,6 +24,26 @@ const NAV = (
   </>
 );
 
+const KATEX_HEAD = (
+  <>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"
+      crossorigin="anonymous"
+    />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+      crossorigin="anonymous"
+    ></script>
+  </>
+);
+
 export function Layout({ title, user, head, children }: LayoutProps) {
   return (
     <BaseLayout
@@ -32,7 +52,12 @@ export function Layout({ title, user, head, children }: LayoutProps) {
       extraCss={PUZZLE_CSS}
       brand={BRAND}
       nav={NAV}
-      head={head}
+      head={
+        <>
+          {KATEX_HEAD}
+          {head}
+        </>
+      }
     >
       {children}
     </BaseLayout>
