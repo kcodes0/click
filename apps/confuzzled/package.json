@@ -1,0 +1,24 @@
+{
+  "name": "@kcodes/confuzzled",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "typecheck": "tsc --noEmit",
+    "deploy": "wrangler deploy",
+    "db:migrate:local": "wrangler d1 migrations apply DB --local",
+    "db:migrate:remote": "wrangler d1 migrations apply DB --remote"
+  },
+  "dependencies": {
+    "@kcodes/auth": "workspace:*",
+    "@kcodes/ui": "workspace:*",
+    "bcryptjs": "^3.0.2",
+    "hono": "^4.9.8"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260320.0",
+    "typescript": "^5.9.2",
+    "wrangler": "^4.24.3"
+  }
+}
