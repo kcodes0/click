@@ -4,6 +4,7 @@ import { mountUiAssets } from "@kcodes/ui";
 import { Hono } from "hono";
 import { Layout } from "./components/Layout";
 import apiRoutes from "./routes/api";
+import authRoutes from "./routes/auth";
 import gameRoutes from "./routes/game";
 import { GAME_MATH_JS } from "./static/game-math";
 import type { AppVars, Bindings } from "./types";
@@ -51,6 +52,7 @@ app.get("/", (c) => {
   );
 });
 
+app.route("/auth", authRoutes);
 app.route("/play", gameRoutes);
 app.route("/api", apiRoutes);
 
