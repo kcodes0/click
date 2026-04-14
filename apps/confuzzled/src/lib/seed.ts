@@ -15,8 +15,17 @@ export async function ensureDailyPuzzle(
   const def = PUZZLE_TYPES.find((t) => t.type === type);
   if (!def) throw new Error(`Unknown puzzle type: ${type}`);
 
-  const seed = hashStringToSeed(`confuzzled:${type}:${dateKey}`);
-  const puzzle = def.generate(def.width, def.height, seed);
+  let puzzle: ReturnType<typeof def.generate> | null = null;
+  for (let seedOffset = 0; seedOffset < 10; seedOffset++) {
+    try {
+      const seed = hashStringToSeed(`confuzzled:${type}:${dateKey}:${seedOffset}`);
+      puzzle = def.generate(def.width, def.height, seed);
+      break;
+    } catch {
+      // Try next seed offset
+    }
+  }
+  if (!puzzle) throw new Error(`Failed to generate ${type} puzzle after retries`);
 
   const id = crypto.randomUUID();
   try {
