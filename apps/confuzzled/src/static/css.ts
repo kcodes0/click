@@ -526,19 +526,35 @@ export const PUZZLE_CSS = String.raw`/* confuzzled — puzzle-specific styles */
   font-size: 1.3rem;
 }
 
+/* Player-placed mirrors — bold, bright */
 .sig-cell--fwd, .sig-cell--bwd {
   font: 700 clamp(1.4rem, 5vw, 2.2rem) var(--ff-goofy);
   color: var(--ink);
+  background: var(--paper);
 }
+
+/* Fixed/clue mirrors — locked look, can't change */
 .sig-cell--fixed {
-  background: var(--paper-2);
+  background: var(--ink);
   cursor: default;
+  opacity: 1;
 }
+.sig-cell--fixed:hover { background: var(--ink); }
 .sig-mirror {
   font: 700 clamp(1.4rem, 5vw, 2.2rem) var(--ff-goofy);
-  color: var(--ink-soft);
+  color: var(--paper);
 }
-.sig-cell--empty { background: var(--paper); }
+
+/* Empty cells the player needs to fill */
+.sig-cell--empty {
+  background: var(--paper);
+}
+.sig-cell--empty::after {
+  content: "\00b7";
+  font-size: 1.5rem;
+  color: var(--ink-soft);
+  opacity: .3;
+}
 
 .sig-path-a { background: rgba(255, 107, 26, .2) !important; }
 .sig-path-b { background: rgba(79, 184, 255, .2) !important; }
