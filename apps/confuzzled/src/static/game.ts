@@ -265,20 +265,19 @@ export const GAME_JS = String.raw`(function () {
   }
 
   // ----------------------------------------------------------------
-  // Click handler
+  // Click handler — attached directly to each white cell
   // ----------------------------------------------------------------
 
-  grid.addEventListener("pointerdown", function (e) {
+  function handleCellClick(e) {
+    e.preventDefault();
+    e.stopPropagation();
     if (finished) return;
-    var cell = e.target.closest(".pz-cell[data-idx]");
-    if (!cell || cell.disabled) return;
-
+    var cell = this;
     var idx = parseInt(cell.dataset.idx, 10);
     if (isWall(idx)) return;
 
     ensureTimer();
 
-    // Cycle: 0 → 1 → 2 → 0
     state[idx] = (state[idx] + 1) % 3;
 
     updateDisplay();
@@ -286,7 +285,13 @@ export const GAME_JS = String.raw`(function () {
     if (checkSolved()) {
       submitSolve();
     }
-  });
+  }
+
+  for (var ci = 0; ci < cells.length; ci++) {
+    if (!cells[ci].disabled) {
+      cells[ci].addEventListener("click", handleCellClick);
+    }
+  }
 
   // ----------------------------------------------------------------
   // Keyboard support
@@ -346,10 +351,12 @@ export const GAME_JS = String.raw`(function () {
   // Help toggle
   // ----------------------------------------------------------------
 
-  if (helpBtn && rulesEl) {
+  var rulesBody = document.getElementById("pz-rules-body");
+  if (helpBtn && rulesBody) {
     helpBtn.addEventListener("click", function () {
-      var open = rulesEl.classList.toggle("hidden");
-      helpBtn.setAttribute("aria-expanded", open ? "false" : "true");
+      var isHidden = rulesBody.classList.toggle("hidden");
+      helpBtn.setAttribute("aria-expanded", isHidden ? "false" : "true");
+      helpBtn.textContent = isHidden ? "show" : "hide";
     });
   }
 

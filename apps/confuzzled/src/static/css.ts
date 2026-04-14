@@ -197,7 +197,7 @@ export const PUZZLE_CSS = String.raw`/* confuzzled — puzzle-specific styles */
 }
 
 /* ==============================================================
-   ACTION ROW + HELP
+   ACTION ROW
    ============================================================== */
 
 .pz-actions {
@@ -207,57 +207,126 @@ export const PUZZLE_CSS = String.raw`/* confuzzled — puzzle-specific styles */
   flex-wrap: wrap;
   align-items: center;
 }
-.pz-help-btn {
-  width: 2.2rem;
-  height: 2.2rem;
-  border-radius: 50%;
-  border: 3px dashed var(--ink);
-  background: var(--paper);
-  color: var(--ink);
-  font: 400 1.2rem var(--ff-goofy);
-  cursor: pointer;
-  transform: rotate(-3deg);
-  transition: transform .14s ease, background .14s ease;
-  padding: 0;
-  line-height: 1;
-}
-.pz-help-btn:hover { background: var(--sun); transform: rotate(2deg) scale(1.08); }
-.pz-help-btn:focus-visible { outline: 3px dashed var(--orange); outline-offset: 3px; }
+
+/* ==============================================================
+   RULES PANEL
+   ============================================================== */
 
 .pz-rules {
-  margin-top: 1rem;
-  padding: 1rem 1.2rem;
+  margin-top: 1.2rem;
+  padding: 1rem 1.4rem 1.2rem;
   border: 3px dashed var(--ink);
   border-radius: 18px 26px 14px 22px / 22px 14px 26px 16px;
-  background: rgba(255, 251, 240, .75);
-  transform: rotate(-.4deg);
-  max-width: 560px;
+  background: rgba(255, 251, 240, .85);
+  max-width: 600px;
 }
-.pz-rules.hidden { display: none; }
+.pz-rules-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .8rem;
+  margin-bottom: .6rem;
+}
 .pz-rules h3 {
-  font: 400 1.3rem var(--ff-goofy);
+  font: 400 1.4rem var(--ff-goofy);
   color: var(--lav);
-  margin-bottom: .5rem;
   display: inline-block;
   transform: rotate(-2deg);
-}
-.pz-rules ul {
-  list-style: none;
   margin: 0;
-  padding: 0;
-  font: 1rem/1.55 var(--ff-read);
 }
-.pz-rules li {
-  padding: .25rem 0 .25rem 1.4rem;
-  position: relative;
+.pz-help-btn {
+  border: 2px dashed var(--ink-soft);
+  background: var(--paper);
+  color: var(--ink-soft);
+  font: 400 .85rem var(--ff-read);
+  cursor: pointer;
+  padding: .2rem .7rem;
+  border-radius: 8px;
+  transition: background .12s ease;
 }
-.pz-rules li::before {
-  content: "~";
-  position: absolute;
-  left: .2rem;
-  top: .25rem;
-  color: var(--teal);
+.pz-help-btn:hover { background: var(--sun); color: var(--ink); }
+.pz-help-btn:focus-visible { outline: 3px dashed var(--orange); outline-offset: 3px; }
+
+.pz-rules-body.hidden { display: none; }
+
+/* Visual legend */
+.pz-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem .9rem;
+  margin-bottom: .9rem;
+  padding: .6rem .8rem;
+  background: var(--paper);
+  border: 2px solid rgba(42, 28, 16, .15);
+  border-radius: 10px;
+}
+.pz-legend-item {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  font: .85rem var(--ff-read);
+  color: var(--ink-soft);
+}
+.pz-legend-swatch {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border: 2px solid rgba(42, 28, 16, .3);
+  border-radius: 4px;
+  font-size: .85rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.pz-legend--empty { background: var(--paper); }
+.pz-legend--wall { background: var(--ink); }
+.pz-legend--num {
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 700;
   font-family: var(--ff-goofy);
+}
+.pz-legend--bulb {
+  background: var(--sun);
+}
+.pz-legend--bulb::after {
+  content: "\2605";
+  color: var(--orange);
+  font-size: 1rem;
+}
+.pz-legend--xmark {
+  background: var(--paper);
+}
+.pz-legend--xmark::after {
+  content: "\00d7";
+  color: var(--ink-soft);
+  font-size: 1.1rem;
+  opacity: .6;
+}
+
+/* Numbered rules */
+.pz-rules-list {
+  margin: 0 0 .6rem;
+  padding: 0 0 0 1.5rem;
+  font: 1rem/1.6 var(--ff-read);
+  color: var(--ink);
+}
+.pz-rules-list li {
+  padding: .2rem 0;
+}
+.pz-rules-list li::marker {
+  color: var(--lav);
+  font-family: var(--ff-goofy);
+  font-weight: 700;
+}
+
+.pz-rules-goal {
+  font: italic .95rem/1.5 var(--ff-read);
+  color: var(--ink-soft);
+  margin: 0;
+  padding-top: .3rem;
+  border-top: 2px dotted rgba(42, 28, 16, .2);
 }
 
 /* ==============================================================

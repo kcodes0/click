@@ -67,6 +67,70 @@ function GamePage({
             />
           </div>
 
+          <div id="pz-rules" class="pz-rules">
+            <div class="pz-rules-header">
+              <h3>How to play</h3>
+              <button
+                type="button"
+                id="pz-help"
+                class="pz-help-btn"
+                aria-label="Toggle rules"
+                aria-expanded="true"
+                aria-controls="pz-rules-body"
+              >
+                hide
+              </button>
+            </div>
+            <div id="pz-rules-body" class="pz-rules-body">
+              <div class="pz-legend">
+                <span class="pz-legend-item">
+                  <span class="pz-legend-swatch pz-legend--empty" />
+                  empty cell
+                </span>
+                <span class="pz-legend-item">
+                  <span class="pz-legend-swatch pz-legend--wall" />
+                  wall
+                </span>
+                <span class="pz-legend-item">
+                  <span class="pz-legend-swatch pz-legend--num">2</span>
+                  numbered wall
+                </span>
+                <span class="pz-legend-item">
+                  <span class="pz-legend-swatch pz-legend--bulb" />
+                  bulb (click 1x)
+                </span>
+                <span class="pz-legend-item">
+                  <span class="pz-legend-swatch pz-legend--xmark" />
+                  no bulb (click 2x)
+                </span>
+              </div>
+              <ol class="pz-rules-list">
+                <li>
+                  Place bulbs to <strong>light up every white cell</strong>.
+                  A bulb shines left, right, up, and down until it hits a wall.
+                </li>
+                <li>
+                  <strong>No two bulbs can see each other.</strong> If two bulbs
+                  share a row or column with no wall between them, that's a
+                  conflict (they'll turn red).
+                </li>
+                <li>
+                  A number on a wall means <strong>exactly that many</strong> of
+                  its 4 neighbors (up/down/left/right) are bulbs. Walls without
+                  a number have no constraint.
+                </li>
+                <li>
+                  Click a cell to cycle: empty &rarr; bulb &rarr; X &rarr;
+                  empty. Use X to mark cells you've ruled out.
+                </li>
+              </ol>
+              <p class="pz-rules-goal">
+                When every cell is lit with no conflicts, you win and your
+                time is saved.
+              </p>
+            </div>
+          </div>
+
           <div class="pz-actions">
             <button
               type="button"
@@ -75,44 +139,6 @@ function GamePage({
             >
               Reset
             </button>
-            <button
-              type="button"
-              id="pz-help"
-              class="pz-help-btn"
-              aria-label="How to play"
-              aria-expanded="false"
-              aria-controls="pz-rules"
-            >
-              ?
-            </button>
-          </div>
-
-          <div id="pz-rules" class="pz-rules hidden">
-            <h3>How to play — Light Up</h3>
-            <ul>
-              <li>
-                <strong>Tap</strong> an empty cell to place a light bulb. Tap
-                again to mark it X (no bulb). Tap once more to clear.
-              </li>
-              <li>
-                Each bulb lights its entire row and column until blocked by a
-                wall. <strong>Every</strong> white cell must be illuminated.
-              </li>
-              <li>
-                No two bulbs may see each other — if they share a row or column
-                with no wall between them, that's a conflict.
-              </li>
-              <li>
-                Numbers on walls tell you <strong>exactly</strong> how many of
-                the 4 adjacent cells (up/down/left/right) contain a bulb.
-                Walls without numbers have no constraint.
-              </li>
-              <li>
-                The puzzle is solved when every cell is lit, every number is
-                satisfied, and no bulbs conflict. Your time is locked on
-                completion.
-              </li>
-            </ul>
           </div>
 
           <aside class="pz-side">
