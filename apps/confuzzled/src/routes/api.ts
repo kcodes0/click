@@ -6,12 +6,12 @@ import {
   getPuzzleLeaderboard,
   getUserSolve
 } from "../db/queries";
-import { verifyAkariSolution } from "../lib/akari";
+import { getPuzzleTypeDef } from "../lib/puzzle-types";
 import type { AppVars, Bindings } from "../types";
 
 const api = new Hono<{ Bindings: Bindings; Variables: AppVars }>();
 
-const MAX_SOLVE_MS = 60 * 60 * 1000; // 1 hour
+const MAX_SOLVE_MS = 60 * 60 * 1000;
 
 api.post("/solves", async (c) => {
   const guard = requireAuth(c);
@@ -21,15 +21,10 @@ api.post("/solves", async (c) => {
   const body = await c.req.json<{
     puzzleId?: string;
     timeMs?: number;
-    bulbs?: number[];
+    answer?: unknown;
   }>();
 
-  if (
-    !user ||
-    !body.puzzleId ||
-    !Number.isInteger(body.timeMs) ||
-    !Array.isArray(body.bulbs)
-  ) {
+  if (!user || !body.puzzleId || !Number.isInteger(body.timeMs) || body.answer == null) {
     return c.json({ error: "Invalid payload" }, 400);
   }
 
@@ -46,11 +41,14 @@ api.post("/solves", async (c) => {
     return c.json({ error: "Already submitted a solve for this puzzle" }, 409);
   }
 
-  const { valid, reason } = verifyAkariSolution(
+  const def = getPuzzleTypeDef(puzzle.type);
+  if (!def) return c.json({ error: "Unknown puzzle type" }, 400);
+
+  const { valid, reason } = def.verify(
     puzzle.grid,
     puzzle.width,
     puzzle.height,
-    body.bulbs
+    body.answer
   );
 
   if (!valid) {
@@ -67,8 +65,7 @@ api.post("/solves", async (c) => {
   });
 
   const leaderboard = await getPuzzleLeaderboard(c.env.DB, puzzle.id);
-  const rank =
-    leaderboard.findIndex((entry) => entry.userId === user.id) + 1;
+  const rank = leaderboard.findIndex((entry) => entry.userId === user.id) + 1;
 
   return c.json({ ok: true, rank, timeMs, leaderboard });
 });

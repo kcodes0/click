@@ -389,5 +389,154 @@ export const PUZZLE_CSS = String.raw`/* confuzzled — puzzle-specific styles */
   .pz-stats { width: 100%; }
   .pz-title { font-size: 1.6rem; }
   .pz-grid { width: 100%; }
+  .board-table--wide { font-size: .85rem; }
+  .board-table--wide th, .board-table--wide td { padding: .35rem .25rem; }
+}
+
+/* ==============================================================
+   DAILY HUB
+   ============================================================== */
+
+.hub { max-width: 700px; margin: 0 auto; }
+
+.hub-header {
+  text-align: center;
+  margin-bottom: 1.6rem;
+}
+.hub-date {
+  font: 400 2rem var(--ff-goofy);
+  color: var(--lav);
+  transform: rotate(-1.5deg);
+  display: inline-block;
+}
+.hub-subtitle {
+  font: 1rem var(--ff-read);
+  color: var(--ink-soft);
+  margin-top: .3rem;
+}
+
+.hub-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.hub-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .4rem;
+  padding: 1.2rem .8rem;
+  border: 3px solid var(--ink);
+  border-radius: 16px 22px 14px 20px / 20px 14px 22px 16px;
+  background: var(--paper);
+  text-decoration: none;
+  color: var(--ink);
+  transition: transform .12s ease, background .12s ease;
+  text-align: center;
+}
+.hub-card:hover {
+  transform: rotate(-1deg) scale(1.03);
+  background: var(--paper-2);
+}
+
+.hub-card-diff {
+  font: 700 .75rem var(--ff-read);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  padding: .15rem .5rem;
+  border-radius: 6px;
+  color: var(--paper);
+}
+.hub-card--medium .hub-card-diff { background: var(--teal); }
+.hub-card--hard .hub-card-diff { background: var(--orange); }
+.hub-card--super .hub-card-diff { background: var(--pink); }
+
+.hub-card-name {
+  font: 400 1.4rem var(--ff-goofy);
+  color: var(--ink);
+}
+.hub-card-cta {
+  font: 400 1.1rem var(--ff-goofy);
+  color: var(--lav);
+}
+.hub-card-time {
+  font: 400 1.3rem var(--ff-goofy);
+  color: var(--teal);
+}
+
+.hub-card--done {
+  border-style: dashed;
+  border-color: var(--teal);
+  background: rgba(16, 191, 160, .08);
+}
+
+.hub-leaderboard { margin-top: 1rem; }
+
+.board-table--wide { overflow-x: auto; display: block; }
+
+@media (max-width: 600px) {
+  .hub-cards { grid-template-columns: 1fr; }
+}
+
+/* ==============================================================
+   SIGNAL PUZZLE
+   ============================================================== */
+
+.sig-cell--fwd, .sig-cell--bwd {
+  font: 700 clamp(1.4rem, 5vw, 2.2rem) var(--ff-goofy);
+  color: var(--ink);
+}
+.sig-cell--fixed {
+  background: var(--paper-2);
+}
+.sig-mirror {
+  font: 700 clamp(1.4rem, 5vw, 2.2rem) var(--ff-goofy);
+  color: var(--ink-soft);
+}
+.sig-cell--empty { background: var(--paper); }
+
+.sig-path-a { background: rgba(255, 107, 26, .2) !important; }
+.sig-path-b { background: rgba(79, 184, 255, .2) !important; }
+.sig-path-c { background: rgba(255, 79, 154, .2) !important; }
+.sig-cell--conflict { background: rgba(220, 38, 38, .25) !important; }
+
+/* ==============================================================
+   FROST PUZZLE
+   ============================================================== */
+
+.frost-cell { position: relative; }
+.frost-num {
+  font: 700 clamp(1rem, 4vw, 1.5rem) var(--ff-goofy);
+  color: var(--ink);
+  z-index: 1;
+}
+.frost-arrow {
+  position: absolute;
+  top: 2px;
+  right: 3px;
+  font-size: .7rem;
+  color: var(--ink-soft);
+  z-index: 1;
+}
+
+.frost-cell--ice {
+  background: rgba(79, 184, 255, .35);
+}
+.frost-cell--noice {
+  background: var(--paper);
+}
+.frost-cell--noice::after {
+  content: "\00d7";
+  font-size: clamp(1rem, 4vw, 1.5rem);
+  color: var(--ink-soft);
+  opacity: .4;
+}
+.frost-cell--unknown { background: var(--paper); }
+.frost-cell--error .frost-num { color: var(--red); }
+
+.frost-grid.solved .frost-cell--ice {
+  background: rgba(16, 191, 160, .3);
 }
 `;

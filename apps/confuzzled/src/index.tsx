@@ -5,7 +5,9 @@ import { Hono } from "hono";
 import { Layout } from "./components/Layout";
 import apiRoutes from "./routes/api";
 import gameRoutes from "./routes/game";
-import { GAME_JS } from "./static/game";
+import { GAME_AKARI_JS } from "./static/game-akari";
+import { GAME_FROST_JS } from "./static/game-frost";
+import { GAME_SIGNAL_JS } from "./static/game-signal";
 import type { AppVars, Bindings } from "./types";
 
 const app = new Hono<{ Bindings: Bindings; Variables: AppVars }>();
@@ -14,12 +16,14 @@ app.use("*", authMiddleware);
 
 mountUiAssets(app);
 
-app.get("/static/game.js", (c) =>
-  c.body(GAME_JS, 200, {
-    "content-type": "application/javascript; charset=utf-8",
-    "cache-control": "public, max-age=3600"
-  })
-);
+const JS_HEADERS = {
+  "content-type": "application/javascript; charset=utf-8",
+  "cache-control": "public, max-age=3600"
+};
+
+app.get("/static/game-akari.js", (c) => c.body(GAME_AKARI_JS, 200, JS_HEADERS));
+app.get("/static/game-signal.js", (c) => c.body(GAME_SIGNAL_JS, 200, JS_HEADERS));
+app.get("/static/game-frost.js", (c) => c.body(GAME_FROST_JS, 200, JS_HEADERS));
 
 app.get("/", (c) => {
   const user = c.get("user");
@@ -33,19 +37,18 @@ app.get("/", (c) => {
             <span class="wob-2">fuzzled</span>
           </h1>
           <p>
-            A fresh logic puzzle drops every day at noon UTC. No math, no
-            guessing — pure deduction. Can you light up the whole grid before
-            anyone else?
+            3 fresh logic puzzles drop every day at noon UTC. Medium, Hard, and
+            Super Hard. Solve all three for the best leaderboard time.
           </p>
           <div>
-            <a href="/play/daily" class="btn">Play today's puzzle</a>
+            <a href="/play/daily" class="btn">Play today's puzzles</a>
           </div>
         </div>
       </section>
 
       <footer class="footer">
         <div class="wrap">
-          <p>every bulb counts. illuminate everything.</p>
+          <p>pure logic. no guessing. every cell counts.</p>
         </div>
       </footer>
     </Layout>

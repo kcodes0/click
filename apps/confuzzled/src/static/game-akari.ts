@@ -1,4 +1,4 @@
-export const GAME_JS = String.raw`(function () {
+export const GAME_AKARI_JS = String.raw`(function () {
   "use strict";
 
   var shell = document.querySelector(".pz-shell");

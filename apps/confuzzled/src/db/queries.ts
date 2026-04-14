@@ -1,4 +1,9 @@
-import type { LeaderboardEntry, PuzzleRow, PuzzleSolveRow } from "../types";
+import type {
+  CombinedLeaderboardEntry,
+  LeaderboardEntry,
+  PuzzleRow,
+  PuzzleSolveRow
+} from "../types";
 
 export async function getPuzzleById(
   db: D1Database,
@@ -13,15 +18,27 @@ export async function getPuzzleById(
 
 export async function getDailyPuzzleByDate(
   db: D1Database,
+  type: string,
   dateKey: string
 ): Promise<PuzzleRow | null> {
   const result = await db
     .prepare(
-      "SELECT * FROM puzzles WHERE type = 'akari' AND daily_date = ? LIMIT 1"
+      "SELECT * FROM puzzles WHERE type = ? AND daily_date = ? LIMIT 1"
     )
-    .bind(dateKey)
+    .bind(type, dateKey)
     .first<PuzzleRow>();
   return result ?? null;
+}
+
+export async function getDailyPuzzlesByDate(
+  db: D1Database,
+  dateKey: string
+): Promise<PuzzleRow[]> {
+  const rows = await db
+    .prepare("SELECT * FROM puzzles WHERE daily_date = ? ORDER BY type")
+    .bind(dateKey)
+    .all<PuzzleRow>();
+  return rows.results;
 }
 
 export async function createPuzzle(
@@ -115,5 +132,32 @@ export async function getPuzzleLeaderboard(
     )
     .bind(puzzleId)
     .all<LeaderboardEntry>();
+  return rows.results;
+}
+
+export async function getDailyCombinedLeaderboard(
+  db: D1Database,
+  dateKey: string
+): Promise<CombinedLeaderboardEntry[]> {
+  const rows = await db
+    .prepare(
+      `SELECT
+         u.id AS userId,
+         u.username AS username,
+         COUNT(ps.id) AS puzzlesCompleted,
+         SUM(ps.time_ms) AS totalTimeMs,
+         MAX(CASE WHEN p.type = 'akari' THEN ps.time_ms END) AS akariTimeMs,
+         MAX(CASE WHEN p.type = 'signal' THEN ps.time_ms END) AS signalTimeMs,
+         MAX(CASE WHEN p.type = 'frost' THEN ps.time_ms END) AS frostTimeMs
+       FROM users u
+       JOIN puzzle_solves ps ON ps.user_id = u.id
+       JOIN puzzles p ON p.id = ps.puzzle_id
+       WHERE p.daily_date = ?
+       GROUP BY u.id
+       ORDER BY puzzlesCompleted DESC, totalTimeMs ASC
+       LIMIT 50`
+    )
+    .bind(dateKey)
+    .all<CombinedLeaderboardEntry>();
   return rows.results;
 }
