@@ -7,107 +7,99 @@ export type StarBattleData = {
   numStars: number;
 };
 
-function generateRegions(w: number, h: number, numRegions: number, rng: () => number): number[] {
+function adj4(cell: number, w: number, h: number): number[] {
+  const cx = cell % w, cy = Math.floor(cell / w);
+  const r: number[] = [];
+  if (cx > 0) r.push(cell - 1);
+  if (cx < w - 1) r.push(cell + 1);
+  if (cy > 0) r.push(cell - w);
+  if (cy < h - 1) r.push(cell + w);
+  return r;
+}
+
+function generateRegions(w: number, h: number, numRegions: number, rng: () => number): number[] | null {
   const n = w * h;
   const region = new Array(n).fill(-1);
-  const indices = shuffle(Array.from({ length: n }, (_, i) => i), rng);
+  const targetSize = Math.floor(n / numRegions);
 
-  for (let i = 0; i < numRegions; i++) region[indices[i]] = i;
+  const seeds = shuffle(Array.from({ length: n }, (_, i) => i), rng).slice(0, numRegions);
+  for (let i = 0; i < numRegions; i++) region[seeds[i]] = i;
 
-  const frontiers: number[][] = [];
-  for (let i = 0; i < numRegions; i++) frontiers.push([indices[i]]);
+  const frontier: Set<number>[] = seeds.map((s) => new Set([s]));
+  const sizes = new Array(numRegions).fill(1);
 
   let unclaimed = n - numRegions;
-  while (unclaimed > 0) {
-    let progress = false;
+  let stuck = 0;
+  while (unclaimed > 0 && stuck < n * 2) {
     const order = shuffle(Array.from({ length: numRegions }, (_, i) => i), rng);
+    let anyProgress = false;
     for (const r of order) {
-      if (frontiers[r].length === 0) continue;
+      if (sizes[r] >= targetSize + 2) continue;
       const candidates: number[] = [];
-      for (const cell of frontiers[r]) {
-        const cx = cell % w, cy = Math.floor(cell / w);
-        if (cx > 0 && region[cell - 1] === -1) candidates.push(cell - 1);
-        if (cx < w - 1 && region[cell + 1] === -1) candidates.push(cell + 1);
-        if (cy > 0 && region[cell - w] === -1) candidates.push(cell - w);
-        if (cy < h - 1 && region[cell + w] === -1) candidates.push(cell + w);
+      for (const cell of frontier[r]) {
+        for (const nb of adj4(cell, w, h)) {
+          if (region[nb] === -1) candidates.push(nb);
+        }
       }
       const unique = [...new Set(candidates)];
       if (unique.length > 0) {
         const pick = unique[Math.floor(rng() * unique.length)];
         region[pick] = r;
-        frontiers[r].push(pick);
+        frontier[r].add(pick);
+        sizes[r]++;
         unclaimed--;
-        progress = true;
+        anyProgress = true;
       }
     }
-    if (!progress) break;
+    if (!anyProgress) stuck++;
+    else stuck = 0;
   }
-  return region;
+
+  if (unclaimed > 0) {
+    for (let i = 0; i < n; i++) {
+      if (region[i] !== -1) continue;
+      for (const nb of adj4(i, w, h)) {
+        if (region[nb] !== -1) { region[i] = region[nb]; unclaimed--; break; }
+      }
+    }
+  }
+
+  return region.includes(-1) ? null : region;
 }
 
-function solveStarBattle(regions: number[], w: number, h: number, numStars: number): number[][] {
-  const numRegions = w;
+function solveStarBattle(regions: number[], w: number, h: number): number[][] {
   const solutions: number[][] = [];
-  const colUsed = new Array(w).fill(0);
-  const regionUsed = new Array(numRegions).fill(0);
-  const blocked = new Set<number>();
+  const colUsed = new Array(w).fill(false);
+  const regionUsed = new Array(w).fill(false);
   const stars: number[] = [];
 
-  function getAdj(cell: number): number[] {
+  function isBlocked(cell: number): boolean {
     const cx = cell % w, cy = Math.floor(cell / w);
-    const adj: number[] = [];
-    for (let dy = -1; dy <= 1; dy++)
-      for (let dx = -1; dx <= 1; dx++) {
-        if (!dx && !dy) continue;
-        const nx = cx + dx, ny = cy + dy;
-        if (nx >= 0 && nx < w && ny >= 0 && ny < h) adj.push(ny * w + nx);
-      }
-    return adj;
+    for (const s of stars) {
+      const sx = s % w, sy = Math.floor(s / w);
+      if (Math.abs(cx - sx) <= 1 && Math.abs(cy - sy) <= 1) return true;
+    }
+    return false;
   }
 
   function solve(row: number): void {
     if (solutions.length >= 2) return;
-    if (row === h) {
-      if (stars.length === numStars * h) solutions.push([...stars]);
-      return;
-    }
-    const rowStars: number[][] = [];
-    function pickInRow(col: number, placed: number, chosen: number[]): void {
-      if (placed === numStars) { rowStars.push([...chosen]); return; }
-      if (col >= w) return;
-      const remaining = w - col;
-      if (remaining < numStars - placed) return;
-      pickInRow(col + 1, placed, chosen);
-      const cell = row * w + col;
-      if (colUsed[col] >= numStars) return;
-      if (regionUsed[regions[cell]] >= numStars) return;
-      if (blocked.has(cell)) return;
-      chosen.push(cell);
-      pickInRow(col + 1, placed + 1, chosen);
-      chosen.pop();
-    }
-    pickInRow(0, 0, []);
+    if (row === h) { solutions.push([...stars]); return; }
 
-    for (const combo of rowStars) {
-      if (solutions.length >= 2) return;
-      const newBlocked: number[] = [];
-      for (const cell of combo) {
-        const c = cell % w;
-        colUsed[c]++;
-        regionUsed[regions[cell]]++;
-        stars.push(cell);
-        for (const adj of getAdj(cell)) {
-          if (!blocked.has(adj)) { blocked.add(adj); newBlocked.push(adj); }
-        }
-      }
+    for (let col = 0; col < w; col++) {
+      if (colUsed[col]) continue;
+      const cell = row * w + col;
+      const r = regions[cell];
+      if (regionUsed[r]) continue;
+      if (isBlocked(cell)) continue;
+
+      colUsed[col] = true;
+      regionUsed[r] = true;
+      stars.push(cell);
       solve(row + 1);
-      for (const cell of combo) {
-        const c = cell % w;
-        colUsed[c]--;
-        regionUsed[regions[cell]]--;
-        stars.pop();
-      }
-      for (const b of newBlocked) blocked.delete(b);
+      stars.pop();
+      colUsed[col] = false;
+      regionUsed[r] = false;
     }
   }
 
@@ -121,18 +113,14 @@ export function generateStarBattle(
   seed: number
 ): { width: number; height: number; grid: string; solution: string } {
   const rng = mulberry32(seed);
-  const numStars = 1;
 
-  for (let attempt = 0; attempt < 100; attempt++) {
+  for (let attempt = 0; attempt < 1000; attempt++) {
     const regions = generateRegions(w, h, w, rng);
-    if (regions.includes(-1)) continue;
-    const regionSizes = new Array(w).fill(0);
-    for (const r of regions) regionSizes[r]++;
-    if (regionSizes.some((s) => s < numStars)) continue;
+    if (!regions) continue;
 
-    const solutions = solveStarBattle(regions, w, h, numStars);
+    const solutions = solveStarBattle(regions, w, h);
     if (solutions.length === 1) {
-      const data: StarBattleData = { regions, w, h, numStars };
+      const data: StarBattleData = { regions, w, h, numStars: 1 };
       return {
         width: w,
         height: h,
@@ -174,12 +162,8 @@ export function verifyStarBattleSolution(
         return { valid: false, reason: "Two stars are adjacent" };
     }
   }
-  for (let i = 0; i < h; i++)
-    if (rowCount[i] !== numStars) return { valid: false, reason: `Row ${i + 1} needs ${numStars} star(s)` };
-  for (let i = 0; i < w; i++)
-    if (colCount[i] !== numStars) return { valid: false, reason: `Column ${i + 1} needs ${numStars} star(s)` };
-  for (let i = 0; i < w; i++)
-    if (regionCount[i] !== numStars) return { valid: false, reason: `Region ${i + 1} needs ${numStars} star(s)` };
-
+  for (let i = 0; i < h; i++) if (rowCount[i] !== numStars) return { valid: false, reason: "Row constraint" };
+  for (let i = 0; i < w; i++) if (colCount[i] !== numStars) return { valid: false, reason: "Column constraint" };
+  for (let i = 0; i < w; i++) if (regionCount[i] !== numStars) return { valid: false, reason: "Region constraint" };
   return { valid: true };
 }

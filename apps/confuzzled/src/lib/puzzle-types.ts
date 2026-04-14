@@ -38,8 +38,8 @@ export const PUZZLE_TYPES: PuzzleTypeDef[] = [
     displayName: "Star Battle",
     difficulty: "Hard",
     order: 2,
-    width: 8,
-    height: 8,
+    width: 7,
+    height: 7,
     generate: generateStarBattle,
     verify: verifyStarBattleSolution
   },
