@@ -51,6 +51,15 @@ const GAMES: GameCard[] = [
     desc: "5×5 Boggle-style grid. Trace adjacent letters to find as many words as you can in 3 minutes. Big words = big points.",
     meta: "live · daily challenge",
     status: "live"
+  },
+  {
+    href: "https://confuzzled.kcodes.me",
+    title: "confuzzled",
+    bang: "!",
+    tag: "logic puzzles",
+    desc: "Light Up puzzle: place bulbs to illuminate every cell. Numbers on walls constrain your options. Pure deduction, no guessing.",
+    meta: "live · daily challenge",
+    status: "live"
   }
 ];
 
