@@ -116,6 +116,16 @@ export const PORTAL_CSS = String.raw`/* games.kcodes.me — homebase styles */
   transform: rotate(8deg);
 }
 
+/* privacy page */
+.privacy-page { max-width: 640px; margin: 0 auto; padding-bottom: 2rem; }
+.privacy-page h1 { font: 400 2.2rem var(--ff-goofy); color: var(--lav); margin-bottom: .3rem; display: inline-block; transform: rotate(-1.5deg); }
+.privacy-page h2 { font: 400 1.4rem var(--ff-goofy); color: var(--ink); margin: 1.6rem 0 .4rem; }
+.privacy-page p, .privacy-page li { font: 1.05rem/1.6 var(--ff-read); color: var(--ink); margin-bottom: .6rem; }
+.privacy-page ul { padding-left: 1.4rem; margin-bottom: .8rem; }
+.privacy-page code { font-size: .95em; background: rgba(42,28,16,.06); padding: .1rem .35rem; border-radius: 4px; }
+.privacy-page a { color: var(--lav); }
+.privacy-updated { font: .9rem var(--ff-read); color: var(--ink-soft); margin-bottom: 1.2rem; }
+
 @media (max-width: 720px) {
   .portal-hero { padding: 2rem 0 1.4rem; }
   .portal-hero h1 { margin-bottom: .5rem; }

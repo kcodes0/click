@@ -82,7 +82,82 @@ app.get("/", (c) => {
 
       <footer class="footer">
         <div class="wrap">
-          <p>more games soon. probably.</p>
+          <p>more games soon. probably. · <a href="/privacy">privacy</a></p>
+        </div>
+      </footer>
+    </Layout>
+  );
+});
+
+app.get("/privacy", (c) => {
+  const user = c.get("user");
+  return c.html(
+    <Layout title="privacy / kcodes games" user={user}>
+      <div class="wrap page-content privacy-page">
+        <h1>Privacy Policy</h1>
+        <p class="privacy-updated">Last updated: April 14, 2026</p>
+
+        <h2>What we collect</h2>
+        <p>
+          When you create an account, we store your username, email (if you
+          provide one), and a hashed version of your password. We never store
+          your password in plain text.
+        </p>
+        <p>
+          When you play games, we store your solve times and answers so we can
+          show leaderboards. That is it. We do not track what pages you visit,
+          how long you spend on the site, or anything like that.
+        </p>
+
+        <h2>Cookies</h2>
+        <p>
+          We use one cookie called <code>wiki_session</code>. It holds a login
+          token (a JWT) so you stay logged in across all kcodes games. It is
+          set on the <code>.kcodes.me</code> domain, which is why logging in on
+          one game logs you in everywhere.
+        </p>
+        <p>
+          We do not use analytics cookies, tracking cookies, or any third-party
+          cookies. There is no Google Analytics, no Facebook pixel, nothing
+          like that.
+        </p>
+
+        <h2>Where your data lives</h2>
+        <p>
+          Everything runs on Cloudflare. Your account data and game data are
+          stored in a Cloudflare D1 database. The servers that handle your
+          requests are Cloudflare Workers. We do not send your data to any
+          other service.
+        </p>
+        <p>
+          Cloudflare has their own privacy policy that covers how their
+          infrastructure works. You can read it
+          at <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">cloudflare.com/privacypolicy</a>.
+        </p>
+
+        <h2>What we do not do</h2>
+        <ul>
+          <li>We do not sell your data.</li>
+          <li>We do not show ads.</li>
+          <li>We do not share your information with third parties.</li>
+          <li>We do not use your data for anything other than running the games.</li>
+        </ul>
+
+        <h2>Deleting your data</h2>
+        <p>
+          If you want your account and data deleted, email <a href="mailto:team@kcodes.me">team@kcodes.me</a> and
+          we will take care of it.
+        </p>
+
+        <h2>Questions</h2>
+        <p>
+          If you have questions about any of this, reach out
+          at <a href="mailto:team@kcodes.me">team@kcodes.me</a>.
+        </p>
+      </div>
+      <footer class="footer">
+        <div class="wrap">
+          <p><a href="/">back to games</a></p>
         </div>
       </footer>
     </Layout>
