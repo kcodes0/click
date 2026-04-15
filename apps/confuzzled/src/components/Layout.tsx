@@ -20,6 +20,8 @@ const BRAND = (
 const NAV = (
   <>
     <a href="/">Home</a>
+    <a href="/leaderboard">Leaderboard</a>
+    <a href="/archive">Archive</a>
     <a href="https://games.kcodes.me">All games</a>
   </>
 );

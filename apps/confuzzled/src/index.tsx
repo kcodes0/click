@@ -4,8 +4,10 @@ import { mountUiAssets } from "@kcodes/ui";
 import { Hono } from "hono";
 import { Layout } from "./components/Layout";
 import apiRoutes from "./routes/api";
+import archiveRoutes from "./routes/archive";
 import authRoutes from "./routes/auth";
 import gameRoutes from "./routes/game";
+import leaderboardRoutes from "./routes/leaderboard";
 import { GAME_ICEBARN_JS } from "./static/game-icebarn";
 import type { AppVars, Bindings } from "./types";
 
@@ -55,5 +57,7 @@ app.get("/", (c) => {
 app.route("/auth", authRoutes);
 app.route("/play", gameRoutes);
 app.route("/api", apiRoutes);
+app.route("/leaderboard", leaderboardRoutes);
+app.route("/archive", archiveRoutes);
 
 export default app;

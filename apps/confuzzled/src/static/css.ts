@@ -110,4 +110,22 @@ export const PUZZLE_CSS = String.raw`/* confuzzled — icebarn puzzle styles */
   .board-table--wide th,.board-table--wide td{padding:.35rem .25rem}
 }
 @media(max-width:600px){.hub-cards{grid-template-columns:1fr}}
+
+/* leaderboard page */
+.lb-page,.archive-page{max-width:700px;margin:0 auto}
+.lb-title,.archive-title{font:400 2.2rem var(--ff-goofy);color:var(--lav);display:inline-block;transform:rotate(-1.5deg);margin-bottom:.3rem}
+.lb-sub,.archive-sub{font:1rem var(--ff-read);color:var(--ink-soft);margin-bottom:1.6rem}
+.lb-section{font:400 1.4rem var(--ff-goofy);color:var(--ink);margin:1.4rem 0 .6rem;display:inline-block;transform:rotate(-1deg)}
+
+/* archive page */
+.archive-list{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:2rem}
+.archive-date-link{display:inline-block;font:400 1.1rem var(--ff-goofy);color:var(--ink);padding:.5rem 1rem;border:2px solid var(--ink);border-radius:10px 14px 8px 12px/12px 8px 14px 10px;text-decoration:none;transition:transform .1s,background .1s}
+.archive-date-link:hover{transform:rotate(-1deg) scale(1.03);background:var(--paper-2)}
+.archive-puzzle{margin:2rem 0 2.5rem;padding-top:1.5rem;border-top:3px dashed rgba(42,28,16,.2)}
+.archive-puzzle-name{font:400 1.6rem var(--ff-goofy);color:var(--lav);display:inline-block;transform:rotate(-1.5deg);margin-bottom:.8rem}
+.archive-puzzle-size{font:.85rem var(--ff-read);color:var(--ink-soft);margin-left:.6rem}
+.archive-grid-wrap{margin-bottom:1rem}
+.archive-solution-toggle{margin-top:.6rem}
+.archive-grid .ib-cell{cursor:default !important}
+.archive-grid .ib-cell:hover{background:inherit !important}
 `;

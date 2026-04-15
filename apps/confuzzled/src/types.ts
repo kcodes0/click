@@ -37,3 +37,9 @@ export type CombinedLeaderboardEntry = {
   icebarnTimeMs: number | null;
   icebarnLgTimeMs: number | null;
 };
+
+export type CrownEntry = {
+  userId: string;
+  username: string;
+  crowns: number;
+};

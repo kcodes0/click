@@ -1,5 +1,6 @@
 import type {
   CombinedLeaderboardEntry,
+  CrownEntry,
   LeaderboardEntry,
   PuzzleRow,
   PuzzleSolveRow
@@ -147,5 +148,55 @@ export async function getDailyCombinedLeaderboard(
     )
     .bind(dateKey)
     .all<CombinedLeaderboardEntry>();
+  return rows.results;
+}
+
+export async function getCrownLeaderboard(
+  db: D1Database
+): Promise<CrownEntry[]> {
+  const rows = await db
+    .prepare(
+      `SELECT u.id AS userId, u.username, COUNT(*) AS crowns
+       FROM users u
+       JOIN puzzle_solves ps ON ps.user_id = u.id
+       WHERE ps.id IN (
+         SELECT ps2.id FROM puzzle_solves ps2
+         JOIN puzzles p2 ON p2.id = ps2.puzzle_id
+         WHERE p2.daily_date IS NOT NULL
+         AND ps2.time_ms = (
+           SELECT MIN(ps3.time_ms) FROM puzzle_solves ps3
+           WHERE ps3.puzzle_id = ps2.puzzle_id
+         )
+       )
+       GROUP BY u.id
+       ORDER BY crowns DESC
+       LIMIT 50`
+    )
+    .all<CrownEntry>();
+  return rows.results;
+}
+
+export async function getArchiveDates(
+  db: D1Database
+): Promise<string[]> {
+  const rows = await db
+    .prepare(
+      `SELECT DISTINCT daily_date FROM puzzles
+       WHERE daily_date IS NOT NULL
+       ORDER BY daily_date DESC
+       LIMIT 60`
+    )
+    .all<{ daily_date: string }>();
+  return rows.results.map((r) => r.daily_date);
+}
+
+export async function getPuzzlesByDate(
+  db: D1Database,
+  dateKey: string
+): Promise<PuzzleRow[]> {
+  const rows = await db
+    .prepare("SELECT * FROM puzzles WHERE daily_date = ? ORDER BY type")
+    .bind(dateKey)
+    .all<PuzzleRow>();
   return rows.results;
 }
