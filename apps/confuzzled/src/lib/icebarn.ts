@@ -215,11 +215,11 @@ function designateIce(path: number[], w: number, rng: () => number, target: numb
     const dx2 = (path[i] % w) - (path[i - 1] % w);
     const dy2 = Math.floor(path[i] / w) - Math.floor(path[i - 1] / w);
     if (dx1 !== dx2 || dy1 !== dy2) {
-      if (i - rs >= 3) runs.push(path.slice(rs + 1, i));
+      if (i - 1 - (rs + 1) >= 1) runs.push(path.slice(rs + 1, i - 1));
       rs = i - 1;
     }
   }
-  if (path.length - rs >= 3) runs.push(path.slice(rs + 1, path.length - 1));
+  if (path.length - 1 - (rs + 1) >= 1) runs.push(path.slice(rs + 1, path.length - 1));
 
   for (const run of shuffle(runs, rng)) {
     if (ice.size >= target) break;
@@ -289,11 +289,14 @@ export function generateIcebarn(
     if (!arrows) continue;
 
     const finalData: IcebarnData = { ...baseData, arrows };
+    const verified = solveIcebarn(finalData, 1);
+    if (verified.length !== 1) continue;
+
     return {
       width: w,
       height: h,
       grid: JSON.stringify(finalData),
-      solution: JSON.stringify(path)
+      solution: JSON.stringify(verified[0])
     };
   }
 
@@ -339,17 +342,20 @@ export function verifyIcebarnSolution(
       if (dx + dy !== 1) return { valid: false, reason: "Non-adjacent move" };
     }
 
-    const dir = i === 0 ? inDir : dirFromTo(path[i - 1], cell, w);
+    const arrivalDir = i === 0 ? inDir : dirFromTo(path[i - 1], cell, w);
 
-    if (arrowMap.has(cell) && arrowMap.get(cell) !== dir) {
-      return { valid: false, reason: "Arrow violated" };
+    if (arrowMap.has(cell) && i < path.length - 1) {
+      const deptDir = dirFromTo(cell, path[i + 1], w);
+      if (arrowMap.get(cell) !== deptDir) {
+        return { valid: false, reason: "Arrow violated" };
+      }
     }
 
     if (iceSet.has(cell)) {
       patchVisited.add(cellToPatch.get(cell)!);
       if (i > 0 && i < path.length - 1) {
         const nextDir = dirFromTo(cell, path[i + 1], w);
-        if (nextDir !== dir) return { valid: false, reason: "Turned on ice" };
+        if (nextDir !== arrivalDir) return { valid: false, reason: "Turned on ice" };
       }
     } else {
       if (visitedNonIce.has(cell)) return { valid: false, reason: "Revisited non-ice cell" };

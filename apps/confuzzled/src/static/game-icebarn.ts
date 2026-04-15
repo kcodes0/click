@@ -90,8 +90,6 @@ export const GAME_ICEBARN_JS = String.raw`(function () {
       var prevDir = dirBetween(path[path.length - 2], head);
       if (dir !== prevDir) return false;
     }
-    // check arrow at target
-    if (arrowMap[cell] !== undefined && arrowMap[cell] !== dir) return false;
     // can't revisit non-ice
     if (!iceSet[cell] && visitedNonIce[cell]) return false;
     return true;
