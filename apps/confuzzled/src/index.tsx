@@ -35,8 +35,7 @@ app.get("/", (c) => {
           </h1>
           <p>
             2 hard path puzzles every day at noon UTC. Draw your way from IN to
-            OUT — navigate ice, follow arrows, and find the only valid path.
-            Inspired by BmMT.
+            OUT. Inspired heavily by BmMT.
           </p>
           <div>
             <a href="/play/daily" class="btn">Play today's puzzles</a>
@@ -46,7 +45,7 @@ app.get("/", (c) => {
 
       <footer class="footer">
         <div class="wrap">
-          <p>pure spatial logic. every cell counts.</p>
+          <p>spatial logic? what's that?</p>
         </div>
       </footer>
     </Layout>
