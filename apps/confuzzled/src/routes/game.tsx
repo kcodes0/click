@@ -1,22 +1,18 @@
 /** @jsxImportSource hono/jsx */
 import { Hono } from "hono";
 import { DailyHub } from "../components/DailyHub";
+import { IcebarnGrid } from "../components/IcebarnGrid";
 import { Layout } from "../components/Layout";
 import { Leaderboard } from "../components/Leaderboard";
-import { NonogramGrid } from "../components/NonogramGrid";
-import { StarBattleGrid } from "../components/StarBattleGrid";
-import { TentsGrid } from "../components/TentsGrid";
 import {
   getDailyCombinedLeaderboard,
   getPuzzleById,
   getPuzzleLeaderboard,
   getUserSolve
 } from "../db/queries";
-import type { NonogramData } from "../lib/nonogram";
+import type { IcebarnData } from "../lib/icebarn";
 import { getPuzzleTypeDef } from "../lib/puzzle-types";
 import { ensureDailyPuzzles } from "../lib/seed";
-import type { StarBattleData } from "../lib/starbattle";
-import type { TentsData } from "../lib/tents";
 import { formatDateKey, getDailyDateKey } from "../lib/time";
 import type { AppVars, Bindings, PuzzleRow, PuzzleSolveRow } from "../types";
 
@@ -48,9 +44,7 @@ game.get("/daily", async (c) => {
         />
       </div>
       <footer class="footer">
-        <div class="wrap">
-          <p>3 puzzles. pure spatial logic. no guessing.</p>
-        </div>
+        <div class="wrap"><p>draw the path. find the only way.</p></div>
       </footer>
     </Layout>
   );
@@ -67,9 +61,10 @@ function GamePage({
 }) {
   const def = getPuzzleTypeDef(puzzle.type);
   const subtitle = puzzle.daily_date
-    ? `${def?.difficulty || ""} — ${formatDateKey(puzzle.daily_date)}`
+    ? `${def?.difficulty || ""} · ${puzzle.width}x${puzzle.height} — ${formatDateKey(puzzle.daily_date)}`
     : "Practice";
-  const scriptSrc = `/static/game-${puzzle.type}.js`;
+  const scriptSrc = `/static/${def?.scriptName || "game-icebarn"}.js`;
+  const gridData = JSON.parse(puzzle.grid) as IcebarnData;
 
   return (
     <Layout
@@ -100,22 +95,12 @@ function GamePage({
           </div>
 
           {!user && (
-            <p class="error-banner">
-              You need an account to submit solves. You can still play.
-            </p>
+            <p class="error-banner">You need an account to submit solves. You can still play.</p>
           )}
           <div id="game-result" class="result-banner hidden" />
 
           <div class="pz-canvas">
-            {puzzle.type === "nonogram" && (
-              <NonogramGrid gridData={JSON.parse(puzzle.grid) as NonogramData} />
-            )}
-            {puzzle.type === "starbattle" && (
-              <StarBattleGrid gridData={JSON.parse(puzzle.grid) as StarBattleData} />
-            )}
-            {puzzle.type === "tents" && (
-              <TentsGrid gridData={JSON.parse(puzzle.grid) as TentsData} />
-            )}
+            <IcebarnGrid gridData={gridData} />
           </div>
 
           <div class="pz-actions">
@@ -125,9 +110,7 @@ function GamePage({
             )}
           </div>
 
-          {puzzle.type === "nonogram" && <NonogramRules />}
-          {puzzle.type === "starbattle" && <StarBattleRules />}
-          {puzzle.type === "tents" && <TentsRules />}
+          <IcebarnRules variant={gridData.variant} />
 
           <aside class="pz-side">
             <h3 class="pz-side-heading">Fastest Solves</h3>
@@ -140,43 +123,20 @@ function GamePage({
   );
 }
 
-function NonogramRules() {
+function IcebarnRules({ variant }: { variant: string }) {
   return (
     <div id="pz-rules" class="pz-rules">
-      <h3>Nonogram</h3>
+      <h3>Icebarn{variant === "worldtour" ? ": World Tour" : ""}</h3>
       <ol class="pz-rules-list">
-        <li>Numbers on each row/column tell you the lengths of <strong>consecutive filled blocks</strong>.</li>
-        <li>Blocks are separated by <strong>at least one empty cell</strong>.</li>
-        <li>Click to fill. Right-click to mark empty.</li>
-        <li>Puzzle auto-submits when the grid matches the clues.</li>
-      </ol>
-    </div>
-  );
-}
-
-function StarBattleRules() {
-  return (
-    <div id="pz-rules" class="pz-rules">
-      <h3>Star Battle</h3>
-      <ol class="pz-rules-list">
-        <li>Place exactly <strong>1 star per row</strong>, <strong>1 per column</strong>, and <strong>1 per colored region</strong>.</li>
-        <li><strong>No two stars can touch</strong> — not even diagonally.</li>
-        <li>Click a cell to place or remove a star.</li>
-        <li>Puzzle auto-submits when all stars are correctly placed.</li>
-      </ol>
-    </div>
-  );
-}
-
-function TentsRules() {
-  return (
-    <div id="pz-rules" class="pz-rules">
-      <h3>Tents &amp; Trees</h3>
-      <ol class="pz-rules-list">
-        <li>Place one <strong>tent next to each tree</strong> (up/down/left/right). Each tree gets one tent.</li>
-        <li><strong>No two tents can touch</strong> — not even diagonally.</li>
-        <li>Row/column numbers show <strong>how many tents</strong> belong there.</li>
-        <li>Click to cycle: empty → tent → grass → empty. Right-click for grass.</li>
+        <li>Draw a path from <strong>IN</strong> to <strong>OUT</strong>. Move horizontally or vertically, turning only at cell centers.</li>
+        <li>Follow all <strong>arrows</strong> — the arrow shows the direction of travel through that cell.</li>
+        <li><strong>Ice cells</strong> (blue): cannot change direction on ice. You slide straight through.</li>
+        <li>Connected ice cells form <strong>ice patches</strong>. The path must enter every ice patch at least once.</li>
+        <li>The path <strong>cannot cross itself</strong> on normal cells, but <strong>can cross on ice</strong>.</li>
+        {variant === "worldtour" && (
+          <li><strong>World Tour:</strong> the path must visit <strong>every non-ice cell</strong>.</li>
+        )}
+        <li>Click cells adjacent to the path head to extend. Click the head to undo.</li>
       </ol>
     </div>
   );

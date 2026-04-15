@@ -6,9 +6,7 @@ import { Layout } from "./components/Layout";
 import apiRoutes from "./routes/api";
 import authRoutes from "./routes/auth";
 import gameRoutes from "./routes/game";
-import { GAME_NONOGRAM_JS } from "./static/game-nonogram";
-import { GAME_STARBATTLE_JS } from "./static/game-starbattle";
-import { GAME_TENTS_JS } from "./static/game-tents";
+import { GAME_ICEBARN_JS } from "./static/game-icebarn";
 import type { AppVars, Bindings } from "./types";
 
 const app = new Hono<{ Bindings: Bindings; Variables: AppVars }>();
@@ -22,9 +20,7 @@ const JS_HEADERS = {
   "cache-control": "public, max-age=3600"
 };
 
-app.get("/static/game-nonogram.js", (c) => c.body(GAME_NONOGRAM_JS, 200, JS_HEADERS));
-app.get("/static/game-starbattle.js", (c) => c.body(GAME_STARBATTLE_JS, 200, JS_HEADERS));
-app.get("/static/game-tents.js", (c) => c.body(GAME_TENTS_JS, 200, JS_HEADERS));
+app.get("/static/game-icebarn.js", (c) => c.body(GAME_ICEBARN_JS, 200, JS_HEADERS));
 
 app.get("/", (c) => {
   const user = c.get("user");
@@ -38,8 +34,9 @@ app.get("/", (c) => {
             <span class="wob-2">fuzzled</span>
           </h1>
           <p>
-            3 fresh spatial puzzles every day at noon UTC. Nonogram, Star Battle,
-            and Tents &amp; Trees. Solve all three for the best time.
+            2 hard path puzzles every day at noon UTC. Draw your way from IN to
+            OUT — navigate ice, follow arrows, and find the only valid path.
+            Inspired by BmMT.
           </p>
           <div>
             <a href="/play/daily" class="btn">Play today's puzzles</a>
@@ -49,7 +46,7 @@ app.get("/", (c) => {
 
       <footer class="footer">
         <div class="wrap">
-          <p>pure logic. no guessing. every cell counts.</p>
+          <p>pure spatial logic. every cell counts.</p>
         </div>
       </footer>
     </Layout>

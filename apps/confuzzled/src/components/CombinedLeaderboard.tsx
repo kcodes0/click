@@ -17,9 +17,8 @@ export function CombinedLeaderboard({ entries }: Props) {
           <th>Player</th>
           <th>Done</th>
           <th>Total</th>
-          <th>Nono</th>
-          <th>Star</th>
-          <th>Tents</th>
+          <th>Icebarn</th>
+          <th>XL</th>
         </tr>
       </thead>
       <tbody>
@@ -28,16 +27,15 @@ export function CombinedLeaderboard({ entries }: Props) {
             <tr>
               <td>{i + 1}</td>
               <td>{e.username}</td>
-              <td>{e.puzzlesCompleted}/3</td>
+              <td>{e.puzzlesCompleted}/2</td>
               <td>{formatDuration(e.totalTimeMs)}</td>
-              <td>{timeOrDash(e.nonogramTimeMs)}</td>
-              <td>{timeOrDash(e.starbattleTimeMs)}</td>
-              <td>{timeOrDash(e.tentsTimeMs)}</td>
+              <td>{timeOrDash(e.icebarnTimeMs)}</td>
+              <td>{timeOrDash(e.icebarnLgTimeMs)}</td>
             </tr>
           ))
         ) : (
           <tr>
-            <td colSpan={7}>No solves yet.</td>
+            <td colSpan={6}>No solves yet.</td>
           </tr>
         )}
       </tbody>

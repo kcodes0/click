@@ -135,9 +135,8 @@ export async function getDailyCombinedLeaderboard(
          u.username AS username,
          COUNT(ps.id) AS puzzlesCompleted,
          SUM(ps.time_ms) AS totalTimeMs,
-         MAX(CASE WHEN p.type = 'nonogram' THEN ps.time_ms END) AS nonogramTimeMs,
-         MAX(CASE WHEN p.type = 'starbattle' THEN ps.time_ms END) AS starbattleTimeMs,
-         MAX(CASE WHEN p.type = 'tents' THEN ps.time_ms END) AS tentsTimeMs
+         MAX(CASE WHEN p.type = 'icebarn' THEN ps.time_ms END) AS icebarnTimeMs,
+         MAX(CASE WHEN p.type = 'icebarn-lg' THEN ps.time_ms END) AS icebarnLgTimeMs
        FROM users u
        JOIN puzzle_solves ps ON ps.user_id = u.id
        JOIN puzzles p ON p.id = ps.puzzle_id

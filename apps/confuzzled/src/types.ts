@@ -34,7 +34,6 @@ export type CombinedLeaderboardEntry = {
   username: string;
   puzzlesCompleted: number;
   totalTimeMs: number;
-  nonogramTimeMs: number | null;
-  starbattleTimeMs: number | null;
-  tentsTimeMs: number | null;
+  icebarnTimeMs: number | null;
+  icebarnLgTimeMs: number | null;
 };

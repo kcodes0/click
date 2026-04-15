@@ -38,8 +38,8 @@ const GAMES: GameCard[] = [
     href: "https://confuzzled.kcodes.me",
     title: "confuzzled",
     bang: "!",
-    tag: "spatial puzzles",
-    desc: "3 daily spatial logic puzzles — Nonogram, Star Battle, and Tents & Trees. Solve all three for the best time.",
+    tag: "path puzzles",
+    desc: "2 hard Icebarn path puzzles daily — navigate ice, follow arrows, find the only valid route. Inspired by BmMT.",
     meta: "live · daily challenge",
     status: "live"
   }
