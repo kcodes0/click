@@ -17,7 +17,7 @@ mountUiAssets(app);
 
 const JS_HEADERS = {
   "content-type": "application/javascript; charset=utf-8",
-  "cache-control": "public, max-age=3600"
+  "cache-control": "public, max-age=60"
 };
 
 app.get("/static/game-icebarn.js", (c) => c.body(GAME_ICEBARN_JS, 200, JS_HEADERS));

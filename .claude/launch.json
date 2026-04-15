@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "confuzzled",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["wrangler", "dev", "-c", "apps/confuzzled/wrangler.toml", "--port", "8791"],
+      "port": 8791
+    }
+  ]
+}
