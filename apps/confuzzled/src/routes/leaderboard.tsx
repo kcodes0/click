@@ -25,69 +25,68 @@ lb.get("/", async (c) => {
         <div class="lb-page">
           <h1 class="lb-title">Leaderboard</h1>
 
-          <h2 class="lb-section">Today — {formatDateKey(dateKey)}</h2>
-          <table class="board-table board-table--wide">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Player</th>
-                <th>7x7</th>
-                <th>9x9</th>
-                <th>Total</th>
-                <th>Crowns</th>
-              </tr>
-            </thead>
-            <tbody>
-              {today.length ? (
-                today.map((e, i) => {
-                  const playerCrowns = crowns.find((cr) => cr.userId === e.userId);
-                  return (
-                    <tr>
-                      <td>{i + 1}</td>
-                      <td>{e.username}</td>
-                      <td>{timeOrDash(e.icebarnTimeMs)}</td>
-                      <td>{timeOrDash(e.icebarnLgTimeMs)}</td>
-                      <td>{formatDuration(e.totalTimeMs)}</td>
-                      <td>{playerCrowns ? playerCrowns.crowns : 0}</td>
-                    </tr>
-                  );
-                })
-              ) : (
-                <tr>
-                  <td colSpan={6}>No solves yet today.</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-
-          <h2 class="lb-section">All-Time Crown Leaders</h2>
-          <p class="lb-sub">
-            Fastest solve on a puzzle earns a crown. More crowns = more #1 finishes.
-          </p>
-          <table class="board-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Player</th>
-                <th>Crowns</th>
-              </tr>
-            </thead>
-            <tbody>
-              {crowns.length ? (
-                crowns.map((e, i) => (
+          <div class="lb-split">
+            <div class="lb-col">
+              <h2 class="lb-section">Today — {formatDateKey(dateKey)}</h2>
+              <table class="board-table board-table--wide">
+                <thead>
                   <tr>
-                    <td>{i + 1}</td>
-                    <td>{e.username}</td>
-                    <td>{e.crowns}</td>
+                    <th>#</th>
+                    <th>Player</th>
+                    <th>7x7</th>
+                    <th>9x9</th>
+                    <th>Total</th>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan={3}>No crowns yet. Be the first!</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                </thead>
+                <tbody>
+                  {today.length ? (
+                    today.map((e, i) => (
+                      <tr>
+                        <td>{i + 1}</td>
+                        <td>{e.username}</td>
+                        <td>{timeOrDash(e.icebarnTimeMs)}</td>
+                        <td>{timeOrDash(e.icebarnLgTimeMs)}</td>
+                        <td>{formatDuration(e.totalTimeMs)}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={5}>No solves yet today.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            <div class="lb-col">
+              <h2 class="lb-section">All-Time Crowns</h2>
+              <table class="board-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Player</th>
+                    <th>Crowns</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {crowns.length ? (
+                    crowns.map((e, i) => (
+                      <tr>
+                        <td>{i + 1}</td>
+                        <td>{e.username}</td>
+                        <td>{e.crowns}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={3}>No crowns yet.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+              <p class="lb-sub">Fastest solve on a puzzle = 1 crown.</p>
+            </div>
+          </div>
         </div>
       </div>
       <footer class="footer">

@@ -112,10 +112,14 @@ export const PUZZLE_CSS = String.raw`/* confuzzled — icebarn puzzle styles */
 @media(max-width:600px){.hub-cards{grid-template-columns:1fr}}
 
 /* leaderboard page */
-.lb-page,.archive-page{max-width:700px;margin:0 auto}
+.lb-page{max-width:960px;margin:0 auto}
+.archive-page{max-width:700px;margin:0 auto}
 .lb-title,.archive-title{font:400 2.2rem var(--ff-goofy);color:var(--lav);display:inline-block;transform:rotate(-1.5deg);margin-bottom:.3rem}
 .lb-sub,.archive-sub{font:1rem var(--ff-read);color:var(--ink-soft);margin-bottom:1.6rem}
-.lb-section{font:400 1.4rem var(--ff-goofy);color:var(--ink);margin:1.4rem 0 .6rem;display:inline-block;transform:rotate(-1deg)}
+.lb-section{font:400 1.4rem var(--ff-goofy);color:var(--ink);margin:.4rem 0 .6rem;display:inline-block;transform:rotate(-1deg)}
+.lb-split{display:grid;grid-template-columns:1fr 1fr;gap:2rem;align-items:start}
+.lb-col{min-width:0}
+@media(max-width:720px){.lb-split{grid-template-columns:1fr;gap:1.5rem}}
 
 /* archive page */
 .archive-list{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:2rem}
