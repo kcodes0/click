@@ -37,10 +37,14 @@ export const GAME_ICEBARN_JS = String.raw`(function () {
     if (d === W) return 2;
     return 0;
   }
+  function isAdjacent(a, b) {
+    var dx = Math.abs((a % W) - (b % W));
+    var dy = Math.abs(Math.floor(a / W) - Math.floor(b / W));
+    return dx + dy === 1;
+  }
 
   var inCell = markerToCell(gridData.inMarker);
   var outCell = markerToCell(gridData.outMarker);
-  var inDir = markerEntryDir(gridData.inMarker);
 
   var path = [];
   var pathSet = {};
@@ -65,40 +69,52 @@ export const GAME_ICEBARN_JS = String.raw`(function () {
   }
   tick();
 
-  function isAdjacent(a, b) {
-    var dx = Math.abs((a % W) - (b % W));
-    var dy = Math.abs(Math.floor(a / W) - Math.floor(b / W));
-    return dx + dy === 1;
+  function getDepartureDir() {
+    if (path.length < 2) return -1;
+    return dirBetween(path[path.length - 2], path[path.length - 1]);
   }
 
-  function canExtendTo(cell) {
-    if (path.length === 0) return cell === inCell;
+  function canMoveTo(cell) {
     var head = path[path.length - 1];
     if (!isAdjacent(head, cell)) return false;
     var dir = dirBetween(head, cell);
 
-    // check arrow at head forces different direction
-    if (head !== inCell || path.length > 1) {
-      if (arrowMap[head] !== undefined && path.length > 1) {
-        // arrow should match the direction we entered the head cell, which is already validated
-        // but for exit: if head has arrow, we must leave in arrow direction
-        if (arrowMap[head] !== undefined && arrowMap[head] !== dir) return false;
-      }
-    }
-    // if head is on ice, must continue same direction
+    // arrow at head constrains departure direction
+    if (arrowMap[head] !== undefined && arrowMap[head] !== dir) return false;
+
+    // ice at head forces same direction as arrival
     if (iceSet[head] && path.length >= 2) {
-      var prevDir = dirBetween(path[path.length - 2], head);
+      var prevDir = getDepartureDir();
       if (dir !== prevDir) return false;
     }
-    // can't revisit non-ice
+
+    // can't revisit non-ice cells
     if (!iceSet[cell] && visitedNonIce[cell]) return false;
+
     return true;
   }
 
-  function extendPath(cell) {
+  function addToPath(cell) {
     path.push(cell);
     pathSet[cell] = (pathSet[cell] || 0) + 1;
     if (!iceSet[cell]) visitedNonIce[cell] = true;
+  }
+
+  function extendTo(cell) {
+    if (!canMoveTo(cell)) return false;
+    addToPath(cell);
+
+    // auto-slide: if we just entered ice, keep going until we exit
+    while (iceSet[path[path.length - 1]]) {
+      var head = path[path.length - 1];
+      var slideDir = dirBetween(path[path.length - 2], head);
+      var next = cellInDir(head, slideDir);
+      if (next < 0) break;
+      if (!iceSet[next] && visitedNonIce[next]) break;
+      addToPath(next);
+      if (!iceSet[next]) break; // exited ice
+    }
+    return true;
   }
 
   function truncateTo(idx) {
@@ -166,18 +182,18 @@ export const GAME_ICEBARN_JS = String.raw`(function () {
       var idx = parseInt(el.getAttribute("data-idx"));
 
       if (path.length === 0) {
-        if (idx === inCell) {
-          extendPath(idx);
-          renderAll();
-        }
+        if (idx === inCell) { addToPath(idx); renderAll(); }
         return;
       }
 
       var head = path[path.length - 1];
 
-      // click head to undo
+      // click head to undo (undo entire ice slide at once)
       if (idx === head && path.length > 1) {
-        truncateTo(path.length - 1);
+        // if head is right after an ice slide, undo the whole slide
+        var undoTo = path.length - 1;
+        while (undoTo > 1 && iceSet[path[undoTo - 1]]) undoTo--;
+        truncateTo(undoTo);
         renderAll();
         if (resultEl) { resultEl.className = "result-banner hidden"; resultEl.textContent = ""; }
         return;
@@ -191,24 +207,23 @@ export const GAME_ICEBARN_JS = String.raw`(function () {
         return;
       }
 
-      // try to extend
-      if (canExtendTo(idx)) {
-        extendPath(idx);
+      // try to extend (with auto-slide through ice)
+      if (extendTo(idx)) {
         renderAll();
-        if (idx === outCell) trySubmit();
+        if (path[path.length - 1] === outCell) trySubmit();
       }
     });
   });
 
-  // start with IN cell
-  extendPath(inCell);
+  // start with IN cell already on path
+  addToPath(inCell);
   renderAll();
 
   var resetBtn = document.getElementById("pz-reset");
   if (resetBtn) resetBtn.addEventListener("click", function () {
     if (solved) return;
     truncateTo(0);
-    extendPath(inCell);
+    addToPath(inCell);
     renderAll();
     if (resultEl) { resultEl.className = "result-banner hidden"; resultEl.textContent = ""; }
   });
